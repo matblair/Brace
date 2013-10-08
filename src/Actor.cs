@@ -10,23 +10,21 @@ namespace Project1
 {
     using SharpDX.Toolkit.Graphics;
 
-    abstract public class GameObject
+    abstract public class Actor
     {
         private Boolean solid;
         private Boolean paused;
         private Boolean visible;
 
         private Vector3 pos;
-        private Vector3 rot;
+        public Vector3 rot { get; private set; }
 
-        public Model rObject;
         public PhysicsModel pObject;
 
-        public GameObject(Vector3 position, Vector3 rotation, Model rObject, PhysicsModel pObject)
+        public Actor(Vector3 position, Vector3 rotation, PhysicsModel pObject)
         {
             this.pos = position;
             this.rot = rotation;
-            this.rObject = rObject;
             this.pObject = pObject;
             solid = true;
             paused = true;
@@ -35,13 +33,6 @@ namespace Project1
         }
 
         public abstract void Update(GameTime gametime);
-
-        public void Draw(GraphicsDevice context, Matrix view, Matrix projection)
-        {
-            Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
-            rObject.Draw(context, world, view, projection);
-        }
-
-
+        public abstract void Draw(GraphicsDevice context, Matrix view, Matrix projection);
     }
 }

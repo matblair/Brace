@@ -24,7 +24,7 @@ namespace Project1.src
         
         public InputManager input;
         public Camera view;
-        private GameObject[] actors;
+        private Actor[] actors;
 
         
 
@@ -38,7 +38,7 @@ namespace Project1.src
             graphicsDeviceManager = new GraphicsDeviceManager(this);
         }
 
-        private GameObject[] InitializeActors()
+        private Actor[] InitializeActors()
         {
             throw new NotImplementedException();
         }
@@ -59,13 +59,13 @@ namespace Project1.src
 
         private void stepPhysicsModel(GameTime gameTime)
         {
-            Resolver.step(gameTime, actors);
+            PhysicsEngine.step(gameTime, actors);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            foreach (GameObject actor in actors)
+            foreach (Actor actor in actors)
             {
                 actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera;
             }

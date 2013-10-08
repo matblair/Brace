@@ -36,7 +36,7 @@ namespace Project1
         public SpriteFont DefaultFont { get; private set; }
 
         private FPSRenderer fpsRenderer;
-        private GameObject model;
+        private Actor model;
         public Camera camera;
 
         private KeyboardManager keyboardManager;

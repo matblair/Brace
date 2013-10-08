@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project1.src.GameLogic
 {
-    class Body : GameObject
+    class Body : Actor
     {
         MouseState previousMouseState;
         MouseState currentMouseState;
