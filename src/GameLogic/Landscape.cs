@@ -13,15 +13,19 @@ namespace Project1.src.GameLogic
     class Landscape : Actor
     {
         private Random random = new Random();
+        private float xzScale = 10;
 
-        public Landscape(Project1Game game)
-            : base(Vector3.Zero, Vector3.Zero, null, null)
+        // Verticies
+        private float[,] segments;
+        private VertexInputLayout inputLayout;
+        private Buffer<VertexPositionColor> vertices;
+
+        public Landscape(Brace game)
+            : base(Vector3.Zero, Vector3.Zero, null)
         {
-            // Keep a reference to the game
-            this.game = game;
-
             // Generate the terrain and verticies
-            float[,] segments = GenerateTerrain(10, 0.2f);
+            segments = GenerateTerrain(10, 10f);
+            
             VertexPositionColor[] vertPosColors = GenerateVerticies(segments);
             //throw new Exception();
 
@@ -32,12 +36,35 @@ namespace Project1.src.GameLogic
 
             inputLayout = VertexInputLayout.FromBuffer(0, vertices);
 
-            GenerateBasicEffect();
+            basicEffect = new BasicEffect(game.GraphicsDevice)
+            {
+                VertexColorEnabled = true
+            };
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            
+            basicEffect.World = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
+        }
+
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection)
+        {
+            // Setup the vertices
+            context.SetVertexBuffer(vertices);
+            context.SetVertexInputLayout(inputLayout);
+
+            // Apply the basic effect technique and draw the rotating cube
+            basicEffect.View = view;
+            basicEffect.Projection = projection;
+            basicEffect.CurrentTechnique.Passes[0].Apply();
+            context.Draw(PrimitiveType.TriangleList, vertices.ElementCount);
+        }
+
+        public float HeightAt(float x, float z)
+        {
+            int i = (int)((0.5f + x / xzScale / 2) * segments.GetLength(0));
+            int j = (int)((0.5f + z / xzScale / 2) * segments.GetLength(1));
+            return segments[i, j];
         }
 
         private float[,] GenerateTerrain(int divisions, float heightRange)
@@ -125,24 +152,24 @@ namespace Project1.src.GameLogic
 
             for (int i = 0; i < nRows - 1; i++)
             {
-                float xStart = (i * 2.0f / (nRows - 1)) - 1;
-                float xDist = 2f / (nRows - 1);
+                float xStart = xzScale * ((i * 2.0f / (nRows - 1)) - 1);
+                float xDist = xzScale * 2f / (nRows - 1);
 
                 for (int j = 0; j < nCols - 1; j++)
                 {
                     int baseIndex = (i * (nCols - 1) + j) * 6;
-                    float yStart = (j * 2.0f / (nCols - 1)) - 1;
-                    float yDist = 2f / (nCols - 1);
+                    float zStart = xzScale * ((j * 2.0f / (nCols - 1)) - 1);
+                    float zDist = xzScale * 2f / (nCols - 1);
 
                     // First triangle
-                    values[baseIndex] = new VertexPositionColor(new Vector3(xStart, yStart, segments[i, j]), colors[i, j]);
-                    values[baseIndex + 1] = new VertexPositionColor(new Vector3(xStart + xDist, yStart, segments[i + 1, j]), colors[i + 1, j]);
-                    values[baseIndex + 2] = new VertexPositionColor(new Vector3(xStart + xDist, yStart + yDist, segments[i + 1, j + 1]), colors[i + 1, j + 1]);
+                    values[baseIndex] = new VertexPositionColor(new Vector3(xStart, segments[i, j], zStart), colors[i, j]);
+                    values[baseIndex + 1] = new VertexPositionColor(new Vector3(xStart + xDist, segments[i + 1, j + 1], zStart + zDist), colors[i + 1, j + 1]);
+                    values[baseIndex + 2] = new VertexPositionColor(new Vector3(xStart + xDist, segments[i + 1, j], zStart), colors[i + 1, j]);
 
                     // Second triangle
-                    values[baseIndex + 3] = new VertexPositionColor(new Vector3(xStart, yStart, segments[i, j]), colors[i, j]);
-                    values[baseIndex + 4] = new VertexPositionColor(new Vector3(xStart + xDist, yStart + yDist, segments[i + 1, j + 1]), colors[i + 1, j + 1]);
-                    values[baseIndex + 5] = new VertexPositionColor(new Vector3(xStart, yStart + yDist, segments[i, j + 1]), colors[i, j + 1]);
+                    values[baseIndex + 3] = new VertexPositionColor(new Vector3(xStart, segments[i, j], zStart), colors[i, j]);
+                    values[baseIndex + 4] = new VertexPositionColor(new Vector3(xStart, segments[i, j + 1], zStart + zDist), colors[i, j + 1]);
+                    values[baseIndex + 5] = new VertexPositionColor(new Vector3(xStart + xDist, segments[i + 1, j + 1], zStart + zDist), colors[i + 1, j + 1]);
                 }
             }
 

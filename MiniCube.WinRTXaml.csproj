@@ -51,9 +51,9 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Project1Game.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\ITrackable.cs" />
+    <Compile Include="src\OriginTrackable.cs" />
     <Compile Include="src\PhysicsModel.cs" />
     <Compile Include="src\Physics\PhysicsEngine.cs" />
     <Compile Include="src\RenderModel.cs" />

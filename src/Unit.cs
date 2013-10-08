@@ -19,12 +19,12 @@ namespace Project1.src
             this.model = model;
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
         }
 
-        public void Draw(GraphicsDevice context, Matrix view, Matrix projection)
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection)
         {
             Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
             model.Draw(context, world, view, projection);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1
+namespace Project1.src
 {
     using System.Diagnostics;
     using SharpDX;
@@ -17,7 +17,7 @@ namespace Project1
         Stopwatch clock;
         long lastTime=0;
 
-        public FPSRenderer(Project1Game game)
+        public FPSRenderer(Brace game)
         {
             this.font = game.DefaultFont;
             spriteBatch = new SpriteBatch(game.GraphicsDevice);

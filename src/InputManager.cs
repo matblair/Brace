@@ -20,15 +20,15 @@ namespace Project1.src
         public KeyboardState _keyboard;
         public MouseState _mouse;
         
-
-        public InputManager()
+        public InputManager(Brace game)
         {
-            keys = new KeyboardManager(Brace.get());
-            mouse = new MouseManager(Brace.get());
+            keys = new KeyboardManager(game);
+            mouse = new MouseManager(game);
             accelerometer = Accelerometer.GetDefault();
             gestureRecogniser = new Windows.UI.Input.GestureRecognizer();
 
         }
+
         public void Update()
         {
             _keyboard = keys.GetState();

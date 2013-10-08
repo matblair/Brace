@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Project1.src;
 using Windows.UI.Xaml.Controls;
 
 namespace Project1
@@ -27,12 +28,12 @@ namespace Project1
     /// </summary>
     public sealed partial class MainPage
     {
-        private readonly Project1Game game;
+        private readonly Brace game;
 
         public MainPage()
         {
             InitializeComponent();
-            game = new Project1Game();
+            game = new Brace();
             game.Run(this);
         }
     }

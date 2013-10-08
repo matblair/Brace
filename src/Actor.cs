@@ -16,8 +16,9 @@ namespace Project1
         private Boolean paused;
         private Boolean visible;
 
-        private Vector3 pos;
+        public Vector3 pos { get; private set; }
         public Vector3 rot { get; private set; }
+        public BasicEffect basicEffect;
 
         public PhysicsModel pObject;
 
@@ -29,7 +30,6 @@ namespace Project1
             solid = true;
             paused = true;
             visible = true;
-
         }
 
         public abstract void Update(GameTime gametime);
