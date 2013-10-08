@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project1.src
 {
-    interface ITrackable
+    public interface ITrackable
     {
         Vector3 ViewDirection();
         Vector3 Location();
