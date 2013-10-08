@@ -19,82 +19,75 @@ namespace Project1
 
     public class Camera
     {
+        // General useful things
+        private Brace game;
 
-        //3d vector to store the camera's position in
-        private Vector3 position;
-        //the rotation around the Y axis of the camera
-        private float yaw = 0.0f;
-        //the rotation around the X axis of the camera
-        private float pitch = 0.0f;
+        // Support for different view types
+        public static enum ViewType { FirstPerson, TopDown };
+        private ViewType currentViewType;
 
-        public Vector3 getPosition()
+        // Object to track
+        private ITrackable tracking;
+
+        // Vectors related to View
+        private Vector3 targetPosition, targetLookingAt, targetUp;
+        private Vector3 position, lookingAt, up;
+
+        // View and proj matricies
+        public Matrix View { get; private set; }
+        public Matrix Projection { get; private set; }
+
+        public Camera(Brace game, ITrackable track)
         {
-            return position;
-        }
-        public Matrix lookThrough()
-        {
-            Matrix cameraRotation = Matrix.RotationX(pitch) * Matrix.RotationY(yaw);
+            // General
+            this.game = game;
 
-            Vector3 cameraOriginalTarget = new Vector3(0, -1, 0);
-            Vector3 cameraRotatedTarget = Vector3.TransformCoordinate(cameraOriginalTarget, cameraRotation);
-            Vector3 cameraFinalTarget = position + cameraRotatedTarget;
-
-            Vector3 cameraOriginalUpVector = Vector3.UnitZ;
-            Vector3 cameraRotatedUpVector = Vector3.TransformCoordinate(cameraOriginalUpVector, cameraRotation);
-
-
-            Matrix viewMatrix = Matrix.LookAtLH(position, cameraFinalTarget, cameraRotatedUpVector);
-
-            return viewMatrix;
-        }
-        public Camera(float x, float y, float z)
-        {
-            //instantiate position Vector3f to the x y z params.
-            position = new Vector3(x, y, z);
-        }
-        //increment the camera's current yaw rotation
-        public void addYaw(float amount)
-        {
-            //increment the yaw by the amount param
-            yaw += amount;
+            // View setup
+            Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
+            SetTarget(track);
+            SetViewType(ViewType.FirstPerson);
         }
 
-        //increment the camera's current yaw rotation
-        public void addPitch(float amount)
+        // Update the camera and associated things
+        public void Update(GameTime gameTime)
         {
-            //increment the pitch by the amount param
-            pitch += amount;
-        }
-        //moves the camera forward relative to its current rotation (yaw)
-        public void walkForward(float distance)
-        {
-            Matrix cameraRotation = Matrix.Identity * Matrix.RotationX(pitch) * Matrix.RotationY(yaw);
-            Vector3 cameraOriginalTarget = new Vector3(0, -1, 0);
-            Vector3 cameraRotatedTarget = Vector3.TransformCoordinate(cameraOriginalTarget, cameraRotation);
-            position += distance * cameraRotatedTarget;
+            // Calculate the view. This will eventually be changed to be elastic
+            switch (currentViewType)
+            {
+                case (ViewType.FirstPerson):
+                    targetPosition = tracking.Location();
+                    targetLookingAt = targetPosition + tracking.ViewDirection();
+                    targetUp = Vector3.UnitY;
+                    break;
+
+                case (ViewType.TopDown):
+                    targetLookingAt = tracking.Location();
+                    targetPosition = targetLookingAt + 10 * Vector3.UnitY;
+                    targetUp = Vector3.UnitX;
+                    break;
+
+                default:
+                    break;
+            }
+
+            // Calculate the view. This will eventually be changed to be elastic
+            position = targetPosition;
+            lookingAt = targetLookingAt;
+            up = targetUp;
+
+            View = Matrix.LookAtLH(position, lookingAt, up);
         }
 
-        //moves the camera backward relative to its current rotation (yaw)
-        public void walkBackwards(float distance)
+        // Set a new target object to track
+        public void SetTarget(ITrackable track)
         {
-            Matrix cameraRotation = Matrix.Identity * Matrix.RotationX(pitch) * Matrix.RotationY(yaw);
-            Vector3 cameraOriginalTarget = new Vector3(0, -1, 0);
-            Vector3 cameraRotatedTarget = Vector3.TransformCoordinate(cameraOriginalTarget, cameraRotation);
-            position -= distance * cameraRotatedTarget;
+            this.tracking = track;
         }
 
-        //strafes the camera left relitive to its current rotation (yaw)
-        public void strafeLeft(float distance)
+        // Set the type of camera view
+        public void SetViewType(this ViewType type)
         {
-            position.X -= distance * (float)Math.Sin(yaw - Math.PI / 4);
-            position.Z += distance * (float)Math.Cos(yaw - Math.PI / 4);
-        }
-
-        //strafes the camera right relitive to its current rotation (yaw)
-        public void strafeRight(float distance)
-        {
-            position.X -= distance * (float)Math.Sin(yaw + Math.PI / 4);
-            position.Z += distance * (float)Math.Cos(yaw + Math.PI / 4);
+            this.currentViewType = type;
         }
     }
 }

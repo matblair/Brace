@@ -24,14 +24,12 @@ namespace Project1.src
         
         public InputManager input;
         public Camera view;
-        public GameObject[] actors;
+        private GameObject[] actors;
 
         
 
         public Brace()
         {
-
-
             input = new InputManager();
             
             view = new Camera(0,0,0);
@@ -67,9 +65,9 @@ namespace Project1.src
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            for (int i = 0; i < actors.Length; ++i)
+            foreach (GameObject actor in actors)
             {
-                actors[i].Draw(graphicsDeviceManager);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera;
             }
 
             // Handle base.Update
