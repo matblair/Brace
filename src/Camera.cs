@@ -8,22 +8,15 @@ using SharpDX.Toolkit.Graphics;
 using SharpDX.Toolkit.Input;
 using Project1.src;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpDX;
-namespace Project1
+namespace Project1.src
 {
-
-
     public class Camera
     {
         // General useful things
         private Brace game;
 
         // Support for different view types
-        public static enum ViewType { FirstPerson, TopDown };
+        public enum ViewType { FirstPerson, TopDown };
         private ViewType currentViewType;
 
         // Object to track
@@ -45,7 +38,7 @@ namespace Project1
             // View setup
             Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
             SetTarget(track);
-            SetViewType(ViewType.FirstPerson);
+            SetViewType(ViewType.TopDown);
         }
 
         // Update the camera and associated things
@@ -85,7 +78,7 @@ namespace Project1
         }
 
         // Set the type of camera view
-        public void SetViewType(this ViewType type)
+        public void SetViewType(ViewType type)
         {
             this.currentViewType = type;
         }

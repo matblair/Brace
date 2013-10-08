@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Project1.src.Physics
 {
-    class Resolver
+    class PhysicsEngine
     {
-        public static void step(GameTime gameTime, GameObject[] actors){
+        PhysicsModel[] objects;
+        public static void step(GameTime gameTime, Actor[] actors){
             moveObjects();
             checkForCollisions();
             resolveCollisions();

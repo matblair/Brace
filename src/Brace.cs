@@ -2,6 +2,7 @@
 using Project1.src.Physics;
 using SharpDX;
 using SharpDX.Toolkit;
+using SharpDX.Toolkit.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,69 +13,83 @@ namespace Project1.src
 {
     public class Brace : Game
     {
-        public static Brace get() {
-            if(brace == null) {
-                brace = new Brace();
-            }
-            return brace;
-        }
-
-        private static Brace brace;
         public GraphicsDeviceManager graphicsDeviceManager;
+        public SpriteFont DefaultFont { get; private set; }
         
         public InputManager input;
-        public Camera view;
-        private GameObject[] actors;
-
-        
+        private FPSRenderer fpsRenderer;
+        public Camera Camera { get; private set; }
+        private Actor[] actors;
 
         public Brace()
         {
-            input = new InputManager();
-            
-            view = new Camera(0,0,0);
-            actors = InitializeActors();
-
             graphicsDeviceManager = new GraphicsDeviceManager(this);
+            input = new InputManager(this);
+
+            // Setup the relative directory to the executable directory
+            // for loading contents with the ContentManager
+            Content.RootDirectory = "Content";
         }
 
-        private GameObject[] InitializeActors()
+        protected override void LoadContent()
         {
-            throw new NotImplementedException();
+            // Load the font
+            DefaultFont = Content.Load<SpriteFont>("Arial16");
+
+            // Create FPS renderer
+            fpsRenderer = new FPSRenderer(this);
+
+            // Load camera and models
+            actors = InitializeActors();
+            Camera = new Camera(this, new OriginTrackable()); // Give this an actor
+
+            base.LoadContent();
         }
 
+        private Actor[] InitializeActors()
+        {
+            var newActors = new Actor[] {
+                new GameLogic.Landscape(this)
+            };
+
+            return newActors;
+        }
 
         protected override void Update(GameTime gameTime)
         {
-            for (int i = 0; i < actors.Length; ++i)
-            {
-                actors[i].Update(gameTime);
-            }
-
-            stepPhysicsModel(gameTime);
-
             // Handle base.Update
             base.Update(gameTime);
+
+            foreach (Actor actor in actors)
+            {
+                actor.Update(gameTime);
+            }
+
+            StepPhysicsModel(gameTime);
+
+            // Update the camera
+            Camera.Update(gameTime);
         }
 
-        private void stepPhysicsModel(GameTime gameTime)
+        private void StepPhysicsModel(GameTime gameTime)
         {
-            Resolver.step(gameTime, actors);
+            //PhysicsEngine.step(gameTime, actors);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
-            foreach (GameObject actor in actors)
+            GraphicsDevice.Clear(Color.CadetBlue);
+
+            foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera;
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection);
             }
 
-            // Handle base.Update
-            base.Update(gameTime);
+            // Show FPS
+            fpsRenderer.Draw();
+
+            // Handle base.Draw
+            base.Draw(gameTime);
         }
-
-
-
     }
 }
