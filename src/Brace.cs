@@ -19,6 +19,7 @@ namespace Project1.src
         public InputManager input { get; private set; }
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
+        private bool cameraToggling=false;
         private Actor[] actors;
 
         public Brace()
@@ -60,14 +61,28 @@ namespace Project1.src
             // Handle base.Update
             base.Update(gameTime);
 
+            input.Update();
+
+            // Blerrurhhjgsjkdh. Camera toggling with Tab.
+            if (input.KeyboardState.IsKeyDown(SharpDX.Toolkit.Input.Keys.Tab))
+            {
+                if (!cameraToggling)
+                {
+                    Camera.SetViewType((Camera.ViewType)((int)(Camera.CurrentViewType + 1) % Enum.GetNames(typeof(Camera.ViewType)).Length));
+                    cameraToggling = true;
+                }
+            }
+            else
+            {
+                cameraToggling = false;
+            }
+
             foreach (Actor actor in actors)
             {
                 actor.Update(gameTime);
             }
 
             StepPhysicsModel(gameTime);
-
-            input.Update();
 
             // Update the camera
             Camera.Update(gameTime);
