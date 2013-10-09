@@ -18,7 +18,7 @@ namespace Project1
 
         public Vector3 pos { get; private set; }
         public Vector3 rot { get; private set; }
-        public BasicEffect basicEffect;
+        public Effect basicEffect;
 
         public PhysicsModel pObject;
 

@@ -48,14 +48,14 @@ namespace Project1.src
             switch (currentViewType)
             {
                 case (ViewType.FirstPerson):
-                    targetPosition = tracking.Location();
+                    targetPosition = tracking.EyeLocation();
                     targetLookingAt = targetPosition + tracking.ViewDirection();
                     targetUp = Vector3.UnitY;
                     break;
 
                 case (ViewType.TopDown):
-                    targetLookingAt = tracking.Location();
-                    targetPosition = targetLookingAt + 10 * Vector3.UnitY;
+                    targetLookingAt = tracking.EyeLocation();
+                    targetPosition = targetLookingAt + 30 * Vector3.UnitY;
                     targetUp = Vector3.UnitX;
                     break;
 
