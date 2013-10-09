@@ -13,7 +13,7 @@ namespace Project1.src.GameLogic
     class Landscape : Actor
     {
         private Random random = new Random();
-        private float xzScale = 50;
+        private float xzScale = 20;
 
         // Verticies
         private float[,] segments;
@@ -241,14 +241,21 @@ namespace Project1.src.GameLogic
             Vector3[,] vertexNormals = new Vector3[nRows, nCols];
 
             // Generate edge normals
-            for (int i = 0; i < nRows - 1; i++)
+            for (int i = 0; i < nRows; i++)
             {
-                for (int j = 0; j < nCols - 1; j++)
+                for (int j = 0; j < nCols; j++)
                 {
-                    xEdgeNormals[i, j] = Vector3.Cross(Vector3.UnitZ, new Vector3(xDist, 0, segments[i + 1, j] - segments[i, j]));
-                    xEdgeNormals[i, j].Normalize();
-                    zEdgeNormals[i, j] = Vector3.Cross(new Vector3(0, zDist, segments[i, j + 1] - segments[i, j]), Vector3.UnitX);
-                    zEdgeNormals[i, j].Normalize();
+                    if (i < nRows - 1)
+                    {
+                        xEdgeNormals[i, j] = Vector3.Cross(Vector3.UnitZ, new Vector3(xDist, segments[i + 1, j] - segments[i, j], 0));
+                        xEdgeNormals[i, j].Normalize();
+                    }
+
+                    if (j < nCols - 1)
+                    {
+                        zEdgeNormals[i, j] = Vector3.Cross(new Vector3(0, segments[i, j + 1] - segments[i, j], zDist), Vector3.UnitX);
+                        zEdgeNormals[i, j].Normalize();
+                    }
                 }
             }
 
@@ -257,34 +264,30 @@ namespace Project1.src.GameLogic
             {
                 for (int j = 0; j < nCols; j++)
                 {
-                    Vector3 normal = Vector3.Zero;
-                    int count = 0;
+                    Vector3 xNorm, zNorm;
 
-                    if (i > 0)
+                    if (i == 0)
+                        xNorm = xEdgeNormals[i, j];
+                    else if (i == nRows - 1)
+                        xNorm = xEdgeNormals[i - 1, j];
+                    else
                     {
-                        normal += xEdgeNormals[i - 1, j];
-                        count++;
+                        xNorm = xEdgeNormals[i, j] + xEdgeNormals[i - 1, j];
+                        xNorm.Normalize();
                     }
 
-                    if (i < nRows - 1)
+                    if (j == 0)
+                        zNorm = zEdgeNormals[i, j];
+                    else if (j == nCols - 1)
+                        zNorm = zEdgeNormals[i, j - 1];
+                    else
                     {
-                        normal += xEdgeNormals[i, j];
-                        count++;
+                        zNorm = zEdgeNormals[i, j] + zEdgeNormals[i, j - 1];
+                        zNorm.Normalize();
                     }
 
-                    if (j > 0)
-                    {
-                        normal += zEdgeNormals[i, j - 1];
-                        count++;
-                    }
-
-                    if (j < nCols - 1)
-                    {
-                        normal += zEdgeNormals[i, j];
-                        count++;
-                    }
-
-                    vertexNormals[i, j] = normal / count;
+                    vertexNormals[i, j] = zNorm + xNorm;
+                    vertexNormals[i, j].Y /= 2;
                 }
             }
 
