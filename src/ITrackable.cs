@@ -10,6 +10,7 @@ namespace Project1.src
     public interface ITrackable
     {
         Vector3 ViewDirection();
-        Vector3 Location();
+        Vector3 BodyLocation();
+        Vector3 EyeLocation();
     }
 }

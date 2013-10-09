@@ -15,8 +15,8 @@ namespace Project1.src
     {
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteFont DefaultFont { get; private set; }
-        
-        public InputManager input;
+
+        public InputManager input { get; private set; }
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
         private Actor[] actors;
@@ -66,6 +66,8 @@ namespace Project1.src
             }
 
             StepPhysicsModel(gameTime);
+
+            input.Update();
 
             // Update the camera
             Camera.Update(gameTime);
