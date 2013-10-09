@@ -60,6 +60,7 @@
     <Compile Include="src\Sphere.cs" />
     <Compile Include="src\InputManager.cs" />
     <Compile Include="src\Unit.cs" />
+    <Compile Include="src\VertexPositionNormalColor.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="PackageXaml.appxmanifest">
@@ -72,6 +73,9 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <ToolkitFxc Include="Content\CelShader.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
     <ToolkitFont Include="Content\Arial16.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +91,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>
