@@ -1,6 +1,4 @@
-﻿using Project1;
-using Project1.src.Physics;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 using System;
@@ -9,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1.src
+namespace Brace
 {
-    public class Brace : Game
+    public class BraceGame : Game
     {
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteFont DefaultFont { get; private set; }
@@ -22,7 +20,7 @@ namespace Project1.src
         private bool cameraToggling=false;
         private Actor[] actors;
 
-        public Brace()
+        public BraceGame()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             input = new InputManager(this);

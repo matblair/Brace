@@ -14,8 +14,8 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="MiniCube.App">
-      <VisualElements DisplayName="MiniCube.WinRTXaml" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="MiniCube.WinRTXaml" ForegroundText="light" BackgroundColor="#464646">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Brace.App">
+      <VisualElements DisplayName="Brace" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Brace.WinRTXaml" ForegroundText="light" BackgroundColor="#464646">
         <DefaultTile ShowName="allLogos" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>

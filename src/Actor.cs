@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using SharpDX;
 using SharpDX.Toolkit;
-using Project1.src;
 
-namespace Project1
+namespace Brace
 {
     using SharpDX.Toolkit.Graphics;
 

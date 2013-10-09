@@ -18,22 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using Project1.src;
+using Brace;
 using Windows.UI.Xaml.Controls;
 
-namespace Project1
+namespace Brace
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
     public sealed partial class MainPage
     {
-        private readonly Brace game;
+        private readonly BraceGame game;
 
         public MainPage()
         {
             InitializeComponent();
-            game = new Brace();
+            game = new BraceGame();
             game.Run(this);
         }
     }

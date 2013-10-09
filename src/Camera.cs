@@ -6,15 +6,14 @@ using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.Toolkit.Input;
-using Project1.src;
 
-namespace Project1.src
+namespace Brace
 {
     public class Camera
     {
         // General useful things
-        private Brace game;
-        private static float MOVE_SPEED=60f, PAN_SPEED=10f;
+        private BraceGame game;
+        private static float MOVE_SPEED=60f, PAN_SPEED=10f, ORIENTATION_SPEED=0.5f;
 
         // Support for different view types
         public enum ViewType { FirstPerson, TopDown, Follow };
@@ -31,7 +30,7 @@ namespace Project1.src
         public Matrix View { get; private set; }
         public Matrix Projection { get; private set; }
 
-        public Camera(Brace game, ITrackable track)
+        public Camera(BraceGame game, ITrackable track)
         {
             // General
             this.game = game;
@@ -96,14 +95,14 @@ namespace Project1.src
             }
 
             Vector3 upDir = targetUp - up;
-            if (upDir.Length() < PAN_SPEED * delta / 1000f)
+            if (upDir.Length() < ORIENTATION_SPEED * delta / 1000f)
             {
                 up = targetUp;
             }
             else
             {
                 upDir.Normalize();
-                up += upDir * PAN_SPEED * delta / 1000f;
+                up += upDir * ORIENTATION_SPEED * delta / 1000f;
             }
 
             View = Matrix.LookAtLH(position, lookingAt, up);
