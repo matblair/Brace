@@ -7,8 +7,8 @@
     <ProjectGuid>{5114D1A3-5423-4B73-8729-57CD90DC4BEC}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Project1</RootNamespace>
-    <AssemblyName>Project1.WinRTXaml</AssemblyName>
+    <RootNamespace>Brace</RootNamespace>
+    <AssemblyName>Brace.WinRTXaml</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -43,7 +43,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="src\Camera.cs" />
-    <Compile Include="src\Brace.cs" />
+    <Compile Include="src\BraceGame.cs" />
     <Compile Include="src\FPSRenderer.cs" />
     <Compile Include="src\Actor.cs" />
     <Compile Include="src\GameLogic\Body.cs" />

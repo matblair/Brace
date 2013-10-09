@@ -6,21 +6,20 @@ using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Input;
 
-namespace Project1.src.GameLogic
+namespace Brace.GameLogic
 {
     using SharpDX.Toolkit.Graphics;
-    using Project1.src;
     class Landscape : Actor
     {
         private Random random = new Random();
-        private float xzScale = 20;
+        private float xzScale = 50;
 
         // Verticies
         private float[,] segments;
         public VertexInputLayout inputLayout;
         public Buffer<VertexPositionNormalColor> vertices;
 
-        public Landscape(Brace game)
+        public Landscape(BraceGame game)
             : base(Vector3.Zero, Vector3.Zero, null)
         {
             // Generate the terrain and verticies
