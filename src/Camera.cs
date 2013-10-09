@@ -14,10 +14,11 @@ namespace Project1.src
     {
         // General useful things
         private Brace game;
+        private static float MOVE_SPEED=60f, PAN_SPEED=10f;
 
         // Support for different view types
-        public enum ViewType { FirstPerson, TopDown };
-        private ViewType currentViewType;
+        public enum ViewType { FirstPerson, TopDown, Follow };
+        public ViewType CurrentViewType { get; private set; }
 
         // Object to track
         private ITrackable tracking;
@@ -38,14 +39,16 @@ namespace Project1.src
             // View setup
             Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
             SetTarget(track);
-            SetViewType(ViewType.TopDown);
+            SetViewType(ViewType.Follow);
         }
 
         // Update the camera and associated things
         public void Update(GameTime gameTime)
         {
+            long delta = gameTime.ElapsedGameTime.Milliseconds;
+
             // Calculate the view. This will eventually be changed to be elastic
-            switch (currentViewType)
+            switch (CurrentViewType)
             {
                 case (ViewType.FirstPerson):
                     targetPosition = tracking.EyeLocation();
@@ -59,14 +62,49 @@ namespace Project1.src
                     targetUp = Vector3.UnitX;
                     break;
 
+                case (ViewType.Follow):
+                    targetLookingAt = tracking.EyeLocation();
+                    targetPosition = targetLookingAt + 3 * Vector3.UnitY - 10 * tracking.ViewDirection();
+                    targetUp = Vector3.UnitY;
+                    break;
+
                 default:
                     break;
             }
 
-            // Calculate the view. This will eventually be changed to be elastic
-            position = targetPosition;
-            lookingAt = targetLookingAt;
-            up = targetUp;
+            // Calculate the view
+            Vector3 posDir = targetPosition - position;
+            if (posDir.Length() < MOVE_SPEED * delta / 1000f)
+            {
+                position = targetPosition;
+            }
+            else
+            {
+                posDir.Normalize();
+                position += posDir * MOVE_SPEED * delta / 1000f;
+            }
+
+            Vector3 lookDir = targetLookingAt - lookingAt;
+            if (lookDir.Length() < PAN_SPEED * delta / 1000f)
+            {
+                lookingAt = targetLookingAt;
+            }
+            else
+            {
+                lookDir.Normalize();
+                lookingAt += lookDir * PAN_SPEED * delta / 1000f;
+            }
+
+            Vector3 upDir = targetUp - up;
+            if (upDir.Length() < PAN_SPEED * delta / 1000f)
+            {
+                up = targetUp;
+            }
+            else
+            {
+                upDir.Normalize();
+                up += upDir * PAN_SPEED * delta / 1000f;
+            }
 
             View = Matrix.LookAtLH(position, lookingAt, up);
         }
@@ -80,7 +118,7 @@ namespace Project1.src
         // Set the type of camera view
         public void SetViewType(ViewType type)
         {
-            this.currentViewType = type;
+            this.CurrentViewType = type;
         }
     }
 }
