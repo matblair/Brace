@@ -36,7 +36,6 @@
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
     <Folder Include="src\Draw\" />
-    <Folder Include="src\Utils\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -54,12 +53,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\ITrackable.cs" />
     <Compile Include="src\OriginTrackable.cs" />
-    <Compile Include="src\PhysicsModel.cs" />
-    <Compile Include="src\Physics\PhysicsEngine.cs" />
+    <Compile Include="src\PhysicsEngine\Contact.cs" />
+    <Compile Include="src\PhysicsEngine\PhysicsBody.cs" />
+    <Compile Include="src\PhysicsEngine\PhysicsEngine.cs" />
+    <Compile Include="src\PhysicsEngine\PhysicsModel.cs" />
+    <Compile Include="src\PhysicsEngine\Sphere.cs" />
+    <Compile Include="src\PhysicsEngine\SpheresBody.cs" />
+    <Compile Include="src\PhysicsEngine\Terrain.cs" />
     <Compile Include="src\RenderModel.cs" />
-    <Compile Include="src\Sphere.cs" />
     <Compile Include="src\InputManager.cs" />
     <Compile Include="src\Unit.cs" />
+    <Compile Include="src\Utils\PhysicsUtils.cs" />
+    <Compile Include="src\Utils\VectorUtils.cs" />
     <Compile Include="src\VertexPositionNormalColor.cs" />
   </ItemGroup>
   <ItemGroup>

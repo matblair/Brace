@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Project1.src.PhysicsEngine
+namespace Brace.PhysicsEngine
 {
     public class PhysicsModel
     {

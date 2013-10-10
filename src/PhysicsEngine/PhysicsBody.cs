@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Brace.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Project1.src.PhysicsEngine
+namespace Brace.PhysicsEngine
 {
-    class PhysicsBody
+    public class PhysicsBody
     {
-        
-        public BodyType bodyType; 
+        public BodyType bodyType;
     }
 }

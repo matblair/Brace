@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1.src.PhysicsEngine
+namespace Brace.PhysicsEngine
 {
     class Contact
     {

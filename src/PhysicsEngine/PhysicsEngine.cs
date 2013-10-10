@@ -1,4 +1,4 @@
-﻿using Project1.src.Utils;
+﻿using Brace.Utils;
 using SharpDX;
 using SharpDX.Toolkit;
 using System;
@@ -7,14 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1.src.PhysicsEngine
+namespace Brace.PhysicsEngine
 {
-    enum BodyType
-    {
-        terrain,
-        dynamic,
-        passive
-    }
+    
     class PhysicsEngine
     {
         List<PhysicsModel> bodies;
@@ -114,6 +109,7 @@ namespace Project1.src.PhysicsEngine
                 
 
             }
+            throw new NotImplementedException();
             
 
         }
