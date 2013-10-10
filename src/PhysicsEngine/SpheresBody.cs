@@ -16,14 +16,7 @@ namespace Brace.PhysicsEngine
         public List<Sphere> spheres;
         public SpheresBody(PhysicsModel parent,BodyType type,Vector3 position,List<Sphere> bodyList) : base(type,parent)
         {
-            if (type)
-            {
-                bodyType = BodyType.dynamic;
-            }
-            else
-            {
-                bodyType = BodyType.passive;
-            }
+           
             this.position = position;
             spheres = bodyList;
         }

@@ -36,25 +36,31 @@ namespace Brace.PhysicsEngine
 
             foreach (PhysicsModel body in bodies)
             {
-                UpdateForces(body,dt);
+                UpdateForces(body, dt);
+                UpdateVelocity(body,dt);
                 MoveBody(body,dt);
               
             }
 
         }
 
+        private void UpdateForces(PhysicsModel body, float dt)
+        {
+            //Apply global forces suchas gravity linear damp etc...
+        }
+
         private void MoveBody(PhysicsModel body, float dt)
         {
             
-            Vector3 dist = VectorUtils.mul(body.velocity, dt);
-            body.location = VectorUtils.add(body.location, dist);
+            Vector3 dist = body.velocity * dt;
+            body.location = body.location + dist;
         }
 
-        private void UpdateForces(PhysicsModel body, float dt)
+        private void UpdateVelocity(PhysicsModel body, float dt)
         {
-            Vector3 dv = VectorUtils.mul(body.forces, body.invmass);
-            dv = VectorUtils.mul(dv, dt);
-            body.velocity = VectorUtils.add(body.velocity, dv);
+            Vector3 dv = body.forces * body.invmass;
+            dv = dv*dt;
+            body.velocity = body.velocity + dv;
         }
 
         List<Contact> contacts;
@@ -129,7 +135,7 @@ namespace Brace.PhysicsEngine
         {
             Sphere s = GetLowestSphere(b);
             Vector3 up = a.up;
-            Vector3 lowestPoint = s.position + b.position - VectorUtils.mul((a.up),s.radius);
+            Vector3 lowestPoint = s.position + b.position - (a.up * s.radius);
             Vector3 targetPoint = GetClosestPoint(a,lowestPoint);
             Contact result = null;
             
@@ -183,9 +189,9 @@ namespace Brace.PhysicsEngine
                 {
                     Sphere a = x.spheres[i];
                     Sphere b = y.spheres[j];
-                    Vector3 aLoc = VectorUtils.add(a.position, aTrans);
-                    Vector3 bLoc = VectorUtils.add(b.position, bTrans);
-                    Vector3 direction = VectorUtils.sub(aLoc, bLoc);
+                    Vector3 aLoc = a.position + aTrans;
+                    Vector3 bLoc = b.position + bTrans;
+                    Vector3 direction = aLoc - bLoc;
                     double mag2 = VectorUtils.mag2(direction);
                     double rad2 = (a.radius + b.radius) * (a.radius + b.radius);
                     if (mag2 < rad2)
