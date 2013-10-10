@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1.src
+namespace Brace
 {
     public interface ITrackable
     {
         Vector3 ViewDirection();
-        Vector3 Location();
+        Vector3 BodyLocation();
+        Vector3 EyeLocation();
     }
 }

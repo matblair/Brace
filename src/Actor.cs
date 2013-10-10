@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using SharpDX;
 using SharpDX.Toolkit;
-using Project1.src;
 
-namespace Project1
+namespace Brace
 {
     using SharpDX.Toolkit.Graphics;
 
@@ -18,7 +17,7 @@ namespace Project1
 
         public Vector3 pos { get; private set; }
         public Vector3 rot { get; private set; }
-        public BasicEffect basicEffect;
+        public Effect basicEffect;
 
         public PhysicsModel pObject;
 

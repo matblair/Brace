@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1.src
+namespace Brace
 {
     class OriginTrackable : ITrackable
     {
@@ -14,7 +14,12 @@ namespace Project1.src
             return Vector3.UnitX;
         }
 
-        public Vector3 Location()
+        public Vector3 EyeLocation()
+        {
+            return BodyLocation() + Vector3.UnitY;
+        }
+
+        public Vector3 BodyLocation()
         {
             return Vector3.UnitY * 10;
         }

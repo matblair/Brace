@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Sensors;
 using Windows.UI.Input;
 
-namespace Project1.src
+namespace Brace
 {
     public class InputManager
     {
@@ -17,10 +17,10 @@ namespace Project1.src
         private Accelerometer accelerometer;
         private GestureRecognizer gestureRecogniser;
         
-        public KeyboardState _keyboard;
-        public MouseState _mouse;
+        public KeyboardState KeyboardState { get; private set; }
+        public MouseState MouseState { get; private set; }
         
-        public InputManager(Brace game)
+        public InputManager(BraceGame game)
         {
             keys = new KeyboardManager(game);
             mouse = new MouseManager(game);
@@ -31,8 +31,8 @@ namespace Project1.src
 
         public void Update()
         {
-            _keyboard = keys.GetState();
-            _mouse = mouse.GetState();
+            KeyboardState = keys.GetState();
+            MouseState = mouse.GetState();
 
             mouse.SetPosition(new Vector2(0.5f, 0.5f));
         }

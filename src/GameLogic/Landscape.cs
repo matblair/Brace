@@ -6,45 +6,42 @@ using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Input;
 
-namespace Project1.src.GameLogic
+namespace Brace.GameLogic
 {
     using SharpDX.Toolkit.Graphics;
-    using Project1.src;
     class Landscape : Actor
     {
         private Random random = new Random();
-        private float xzScale = 10;
+        private float xzScale = 50;
 
         // Verticies
         private float[,] segments;
-        private VertexInputLayout inputLayout;
-        private Buffer<VertexPositionColor> vertices;
+        public VertexInputLayout inputLayout;
+        public Buffer<VertexPositionNormalColor> vertices;
 
-        public Landscape(Brace game)
+        public Landscape(BraceGame game)
             : base(Vector3.Zero, Vector3.Zero, null)
         {
             // Generate the terrain and verticies
             segments = GenerateTerrain(10, 10f);
             
-            VertexPositionColor[] vertPosColors = GenerateVerticies(segments);
+            VertexPositionNormalColor[] vertPosColorNormals = GenerateVerticies(segments);
             //throw new Exception();
 
             // Create the renderable object
             vertices = Buffer.Vertex.New(
                 game.GraphicsDevice,
-                vertPosColors);
+                vertPosColorNormals);
 
             inputLayout = VertexInputLayout.FromBuffer(0, vertices);
-
-            basicEffect = new BasicEffect(game.GraphicsDevice)
-            {
-                VertexColorEnabled = true
-            };
+            basicEffect = game.Content.Load<Effect>("CelShader");
         }
 
         public override void Update(GameTime gameTime)
         {
-            basicEffect.World = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
+            Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
+            basicEffect.Parameters["World"].SetValue(world);
+            basicEffect.Parameters["worldInvTrp"].SetValue(Matrix.Transpose(Matrix.Invert(world)));
         }
 
         public override void Draw(GraphicsDevice context, Matrix view, Matrix projection)
@@ -54,8 +51,9 @@ namespace Project1.src.GameLogic
             context.SetVertexInputLayout(inputLayout);
 
             // Apply the basic effect technique and draw the rotating cube
-            basicEffect.View = view;
-            basicEffect.Projection = projection;
+            basicEffect.Parameters["View"].SetValue(view);
+            basicEffect.Parameters["Projection"].SetValue(projection);
+            basicEffect.Parameters["cameraPos"].SetValue(new Vector3(0, 40, 0));
             basicEffect.CurrentTechnique.Passes[0].Apply();
             context.Draw(PrimitiveType.TriangleList, vertices.ElementCount);
         }
@@ -141,14 +139,15 @@ namespace Project1.src.GameLogic
             return segments;
         }
 
-        private VertexPositionColor[] GenerateVerticies(float[,] segments)
+        private VertexPositionNormalColor[] GenerateVerticies(float[,] segments)
         {
             int nRows = segments.GetLength(0);
             int nCols = segments.GetLength(1);
             int nVertPosCol = (nRows - 1) * (nCols - 1) * 2 * 3;
 
-            VertexPositionColor[] values = new VertexPositionColor[nVertPosCol];
+            VertexPositionNormalColor[] values = new VertexPositionNormalColor[nVertPosCol];
             Color[,] colors = GenerateColors(segments);
+            Vector3[,] normals = GenerateNormals(segments);
 
             for (int i = 0; i < nRows - 1; i++)
             {
@@ -162,14 +161,14 @@ namespace Project1.src.GameLogic
                     float zDist = xzScale * 2f / (nCols - 1);
 
                     // First triangle
-                    values[baseIndex] = new VertexPositionColor(new Vector3(xStart, segments[i, j], zStart), colors[i, j]);
-                    values[baseIndex + 1] = new VertexPositionColor(new Vector3(xStart + xDist, segments[i + 1, j + 1], zStart + zDist), colors[i + 1, j + 1]);
-                    values[baseIndex + 2] = new VertexPositionColor(new Vector3(xStart + xDist, segments[i + 1, j], zStart), colors[i + 1, j]);
+                    values[baseIndex] = new VertexPositionNormalColor(new Vector3(xStart, segments[i, j], zStart), normals[i, j], colors[i, j]);
+                    values[baseIndex + 1] = new VertexPositionNormalColor(new Vector3(xStart + xDist, segments[i + 1, j + 1], zStart + zDist), normals[i + 1, j + 1], colors[i + 1, j + 1]);
+                    values[baseIndex + 2] = new VertexPositionNormalColor(new Vector3(xStart + xDist, segments[i + 1, j], zStart), normals[i + 1, j], colors[i + 1, j]);
 
                     // Second triangle
-                    values[baseIndex + 3] = new VertexPositionColor(new Vector3(xStart, segments[i, j], zStart), colors[i, j]);
-                    values[baseIndex + 4] = new VertexPositionColor(new Vector3(xStart, segments[i, j + 1], zStart + zDist), colors[i, j + 1]);
-                    values[baseIndex + 5] = new VertexPositionColor(new Vector3(xStart + xDist, segments[i + 1, j + 1], zStart + zDist), colors[i + 1, j + 1]);
+                    values[baseIndex + 3] = new VertexPositionNormalColor(new Vector3(xStart, segments[i, j], zStart), normals[i, j], colors[i, j]);
+                    values[baseIndex + 4] = new VertexPositionNormalColor(new Vector3(xStart, segments[i, j + 1], zStart + zDist), normals[i, j + 1], colors[i, j + 1]);
+                    values[baseIndex + 5] = new VertexPositionNormalColor(new Vector3(xStart + xDist, segments[i + 1, j + 1], zStart + zDist), normals[i + 1, j + 1], colors[i + 1, j + 1]);
                 }
             }
 
@@ -197,7 +196,6 @@ namespace Project1.src.GameLogic
 
             return colors;
         }
-
 
         private Color ColorForScale(float scale)
         {
@@ -227,6 +225,72 @@ namespace Project1.src.GameLogic
                 stepRange = scalePoints[index] - scalePoints[index - 1];
 
             return Color.SmoothStep(colours[index + 1], colours[index], (scalePoints[index] - scale) / stepRange);
+        }
+
+        private Vector3[,] GenerateNormals(float[,] segments)
+        {
+            int nRows = segments.GetLength(0);
+            int nCols = segments.GetLength(1);
+
+            float xDist = xzScale * 2f / (nRows - 1);
+            float zDist = xzScale * 2f / (nCols - 1);
+
+            Vector3[,] xEdgeNormals = new Vector3[nRows - 1, nCols];
+            Vector3[,] zEdgeNormals = new Vector3[nRows, nCols - 1];
+            Vector3[,] vertexNormals = new Vector3[nRows, nCols];
+
+            // Generate edge normals
+            for (int i = 0; i < nRows; i++)
+            {
+                for (int j = 0; j < nCols; j++)
+                {
+                    if (i < nRows - 1)
+                    {
+                        xEdgeNormals[i, j] = Vector3.Cross(Vector3.UnitZ, new Vector3(xDist, segments[i + 1, j] - segments[i, j], 0));
+                        xEdgeNormals[i, j].Normalize();
+                    }
+
+                    if (j < nCols - 1)
+                    {
+                        zEdgeNormals[i, j] = Vector3.Cross(new Vector3(0, segments[i, j + 1] - segments[i, j], zDist), Vector3.UnitX);
+                        zEdgeNormals[i, j].Normalize();
+                    }
+                }
+            }
+
+            // Generate vertex normals
+            for (int i = 0; i < nRows; i++)
+            {
+                for (int j = 0; j < nCols; j++)
+                {
+                    Vector3 xNorm, zNorm;
+
+                    if (i == 0)
+                        xNorm = xEdgeNormals[i, j];
+                    else if (i == nRows - 1)
+                        xNorm = xEdgeNormals[i - 1, j];
+                    else
+                    {
+                        xNorm = xEdgeNormals[i, j] + xEdgeNormals[i - 1, j];
+                        xNorm.Normalize();
+                    }
+
+                    if (j == 0)
+                        zNorm = zEdgeNormals[i, j];
+                    else if (j == nCols - 1)
+                        zNorm = zEdgeNormals[i, j - 1];
+                    else
+                    {
+                        zNorm = zEdgeNormals[i, j] + zEdgeNormals[i, j - 1];
+                        zNorm.Normalize();
+                    }
+
+                    vertexNormals[i, j] = zNorm + xNorm;
+                    vertexNormals[i, j].Y /= 2;
+                }
+            }
+
+            return vertexNormals;
         }
 
         private float Min(float[,] array)

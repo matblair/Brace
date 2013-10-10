@@ -1,6 +1,4 @@
-﻿using Project1;
-using Project1.src.Physics;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 using System;
@@ -9,19 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project1.src
+namespace Brace
 {
-    public class Brace : Game
+    public class BraceGame : Game
     {
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteFont DefaultFont { get; private set; }
-        
-        public InputManager input;
+
+        public InputManager input { get; private set; }
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
+        private bool cameraToggling=false;
         private Actor[] actors;
 
-        public Brace()
+        public BraceGame()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             input = new InputManager(this);
@@ -59,6 +58,22 @@ namespace Project1.src
         {
             // Handle base.Update
             base.Update(gameTime);
+
+            input.Update();
+
+            // Blerrurhhjgsjkdh. Camera toggling with Tab.
+            if (input.KeyboardState.IsKeyDown(SharpDX.Toolkit.Input.Keys.Tab))
+            {
+                if (!cameraToggling)
+                {
+                    Camera.SetViewType((Camera.ViewType)((int)(Camera.CurrentViewType + 1) % Enum.GetNames(typeof(Camera.ViewType)).Length));
+                    cameraToggling = true;
+                }
+            }
+            else
+            {
+                cameraToggling = false;
+            }
 
             foreach (Actor actor in actors)
             {
