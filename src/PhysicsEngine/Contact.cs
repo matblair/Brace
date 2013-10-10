@@ -7,19 +7,34 @@ using System.Threading.Tasks;
 
 namespace Brace.PhysicsEngine
 {
-    class Contact
+    public class Contact
     {
         Vector3 normal;
         float distance;
-        public PhysicsModel target;
-        public PhysicsModel body;
-        
+        public PhysicsBody x;
+        public PhysicsBody y;
 
-        public Contact(PhysicsModel target, PhysicsModel body)
+
+
+        public Contact(SpheresBody target,SpheresBody body,Vector3 direction,float distance)
         {
             // TODO: Complete member initialization
-            this.target = target;
-            this.body = body;
+            this.x = target;
+            this.y = body;
+            normal = direction;
+            this.distance = distance;
+
+        }
+
+        public Contact(TerrainBody target, Vector3 targetPoint, SpheresBody body, Vector3 lowestPoint)
+        {
+            // TODO: Complete member initialization
+            x = target;
+            y = body;
+            normal = targetPoint - lowestPoint;
+            distance = normal.Length();
+            normal = normal / distance;
+
         }
     }
 }

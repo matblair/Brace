@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Brace.PhysicsEngine
 {
-    class SpheresBody : PhysicsBody
+    public class SpheresBody : PhysicsBody
     {
         public Vector3 position;
         public List<Sphere> spheres;
-        SpheresBody(bool type)
+        public SpheresBody(PhysicsModel parent,BodyType type,Vector3 position,List<Sphere> bodyList) : base(type,parent)
         {
             if (type)
             {
@@ -24,6 +24,8 @@ namespace Brace.PhysicsEngine
             {
                 bodyType = BodyType.passive;
             }
+            this.position = position;
+            spheres = bodyList;
         }
     }
 }

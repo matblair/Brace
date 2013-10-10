@@ -59,7 +59,7 @@
     <Compile Include="src\PhysicsEngine\PhysicsModel.cs" />
     <Compile Include="src\PhysicsEngine\Sphere.cs" />
     <Compile Include="src\PhysicsEngine\SpheresBody.cs" />
-    <Compile Include="src\PhysicsEngine\Terrain.cs" />
+    <Compile Include="src\PhysicsEngine\TerrainBody.cs" />
     <Compile Include="src\RenderModel.cs" />
     <Compile Include="src\InputManager.cs" />
     <Compile Include="src\Unit.cs" />

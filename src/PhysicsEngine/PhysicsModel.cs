@@ -14,6 +14,7 @@ namespace Brace.PhysicsEngine
         public Vector3 forces;
         public Vector3 position;
         public Vector3 location;
+        public List<Contact> contacts;
         
     }
 }
