@@ -20,7 +20,7 @@ namespace Brace.GameLogic
   
         Vector3 ITrackable.ViewDirection()
         {
-            return (rot * Vector3.UnitX);
+            return Vector3.UnitX;
         }
 
         Vector3 ITrackable.BodyLocation()

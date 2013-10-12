@@ -63,7 +63,7 @@ namespace Brace
 
                 case (ViewType.Follow):
                     targetLookingAt = tracking.EyeLocation();
-                    targetPosition = targetLookingAt + 3 * Vector3.UnitY - 10 * tracking.ViewDirection();
+                    targetPosition = targetLookingAt + 7 * Vector3.UnitY - 10 * tracking.ViewDirection();
                     targetUp = Vector3.UnitY;
                     break;
 

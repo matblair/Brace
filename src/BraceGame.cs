@@ -50,7 +50,7 @@ namespace Brace
 
             // Load camera and models
             actors = InitializeActors();
-            Camera = new Camera(this, new OriginTrackable()); // Give this an actor
+            Camera = new Camera(this, (Unit)actors[1]); // Give this an actor
 
             base.LoadContent();
         }
@@ -58,7 +58,8 @@ namespace Brace
         private Actor[] InitializeActors()
         {
             var newActors = new Actor[] {
-                new GameLogic.Landscape(this)
+                new GameLogic.Landscape(this),
+                new Unit(Vector3.UnitY*10, Vector3.Zero, Content.Load<Model>("Shaceship"), null)
             };
 
             return newActors;

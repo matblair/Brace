@@ -17,21 +17,32 @@ namespace Brace.PhysicsEngine
             Terrain,
             Sphere
         }
-
+        List<Contact> contacts;
         List<PhysicsModel> bodies;
+        private const int numberOfResolutionIterations = 5;
+
+        public PhysicsEngine()
+        {
+            bodies = new List<PhysicsModel>();
+            contacts = new List<Contact>();
+        }
+        
         public void step(float dt){
             
             CheckForCollisions();
-            ResolveCollisions(dt);
+            ResolveCollisions();
             MoveObjects(dt);
 
         }
 
-        private void ResolveCollisions(float dt)
+        private void ResolveCollisions()
         {
-            ImpulseResolution();
+            for (int i = 0; i < numberOfResolutionIterations; ++i)
+            {
+                ImpulseResolution();
+                PositionalCorrection();
+            }
             ApplyFriction();
-            PositionalCorrection();
         }
 
         private void ApplyFriction()
@@ -84,11 +95,9 @@ namespace Brace.PhysicsEngine
             foreach (PhysicsModel body in bodies)
             {
                 UpdateForces(body, dt);
-                for (int i = 0; i < numIterations; ++i)
-                {
-                    UpdateVelocity(body, dt);
-                    MoveBody(body, dt);
-                }
+                UpdateVelocity(body, dt);
+                MoveBody(body, dt);
+                
               
             }
 
@@ -113,8 +122,7 @@ namespace Brace.PhysicsEngine
             body.velocity = body.velocity + dv * dt;
         }
 
-        List<Contact> contacts;
-        private const int numIterations = 5;
+        
         private void CheckForCollisions()
         {
             contacts.Clear();
