@@ -1,6 +1,7 @@
 ﻿using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
+using SharpDX.Toolkit.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +20,8 @@ namespace Brace
         public Camera Camera { get; private set; }
         private bool cameraToggling=false;
         private Actor[] actors;
-        private BraceGame game;
-        public BraceGame get() 
+        private static BraceGame game;
+        public static BraceGame get() 
         {
             if (game == null)
             {
@@ -71,7 +72,7 @@ namespace Brace
             input.Update();
 
             // Blerrurhhjgsjkdh. Camera toggling with Tab.
-            if (input.KeyboardState.IsKeyDown(SharpDX.Toolkit.Input.Keys.Tab))
+            if (input.keyboardState.IsKeyDown(Keys.Tab))
             {
                 if (!cameraToggling)
                 {

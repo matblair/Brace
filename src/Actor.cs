@@ -12,9 +12,9 @@ namespace Brace
 
     abstract public class Actor
     {
-        private Boolean solid;
-        private Boolean paused;
-        private Boolean visible;
+        protected Boolean solid;
+        protected Boolean paused;
+        protected Boolean visible;
 
         public Vector3 pos { get; private set; }
         public Vector3 rot { get; private set; }
