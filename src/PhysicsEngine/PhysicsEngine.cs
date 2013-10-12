@@ -20,16 +20,63 @@ namespace Brace.PhysicsEngine
 
         List<PhysicsModel> bodies;
         public void step(float dt){
-            MoveObjects(dt);
+            
             CheckForCollisions();
             ResolveCollisions(dt);
+            MoveObjects(dt);
+
         }
 
         private void ResolveCollisions(float dt)
         {
-            throw new NotImplementedException();
+            ImpulseResolution();
+            ApplyFriction();
+            PositionalCorrection();
         }
 
+        private void ApplyFriction()
+        {
+            
+        }
+
+        private void PositionalCorrection()
+        {
+            foreach (Contact contact in contacts)
+            {
+                const float percentageOfIntersection = 0.02f;
+                float movedist = contact.distance*percentageOfIntersection;
+                PhysicsModel body1 = contact.x.parent;
+                PhysicsModel body2 = contact.y.parent;
+                body1.move(contact.normal, movedist);
+                body2.move(contact.normal, -movedist);
+            }
+        }
+
+        private void ImpulseResolution()
+        {
+            foreach (Contact contact in contacts)
+            {
+                PhysicsModel body1 = contact.x.parent;
+                PhysicsModel body2 = contact.y.parent;
+                Vector3 relativeVelBefore = body1.velocity - body2.velocity;
+                float contactVelocity = Vector3.Dot(relativeVelBefore, contact.normal);
+
+                //nothing to solve
+                if (contactVelocity > 0)
+                {
+                    return;
+                }
+                //Get Resutitution
+                float restitution = Math.Min(body1.restitution, body2.restitution);
+                //Get Impulse
+                float impulseScalar = -(1 + restitution) * contactVelocity;
+                impulseScalar /= body1.invmass + body2.invmass;
+
+                //Apply Impulses
+                body1.applyImpulse(contact.normal, impulseScalar);
+                body2.applyImpulse(contact.normal, impulseScalar);
+            }
+        }
 
         private void MoveObjects(float dt)
         {
@@ -37,8 +84,11 @@ namespace Brace.PhysicsEngine
             foreach (PhysicsModel body in bodies)
             {
                 UpdateForces(body, dt);
-                UpdateVelocity(body,dt);
-                MoveBody(body,dt);
+                for (int i = 0; i < numIterations; ++i)
+                {
+                    UpdateVelocity(body, dt);
+                    MoveBody(body, dt);
+                }
               
             }
 
@@ -59,11 +109,12 @@ namespace Brace.PhysicsEngine
         private void UpdateVelocity(PhysicsModel body, float dt)
         {
             Vector3 dv = body.forces * body.invmass;
-            dv = dv*dt;
-            body.velocity = body.velocity + dv;
+            body.forces = Vector3.Zero;
+            body.velocity = body.velocity + dv * dt;
         }
 
         List<Contact> contacts;
+        private const int numIterations = 5;
         private void CheckForCollisions()
         {
             contacts.Clear();

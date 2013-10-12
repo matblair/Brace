@@ -9,8 +9,8 @@ namespace Brace.PhysicsEngine
 {
     public class Contact
     {
-        Vector3 normal;
-        float distance;
+        public Vector3 normal;
+        public float distance;
         public PhysicsBody x;
         public PhysicsBody y;
 

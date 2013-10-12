@@ -19,7 +19,16 @@ namespace Brace
         public Camera Camera { get; private set; }
         private bool cameraToggling=false;
         private Actor[] actors;
+        private BraceGame game;
+        public BraceGame get() 
+        {
+            if (game == null)
+            {
+                game = new BraceGame();
+            }
+            return game;
 
+        }
         public BraceGame()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);

@@ -19,6 +19,7 @@ namespace Brace
         public Vector3 pos { get; private set; }
         public Vector3 rot { get; private set; }
         public Effect basicEffect;
+        public Model model;
 
         public PhysicsModel pObject;
 
