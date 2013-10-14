@@ -9,6 +9,7 @@ using SharpDX.Toolkit.Input;
 namespace Brace.GameLogic
 {
     using SharpDX.Toolkit.Graphics;
+    using Brace.PhysicsEngine;
     class Landscape : Actor
     {
         private Random random = new Random();
@@ -20,11 +21,19 @@ namespace Brace.GameLogic
         public Buffer<VertexPositionNormalColor> vertices;
 
         public Landscape(BraceGame game)
-            : base(Vector3.Zero, Vector3.Zero, null)
+            : base(Vector3.Zero, Vector3.Zero)
         {
             // Generate the terrain and verticies
             segments = GenerateTerrain(10, 10f);
-            
+
+            //build physics object
+            pObject = new PhysicsModel();
+            TerrainBody bodyDef = new TerrainBody(pObject,segments,xzScale);
+            pObject.Initialize(20, 1, Vector3.Zero, Vector3.Zero, bodyDef);
+
+            //add to physics sim
+            BraceGame.get().physicsWorld.AddBody(pObject);
+
             VertexPositionNormalColor[] vertPosColorNormals = GenerateVerticies(segments);
             //throw new Exception();
 
@@ -36,6 +45,8 @@ namespace Brace.GameLogic
             inputLayout = VertexInputLayout.FromBuffer(0, vertices);
             basicEffect = game.Content.Load<Effect>("CelShader");
         }
+
+    
 
         public override void Update(GameTime gameTime)
         {
@@ -69,7 +80,10 @@ namespace Brace.GameLogic
         {
             int nSegments = (int)Math.Pow(2, divisions) + 1;
             float[,] segments = new float[nSegments, nSegments];
-            segments[0, 0] = segments[0, nSegments - 1] = segments[nSegments - 1, 0] = segments[nSegments - 1, nSegments - 1] = 0;
+            segments[0, 0] = random.NextFloat(-heightRange, heightRange);
+            segments[0, nSegments - 1] = random.NextFloat(-heightRange, heightRange);
+            segments[nSegments - 1, 0] = random.NextFloat(-heightRange, heightRange);
+            segments[nSegments - 1, nSegments - 1] = random.NextFloat(-heightRange, heightRange);
 
             int halfStep, stepSize;
             for (stepSize = nSegments - 1; stepSize > 1; stepSize /= 2, heightRange /= 2)

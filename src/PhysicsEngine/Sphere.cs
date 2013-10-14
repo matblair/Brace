@@ -10,7 +10,7 @@ namespace Brace.PhysicsEngine
     {
         public Vector3 position;
         public float radius;
-        Sphere(Vector3 position, float radius)
+        public Sphere(Vector3 position, float radius)
         {
             
             this.position = position;

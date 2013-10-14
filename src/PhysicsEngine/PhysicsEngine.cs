@@ -3,6 +3,7 @@ using SharpDX;
 using SharpDX.Toolkit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 namespace Brace.PhysicsEngine
 {
     
-    class PhysicsEngine
+    public class PhysicsEngine
     {
         enum CollisionType
         {
@@ -20,6 +21,7 @@ namespace Brace.PhysicsEngine
         List<Contact> contacts;
         List<PhysicsModel> bodies;
         private const int numberOfResolutionIterations = 5;
+        private const float gravity= -9.8f;
 
         public PhysicsEngine()
         {
@@ -54,12 +56,12 @@ namespace Brace.PhysicsEngine
         {
             foreach (Contact contact in contacts)
             {
-                const float percentageOfIntersection = 0.02f;
+                const float percentageOfIntersection = 0.2f;
                 float movedist = contact.distance*percentageOfIntersection;
                 PhysicsModel body1 = contact.x.parent;
                 PhysicsModel body2 = contact.y.parent;
-                body1.move(contact.normal, movedist);
-                body2.move(contact.normal, -movedist);
+                body1.Move(contact.normal, movedist);
+                body2.Move(contact.normal, -movedist);
             }
         }
 
@@ -69,11 +71,11 @@ namespace Brace.PhysicsEngine
             {
                 PhysicsModel body1 = contact.x.parent;
                 PhysicsModel body2 = contact.y.parent;
-                Vector3 relativeVelBefore = body1.velocity - body2.velocity;
+                Vector3 relativeVelBefore = body2.velocity - body1.velocity;
                 float contactVelocity = Vector3.Dot(relativeVelBefore, contact.normal);
 
                 //nothing to solve
-                if (contactVelocity > 0)
+                if (contactVelocity < 0)
                 {
                     return;
                 }
@@ -81,11 +83,12 @@ namespace Brace.PhysicsEngine
                 float restitution = Math.Min(body1.restitution, body2.restitution);
                 //Get Impulse
                 float impulseScalar = -(1 + restitution) * contactVelocity;
-                impulseScalar /= body1.invmass + body2.invmass;
+                
 
                 //Apply Impulses
-                body1.applyImpulse(contact.normal, impulseScalar);
-                body2.applyImpulse(contact.normal, impulseScalar);
+
+                body1.ApplyImpulse(-contact.normal, impulseScalar);
+                body2.ApplyImpulse(contact.normal, impulseScalar);
             }
         }
 
@@ -94,6 +97,7 @@ namespace Brace.PhysicsEngine
 
             foreach (PhysicsModel body in bodies)
             {
+                
                 UpdateForces(body, dt);
                 UpdateVelocity(body, dt);
                 MoveBody(body, dt);
@@ -106,20 +110,31 @@ namespace Brace.PhysicsEngine
         private void UpdateForces(PhysicsModel body, float dt)
         {
             //Apply global forces suchas gravity linear damp etc...
+            ApplyGravity(body,dt);
+            ApplyLinearDamp(body, dt);
+        }
+
+        private void ApplyLinearDamp(PhysicsModel body, float dt)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void ApplyGravity(PhysicsModel body, float dt)
+        {
+            body.ApplyImpulse(Vector3.UnitY, dt * (gravity));
         }
 
         private void MoveBody(PhysicsModel body, float dt)
         {
-            
-            Vector3 dist = body.velocity * dt;
-            body.location = body.location + dist;
+
+            body.Move(body.velocity, dt);
         }
 
         private void UpdateVelocity(PhysicsModel body, float dt)
         {
             Vector3 dv = body.forces * body.invmass;
             body.forces = Vector3.Zero;
-            body.velocity = body.velocity + dv * dt;
+            body.ApplyImpulse(dv, dt);
         }
 
         
@@ -130,9 +145,11 @@ namespace Brace.PhysicsEngine
             {
                 body.contacts.Clear();
             }
-            for (int i=0; i<bodies.Count;++i) {
+            int count = 0;
+          
+            for (int i=0; i<bodies.Count-1;++i) {
                 PhysicsModel target = bodies[i];
-                for (int j = i; j < bodies.Count; ++j)
+                for (int j = i+1; j < bodies.Count; ++j)
                 {
                     PhysicsModel body = bodies[j];
                     Contact newContact = CheckCollision(target, body);
@@ -144,6 +161,14 @@ namespace Brace.PhysicsEngine
                     }
                 }
             }
+            Debug.WriteLine("Contacts");
+            foreach (Contact contact in contacts)
+            {
+                
+                Debug.WriteLine(contact.ToString());
+                
+            }
+                        
         }
 
 
@@ -155,11 +180,11 @@ namespace Brace.PhysicsEngine
             bool isTargetTerrain = false;
 
             //ASSUMPTION TERRAIN WON'T COLLIDE WITH OTHER TERRAIN!!!
-            if (target.GetType() == typeof(TerrainBody))
+            if (target.bodyDefinition.bodyType == BodyType.terrain)
             {
                 isTargetTerrain=true;
                 collisionType = CollisionType.Terrain;
-            } else if (body.GetType() == typeof(TerrainBody)) {
+            } else if (body.bodyDefinition.bodyType == BodyType.terrain) {
                 isTargetTerrain=false;
                 collisionType = CollisionType.Terrain;
             } else {
@@ -194,30 +219,26 @@ namespace Brace.PhysicsEngine
         {
             Sphere s = GetLowestSphere(b);
             Vector3 up = a.up;
-            Vector3 lowestPoint = s.position + b.position - (a.up * s.radius);
-            Vector3 targetPoint = GetClosestPoint(a,lowestPoint);
-            Contact result = null;
+            Vector3 lowestPoint = s.position + b.parent.position - (Vector3.UnitY*s.radius);
+            Vector3 targetPoint = a.GetClosestPoint(lowestPoint);
             
+            Contact result = null;
+            Debug.WriteLine("TargetPoint:" + targetPoint.ToString());
+            Debug.WriteLine("LowestPoint:" + lowestPoint.ToString());
             if (BelowPoint(lowestPoint,targetPoint))
             {
-                result = new Contact(a, targetPoint, b,lowestPoint);
+                result = new Contact(a, targetPoint, b, lowestPoint);
             }
 
             return result;
         }
 
-        private Vector3 GetClosestPoint(TerrainBody a, Vector3 lowestPoint)
-        {
-            float[,] segments = a.points;
-            float xzScale = a.xzScale;
-            int i = (int)((0.5f + lowestPoint.X / xzScale / 2) * segments.GetLength(0));
-            int j = (int)((0.5f + lowestPoint.Y / xzScale / 2) * segments.GetLength(1));
-            return new Vector3(i,segments[i, j],j);
-        }
+       
 
         private bool BelowPoint(Vector3 a, Vector3 b)
         {
-            if (a.Y - b.Y > 0)
+            
+            if (a.Y < b.Y)
             {
                 return true;
             }
@@ -240,8 +261,8 @@ namespace Brace.PhysicsEngine
 
         private Contact CheckSphereCollision(SpheresBody x, SpheresBody y)
         {
-            Vector3 aTrans = x.position;
-            Vector3 bTrans = y.position;
+            Vector3 aTrans = x.parent.position;
+            Vector3 bTrans = y.parent.position;
             for (int i = 0; i < x.spheres.Count; ++i)
             {
                 for (int j = 0; j < y.spheres.Count; ++j)
@@ -257,19 +278,23 @@ namespace Brace.PhysicsEngine
                     {
                         float temp = (float)(Math.Sqrt(rad2) - Math.Sqrt(mag2));
                         direction.Normalize();
-                        return new Contact(x,y,direction,temp);
+                        if (direction == Vector3.Zero)
+                        {
+                            direction = Vector3.UnitY;
+                        }
+                        return new Contact(x,y,direction,temp/2);
                     }
                 }
             }
             return null;
         }
 
-        private void AddBody(PhysicsModel obj) 
+        public void AddBody(PhysicsModel obj) 
         {
             bodies.Add(obj);
         }
 
-        private void RemoveBody(PhysicsModel obj)
+        public void RemoveBody(PhysicsModel obj)
         {
             bodies.Remove(obj);
         }

@@ -12,13 +12,18 @@ namespace Brace.PhysicsEngine
 {
     public class SpheresBody : PhysicsBody
     {
-        public Vector3 position;
         public List<Sphere> spheres;
-        public SpheresBody(PhysicsModel parent,BodyType type,Vector3 position,List<Sphere> bodyList) : base(type,parent)
+      
+        public SpheresBody(PhysicsModel model,bool passive) : base(BodyType.passive,model)
         {
-           
-            this.position = position;
-            spheres = bodyList;
+            if(!passive) 
+            {
+                this.bodyType = BodyType.dynamic;
+            }
+            spheres = new List<Sphere>();
+            spheres.Add(new Sphere(Vector3.Zero,1));
         }
+
+
     }
 }

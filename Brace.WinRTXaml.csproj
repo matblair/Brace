@@ -46,6 +46,7 @@
     <Compile Include="src\Actor.cs" />
     <Compile Include="src\GameLogic\Body.cs" />
     <Compile Include="src\GameLogic\Controller.cs" />
+    <Compile Include="src\GameLogic\Cube.cs" />
     <Compile Include="src\GameLogic\Landscape.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -63,7 +64,7 @@
     <Compile Include="src\PhysicsEngine\SpheresBody.cs" />
     <Compile Include="src\PhysicsEngine\TerrainBody.cs" />
     <Compile Include="src\InputManager.cs" />
-    <Compile Include="src\Unit.cs" />
+    <Compile Include="src\Utils\Assets.cs" />
     <Compile Include="src\Utils\PhysicsUtils.cs" />
     <Compile Include="src\Utils\VectorUtils.cs" />
     <Compile Include="src\VertexPositionNormalColor.cs" />
