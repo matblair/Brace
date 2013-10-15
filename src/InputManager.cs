@@ -28,6 +28,7 @@ namespace Brace
         public KeyboardState keyboardState { get; private set; }
         public MouseState mouseState { get; private set; }
         
+
         public InputManager(BraceGame game)
         {
             keys = new KeyboardManager(game);
