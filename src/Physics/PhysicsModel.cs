@@ -52,7 +52,6 @@ namespace Brace.Physics
         }
         public void ApplyImpulse(Vector3 impulse)
         {
-            impulse.Normalize();
             if (bodyDefinition.bodyType == BodyType.dynamic)
             {
                 velocity += (impulse);

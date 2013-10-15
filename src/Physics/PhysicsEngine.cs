@@ -55,11 +55,11 @@ namespace Brace.Physics
                 if (contact.x.bodyType == BodyType.terrain)
                 {
                     PhysicsModel body = contact.y.parent;
-
+                    float friction = Math.Min(contact.x.parent.friction,contact.y.parent.friction);
                     Vector3 normal = contact.normal;
                     Vector3 projection = Vector3.Dot(body.velocity, normal) * normal;
                     Vector3 direction = body.velocity - projection;
-                    body.ApplyImpulse(-direction*body.friction);
+                    body.ApplyImpulse(-direction*friction);
                 }
             }
         }
@@ -123,7 +123,7 @@ namespace Brace.Physics
 
         private void ApplyLinearDamp(PhysicsModel body, float dt)
         {
-            body.ApplyImpulse(-body.velocity*body.linearDamp * dt * body.mass);
+            body.ApplyImpulse(-body.velocity*(body.linearDamp)*dt);
         }
 
         private void ApplyGravity(PhysicsModel body, float dt)
