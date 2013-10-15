@@ -47,6 +47,7 @@
     <Compile Include="src\GameLogic\Body.cs" />
     <Compile Include="src\GameLogic\Controller.cs" />
     <Compile Include="src\GameLogic\Cube.cs" />
+    <Compile Include="src\GameLogic\UnitController.cs" />
     <Compile Include="src\GameLogic\Landscape.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>

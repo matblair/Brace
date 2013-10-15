@@ -26,6 +26,8 @@ namespace Brace
         private bool cameraToggling=false;
         private Actor[] actors;
         private static BraceGame game;
+        private Controller controller;
+
         public Physics.PhysicsEngine physicsWorld;
 
         public static BraceGame get() 
@@ -67,7 +69,7 @@ namespace Brace
             LoadAssets();
             actors = InitializeActors();
             Camera = new Camera(this, (Unit)actors[1]); // Give this an actor
-
+            controller = new UnitController((Unit)actors[1]);
             base.LoadContent();
         }
 
@@ -97,7 +99,7 @@ namespace Brace
         {
             // Handle base.Update
             base.Update(gameTime);
-
+            controller.Update(gameTime);
             input.Update();
 
             // Blerrurhhjgsjkdh. Camera toggling with Tab.
