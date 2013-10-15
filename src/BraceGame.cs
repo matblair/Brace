@@ -28,6 +28,13 @@ namespace Brace
         private static BraceGame game;
         public Physics.PhysicsEngine physicsWorld;
 
+        //Our actors
+        private GameLogic.Landscape landscape;
+        //Rendering stuff
+        private Effect unitShader;
+        private Effect landscapeEffect;
+        private TrackingLight playerLamp;
+
         public static BraceGame get() 
         {
             if (game == null)
@@ -66,8 +73,11 @@ namespace Brace
             // Load camera and models
             LoadAssets();
             actors = InitializeActors();
-            Camera = new Camera(this, (Unit)actors[1]); // Give this an actor
-
+            Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
+            playerLamp = new TrackingLight((Unit)actors[0]);
+            //Load shaders
+            unitShader = Content.Load<Effect>("CelShader");
+            landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
             base.LoadContent();
         }
 
@@ -80,15 +90,15 @@ namespace Brace
         private Actor[] InitializeActors()
         {
             var newActors = new Actor[] {
-                new GameLogic.Landscape(this),
                 //new Unit(Vector3.UnitY*10, Vector3.Zero, Assets.spaceship),
                 new Cube(Vector3.Zero,false),
                 new Cube( Vector3.UnitY*20+Vector3.UnitZ,false),
                 new Cube( Vector3.UnitY*20-Vector3.UnitZ,false),
                 new Cube( Vector3.UnitY*20+Vector3.UnitX,false),
                 new Cube( Vector3.UnitY*20-Vector3.UnitX,false),
+            };
 
-                };
+            landscape = new GameLogic.Landscape(this);
 
             return newActors;
         }
@@ -122,10 +132,30 @@ namespace Brace
             StepPhysicsModel(gameTime);
 
             
-            
+            //Update tracking lights
+            playerLamp.Update(gameTime);
 
-            // Update the camera
+            // Update the camera 
             Camera.Update(gameTime);
+
+            // Now update the shaders
+            //First the unit shader
+            unitShader.Parameters["View"].SetValue(Camera.View);
+            unitShader.Parameters["Projection"].SetValue(Camera.Projection);
+            unitShader.Parameters["cameraPos"].SetValue(Camera.position);
+           
+            //Then the landscape shader
+            landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+            Debug.WriteLine("PLAYER LAMP");
+            Debug.WriteLine(playerLamp.lightPntPos);
+            Debug.WriteLine("OBJ TRACK POS");
+            Unit tracking = (Unit)actors[0];
+            Debug.WriteLine(tracking.EyeLocation());
+
+            landscapeEffect.Parameters["View"].SetValue(Camera.View);
+            landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
+            landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
+
         }
 
         private void StepPhysicsModel(GameTime gameTime)
@@ -137,11 +167,14 @@ namespace Brace
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CadetBlue);
+            GraphicsDevice.Clear(Color.DarkRed);
+            //First draw the landscape
+            landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
 
+            //Then teh actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,null);
             }
 
             // Show FPS
