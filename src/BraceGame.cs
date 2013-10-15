@@ -24,7 +24,7 @@ namespace Brace
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
         private bool cameraToggling=false;
-        private Actor[] actors;
+        private List<Actor> actors;
         private static BraceGame game;
         private Controller controller;
 
@@ -77,6 +77,7 @@ namespace Brace
             actors = InitializeActors();
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
+            Camera.SetViewType(Brace.Camera.ViewType.TopDown);
             controller = new UnitController((Unit)actors[0]);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
@@ -91,16 +92,18 @@ namespace Brace
             Assets.cube = Content.Load<Model>("Cube");
         }
 
-        private Actor[] InitializeActors()
+        private List<Actor> InitializeActors()
         {
-            var newActors = new Actor[] {
-                //new Unit(Vector3.UnitY*10, Vector3.Zero, Assets.spaceship),
-                new Cube(Vector3.Zero,false),
-                new Cube( Vector3.UnitY*20+Vector3.UnitZ,false),
-                new Cube( Vector3.UnitY*20-Vector3.UnitZ,false),
-                new Cube( Vector3.UnitY*20+Vector3.UnitX,false),
-                new Cube( Vector3.UnitY*20-Vector3.UnitX,false),
-            };
+            List<Actor> newActors = new List<Actor>();
+            newActors.Add(new Cube(Vector3.Zero));
+            for (int i = -3; i < 3; ++i)
+            {
+                for (int j = -3; j < 3; ++j)
+                {
+                    newActors.Add(new Cube(new Vector3(i,10,j)));
+                }
+            }
+
 
             landscape = new GameLogic.Landscape(this);
 
@@ -113,21 +116,7 @@ namespace Brace
             base.Update(gameTime);
             controller.Update(gameTime);
             input.Update();
-
-            // Blerrurhhjgsjkdh. Camera toggling with Tab.
-            if (input.keyboardState.IsKeyDown(Keys.Tab))
-            {
-                if (!cameraToggling)
-                {
-                    Camera.SetViewType((Camera.ViewType)((int)(Camera.CurrentViewType + 1) % Enum.GetNames(typeof(Camera.ViewType)).Length));
-                    cameraToggling = true;
-                }
-            }
-            else
-            {
-                cameraToggling = false;
-            }
-
+          
             foreach (Actor actor in actors)
             {
                 actor.Update(gameTime);

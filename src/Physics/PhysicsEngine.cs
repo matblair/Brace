@@ -20,7 +20,7 @@ namespace Brace.Physics
         }
         List<Contact> contacts;
         List<PhysicsModel> bodies;
-        private const int numberOfResolutionIterations = 5;
+        private const int numberOfResolutionIterations = 10;
         private const float gravity= -9.8f;
 
         public PhysicsEngine()

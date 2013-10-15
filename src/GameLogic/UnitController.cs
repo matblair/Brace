@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace Brace.GameLogic
 {
+    /* WARNING
+     * THIS CONTROLLER
+     * IS A HACK
+     * DO NOT IMPLEMENT A CONTROLLER LIKE THIS
+     * I WILL SHOOT YOU
+     * */
     class UnitController : Controller
     {
         public UnitController(Unit target)
@@ -30,11 +36,11 @@ namespace Brace.GameLogic
             }
             if (BraceGame.get().input.WalkingLeft())
             {
-                target.pObject.ApplyImpulse(50*-Vector3.UnitZ* timeInSeconds);
+                target.pObject.ApplyImpulse(50*Vector3.UnitZ* timeInSeconds);
             }
             if (BraceGame.get().input.WalkingRight())
             {
-                target.pObject.ApplyImpulse(50*Vector3.UnitZ* timeInSeconds);
+                target.pObject.ApplyImpulse(50*-Vector3.UnitZ* timeInSeconds);
             }
             if (BraceGame.get().input.LookingDown())
             {

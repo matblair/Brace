@@ -17,8 +17,8 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
+            pObject.Initialize(1, 0f, 0.1f, 0.1f, position, Vector3.Zero, bodyDef);
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
-            pObject.Initialize(1, 0.2f, 0, 0, position, Vector3.Zero, bodyDef);
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
 
@@ -27,7 +27,7 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(1, 0.2f, 0, 0, position, Vector3.Zero, bodyDef);
+            pObject.Initialize(1, 0f, 0.1f, 0.1f, position, Vector3.Zero, bodyDef); 
             BraceGame.get().physicsWorld.AddBody(pObject);
 
             if (passive)
