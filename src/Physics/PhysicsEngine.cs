@@ -263,17 +263,15 @@ namespace Brace.Physics
         {
             Vector3 aTrans = x.parent.position;
             Vector3 bTrans = y.parent.position;
-            for (int i = 0; i < x.spheres.Count; ++i)
+            foreach (Sphere s1 in x.spheres)
             {
-                for (int j = 0; j < y.spheres.Count; ++j)
+                foreach (Sphere s2 in y.spheres)
                 {
-                    Sphere a = x.spheres[i];
-                    Sphere b = y.spheres[j];
-                    Vector3 aLoc = a.position + aTrans;
-                    Vector3 bLoc = b.position + bTrans;
+                    Vector3 aLoc = s1.position + aTrans;
+                    Vector3 bLoc = s2.position + bTrans;
                     Vector3 direction = aLoc - bLoc;
                     double mag2 = VectorUtils.mag2(direction);
-                    double rad2 = (a.radius + b.radius) * (a.radius + b.radius);
+                    double rad2 = (s1.radius + s2.radius) * (s1.radius + s2.radius);
                     if (mag2 < rad2)
                     {
                         float temp = (float)(Math.Sqrt(rad2) - Math.Sqrt(mag2));
