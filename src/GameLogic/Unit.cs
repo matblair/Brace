@@ -1,4 +1,4 @@
-﻿using Brace.PhysicsEngine;
+﻿using Brace.Physics;
 using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
@@ -15,7 +15,7 @@ namespace Brace
         private Model model;
 
     
-        public Unit(Vector3 position, Vector3 rotation, Model model) : base(position,rotation)
+        public Unit(Vector3 position, Vector3 rotation, Model model) : base(position, rotation)
         {
             this.model = model;
         }
@@ -33,7 +33,8 @@ namespace Brace
 
         public Vector3 ViewDirection()
         {
-            return Vector3.UnitX;
+            // Might need to negate rot.X
+            return Vector3.TransformCoordinate(-Vector3.UnitZ, Matrix.RotationAxis(Vector3.UnitY, rot.X));
         }
 
         public Vector3 BodyLocation()

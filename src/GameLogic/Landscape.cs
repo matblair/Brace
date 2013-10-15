@@ -9,11 +9,11 @@ using SharpDX.Toolkit.Input;
 namespace Brace.GameLogic
 {
     using SharpDX.Toolkit.Graphics;
-    using Brace.PhysicsEngine;
+    using Brace.Physics;
     class Landscape : Actor
     {
         private Random random = new Random();
-        private float xzScale = 50;
+        private float xzScale = 200;
 
         // Verticies
         private float[,] segments;

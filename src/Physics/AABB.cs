@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace Brace.PhysicsEngine
+namespace Brace.Physics
 {
     /// <summary>
     /// Summary description for AABB.

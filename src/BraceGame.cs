@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace Brace
 {
+    using Physics;
+
     public class BraceGame : Game
     {
         public GraphicsDeviceManager graphicsDeviceManager;
@@ -24,7 +26,8 @@ namespace Brace
         private bool cameraToggling=false;
         private Actor[] actors;
         private static BraceGame game;
-        public PhysicsEngine.PhysicsEngine physicsWorld;
+        public Physics.PhysicsEngine physicsWorld;
+
         public static BraceGame get() 
         {
             if (game == null)
@@ -34,7 +37,8 @@ namespace Brace
             return game;
 
         }
-        public BraceGame()
+
+        private BraceGame()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             input = new InputManager(this);
@@ -54,9 +58,9 @@ namespace Brace
 
             // Create FPS renderer
             fpsRenderer = new FPSRenderer(this);
-
+            
             // Create PhysicsWorld
-            physicsWorld = new PhysicsEngine.PhysicsEngine();
+            physicsWorld = new PhysicsEngine();
 
 
             // Load camera and models
@@ -69,7 +73,7 @@ namespace Brace
 
         private void LoadAssets()
         {
-            Assets.spaceship = Content.Load<Model>("Shaceship");
+            Assets.spaceship = Content.Load<Model>("Cube");
             Assets.cube = Content.Load<Model>("Cube");
         }
 

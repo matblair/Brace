@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Brace.PhysicsEngine
+namespace Brace.Physics
 {
     
     public class PhysicsEngine
@@ -39,11 +39,11 @@ namespace Brace.PhysicsEngine
 
         private void ResolveCollisions()
         {
-            for (int i = 0; i < numberOfResolutionIterations; ++i)
-            {
+            //for (int i = 0; i < numberOfResolutionIterations; ++i)
+            //{
                 ImpulseResolution();
                 PositionalCorrection();
-            }
+            //}
             ApplyFriction();
         }
 

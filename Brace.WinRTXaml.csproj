@@ -55,14 +55,14 @@
     <Compile Include="src\GameLogic\Unit.cs" />
     <Compile Include="src\ITrackable.cs" />
     <Compile Include="src\OriginTrackable.cs" />
-    <Compile Include="src\PhysicsEngine\AABB.cs" />
-    <Compile Include="src\PhysicsEngine\Contact.cs" />
-    <Compile Include="src\PhysicsEngine\PhysicsBody.cs" />
-    <Compile Include="src\PhysicsEngine\PhysicsEngine.cs" />
-    <Compile Include="src\PhysicsEngine\PhysicsModel.cs" />
-    <Compile Include="src\PhysicsEngine\Sphere.cs" />
-    <Compile Include="src\PhysicsEngine\SpheresBody.cs" />
-    <Compile Include="src\PhysicsEngine\TerrainBody.cs" />
+    <Compile Include="src\Physics\AABB.cs" />
+    <Compile Include="src\Physics\Contact.cs" />
+    <Compile Include="src\Physics\PhysicsBody.cs" />
+    <Compile Include="src\Physics\PhysicsEngine.cs" />
+    <Compile Include="src\Physics\PhysicsModel.cs" />
+    <Compile Include="src\Physics\Sphere.cs" />
+    <Compile Include="src\Physics\SpheresBody.cs" />
+    <Compile Include="src\Physics\TerrainBody.cs" />
     <Compile Include="src\InputManager.cs" />
     <Compile Include="src\Utils\Assets.cs" />
     <Compile Include="src\Utils\PhysicsUtils.cs" />
@@ -75,9 +75,6 @@
     </AppxManifest>
     <ToolkitModel Include="Content\cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ToolkitModel>
-    <ToolkitModel Include="Content\Shaceship.obj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
     <None Include="MiniCube.WinRTXaml_TemporaryKey.pfx" />
   </ItemGroup>

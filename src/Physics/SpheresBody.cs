@@ -1,4 +1,4 @@
-﻿using Brace.PhysicsEngine;
+﻿using Brace.Physics;
 using Brace.Utils;
 
 using SharpDX;
@@ -8,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Brace.PhysicsEngine
+namespace Brace.Physics
 {
     public class SpheresBody : PhysicsBody
     {
         public List<Sphere> spheres;
       
-        public SpheresBody(PhysicsModel model,bool passive) : base(BodyType.passive,model)
+        public SpheresBody(PhysicsModel model, bool passive) : base(BodyType.stationary, model)
         {
             if(!passive) 
             {

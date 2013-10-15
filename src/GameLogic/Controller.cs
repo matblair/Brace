@@ -9,6 +9,6 @@ namespace Brace.GameLogic
     public abstract class Controller
     {
         Unit target;
-        public abstract void update(GameTime dt);
+        public abstract void Update(GameTime dt);
     }
 }

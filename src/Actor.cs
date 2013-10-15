@@ -8,7 +8,7 @@ using SharpDX.Toolkit;
 namespace Brace
 {
     using SharpDX.Toolkit.Graphics;
-    using Brace.PhysicsEngine;
+    using Brace.Physics;
 
     abstract public class Actor
     {

@@ -1,4 +1,4 @@
-﻿using Brace.PhysicsEngine;
+﻿using Brace.Physics;
 using Brace.Utils;
 using SharpDX;
 using SharpDX.Toolkit;
@@ -19,21 +19,23 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
+
+            pObject.bodyDefinition.bodyType = BodyType.dynamic;
             pObject.Initialize(1, 1, position, Vector3.Zero, bodyDef);
             BraceGame.get().physicsWorld.AddBody(pObject);
-            
-
         }
-        public Cube(Vector3 position,bool passive)
+
+        public Cube(Vector3 position, bool passive)
             : base(position, Vector3.Zero, Assets.cube)
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
             pObject.Initialize(1, 0.1f, position, Vector3.Zero, bodyDef);
             BraceGame.get().physicsWorld.AddBody(pObject);
+
             if (passive)
             {
-                pObject.bodyDefinition.bodyType = BodyType.passive;
+                pObject.bodyDefinition.bodyType = BodyType.stationary;
             }
             else
             {
