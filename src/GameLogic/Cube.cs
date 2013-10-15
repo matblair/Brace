@@ -13,15 +13,12 @@ namespace Brace.GameLogic
 {
     class Cube : Unit
     {
-        private Model model;
-
         public Cube(Vector3 position) : base(position, Vector3.Zero, Assets.cube)
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-
+            pObject.Initialize(1, 0f, 0.1f, 0.1f, position, Vector3.Zero, bodyDef);
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
-            pObject.Initialize(1, 1, position, Vector3.Zero, bodyDef);
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
 
@@ -30,7 +27,7 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(1, 0.1f, position, Vector3.Zero, bodyDef);
+            pObject.Initialize(1, 0f, 0.1f, 0.1f, position, Vector3.Zero, bodyDef); 
             BraceGame.get().physicsWorld.AddBody(pObject);
 
             if (passive)
