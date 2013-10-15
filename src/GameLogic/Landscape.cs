@@ -13,7 +13,7 @@ namespace Brace.GameLogic
     class Landscape : Actor
     {
         private Random random = new Random();
-        private float xzScale = 20;
+        private float xzScale = 100;
 
         // Verticies
         private float[,] segments;
@@ -24,7 +24,7 @@ namespace Brace.GameLogic
             : base(Vector3.Zero, Vector3.Zero)
         {
             // Generate the terrain and verticies
-            segments = GenerateTerrain(10, 10f);
+            segments = GenerateTerrain(9, 10f);
 
             //build physics object
             pObject = new PhysicsModel();

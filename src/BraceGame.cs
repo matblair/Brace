@@ -101,11 +101,19 @@ namespace Brace
             input.Update();
 
             // Blerrurhhjgsjkdh. Camera toggling with Tab.
-            if (input.keyboardState.IsKeyDown(Keys.Tab))
-            {
+            if(input.toggleCamera()) {
                 if (!cameraToggling)
                 {
                     Camera.SetViewType((Camera.ViewType)((int)(Camera.CurrentViewType + 1) % Enum.GetNames(typeof(Camera.ViewType)).Length));
+                    cameraToggling = true;
+                }
+            }
+            else if (input.toggleCameraReverse())
+            {
+                if (!cameraToggling)
+                {
+                    int numberOfViews = Enum.GetNames(typeof(Camera.ViewType)).Length;
+                    Camera.SetViewType((Camera.ViewType)((int)(Camera.CurrentViewType + numberOfViews - 1) % numberOfViews));
                     cameraToggling = true;
                 }
             }
