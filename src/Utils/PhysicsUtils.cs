@@ -10,7 +10,7 @@ namespace Brace.Utils
     {
         terrain,
         dynamic,
-        passive
+        stationary
     }
     class PhysicsUtils
     {
