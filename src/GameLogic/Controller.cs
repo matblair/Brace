@@ -8,7 +8,10 @@ namespace Brace.GameLogic
 {
     public abstract class Controller
     {
-        Unit target;
+        public Controller(Unit target) {
+            this.target = target;
+        }
+        protected Unit target;
         public abstract void Update(GameTime dt);
     }
 }

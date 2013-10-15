@@ -20,7 +20,7 @@ namespace Brace.Physics
         }
         List<Contact> contacts;
         List<PhysicsModel> bodies;
-        private const int numberOfResolutionIterations = 5;
+        private const int numberOfResolutionIterations = 10;
         private const float gravity= -9.8f;
 
         public PhysicsEngine()
@@ -49,7 +49,19 @@ namespace Brace.Physics
 
         private void ApplyFriction()
         {
-            
+            foreach (Contact contact in contacts)
+            {
+                //all terrain contacts have terrain as contact.x
+                if (contact.x.bodyType == BodyType.terrain)
+                {
+                    PhysicsModel body = contact.y.parent;
+                    float friction = Math.Min(contact.x.parent.friction,contact.y.parent.friction);
+                    Vector3 normal = contact.normal;
+                    Vector3 projection = Vector3.Dot(body.velocity, normal) * normal;
+                    Vector3 direction = body.velocity - projection;
+                    body.ApplyImpulse(-direction*friction);
+                }
+            }
         }
 
         private void PositionalCorrection()
@@ -60,8 +72,8 @@ namespace Brace.Physics
                 float movedist = contact.distance*percentageOfIntersection;
                 PhysicsModel body1 = contact.x.parent;
                 PhysicsModel body2 = contact.y.parent;
-                body1.Move(contact.normal, movedist);
-                body2.Move(contact.normal, -movedist);
+                body1.Move(contact.normal*movedist);
+                body2.Move(contact.normal*-movedist);
             }
         }
 
@@ -87,54 +99,49 @@ namespace Brace.Physics
 
                 //Apply Impulses
 
-                body1.ApplyImpulse(-contact.normal, impulseScalar);
-                body2.ApplyImpulse(contact.normal, impulseScalar);
+                body1.ApplyImpulse(-contact.normal*impulseScalar);
+                body2.ApplyImpulse(contact.normal*impulseScalar);
             }
         }
 
         private void MoveObjects(float dt)
         {
-
             foreach (PhysicsModel body in bodies)
             {
-                
                 UpdateForces(body, dt);
                 UpdateVelocity(body, dt);
                 MoveBody(body, dt);
-                
-              
             }
-
         }
 
         private void UpdateForces(PhysicsModel body, float dt)
         {
             //Apply global forces suchas gravity linear damp etc...
-            ApplyGravity(body,dt);
+            ApplyGravity(body, dt);
             ApplyLinearDamp(body, dt);
         }
 
         private void ApplyLinearDamp(PhysicsModel body, float dt)
         {
-            //throw new NotImplementedException();
+            body.ApplyImpulse(-body.velocity*(body.linearDamp)*dt);
         }
 
         private void ApplyGravity(PhysicsModel body, float dt)
         {
-            body.ApplyImpulse(Vector3.UnitY, dt * (gravity));
+            body.ApplyImpulse(Vector3.UnitY*dt * (gravity));
         }
 
         private void MoveBody(PhysicsModel body, float dt)
         {
 
-            body.Move(body.velocity, dt);
+            body.Move(body.velocity*dt);
         }
 
         private void UpdateVelocity(PhysicsModel body, float dt)
         {
             Vector3 dv = body.forces * body.invmass;
             body.forces = Vector3.Zero;
-            body.ApplyImpulse(dv, dt);
+            body.ApplyImpulse(dv*dt);
         }
 
         

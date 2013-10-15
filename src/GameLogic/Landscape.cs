@@ -28,7 +28,7 @@ namespace Brace.GameLogic
             //build physics object
             pObject = new PhysicsModel();
             TerrainBody bodyDef = new TerrainBody(pObject,segments,xzScale);
-            pObject.Initialize(20, 1, Vector3.Zero, Vector3.Zero, bodyDef);
+            pObject.Initialize(20, 1,1, 1, Vector3.Zero, Vector3.Zero, bodyDef);
 
             //add to physics sim
             BraceGame.get().physicsWorld.AddBody(pObject);

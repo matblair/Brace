@@ -14,6 +14,7 @@ namespace Brace.Physics
         public float[,] points;
         public float xzScale;
         public Vector3 up;
+        
         public TerrainBody(PhysicsModel parent,float[,] points, float xzScale) : base(BodyType.terrain, parent)
         {
             bodyType = BodyType.terrain;
