@@ -25,10 +25,10 @@ namespace Brace
 
         }
 
-        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection)
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
         {
             Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
-            model.Draw(context, world, view, projection, basicEffect);
+            model.Draw(context, world, view, projection, effect);
         }
 
         public Vector3 ViewDirection()

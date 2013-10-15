@@ -18,7 +18,6 @@ namespace Brace
 
         public Vector3 pos { get; set; }
         public Vector3 rot { get; set; }
-        public Effect basicEffect;
 
         public PhysicsModel pObject;
 
@@ -32,6 +31,6 @@ namespace Brace
         }
     
         public abstract void Update(GameTime gametime);
-        public abstract void Draw(GraphicsDevice context, Matrix view, Matrix projection);
+        public abstract void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect);
     }
 }

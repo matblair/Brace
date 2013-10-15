@@ -19,7 +19,6 @@ namespace Brace.GameLogic
         private float[,] segments;
         public VertexInputLayout inputLayout;
         public Buffer<VertexPositionNormalColor> vertices;
-
         public Landscape(BraceGame game)
             : base(Vector3.Zero, Vector3.Zero)
         {
@@ -43,29 +42,25 @@ namespace Brace.GameLogic
                 vertPosColorNormals);
 
             inputLayout = VertexInputLayout.FromBuffer(0, vertices);
-            basicEffect = game.Content.Load<Effect>("CelShader");
         }
 
     
 
         public override void Update(GameTime gameTime)
         {
-            Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
-            basicEffect.Parameters["World"].SetValue(world);
-            basicEffect.Parameters["worldInvTrp"].SetValue(Matrix.Transpose(Matrix.Invert(world)));
         }
 
-        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection)
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
         {
             // Setup the vertices
             context.SetVertexBuffer(vertices);
             context.SetVertexInputLayout(inputLayout);
 
-            // Apply the basic effect technique and draw the rotating cube
-            basicEffect.Parameters["View"].SetValue(view);
-            basicEffect.Parameters["Projection"].SetValue(projection);
-            basicEffect.Parameters["cameraPos"].SetValue(new Vector3(0, 40, 0));
-            basicEffect.CurrentTechnique.Passes[0].Apply();
+            Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
+            effect.Parameters["World"].SetValue(world);
+            effect.Parameters["worldInvTrp"].SetValue(Matrix.Transpose(Matrix.Invert(world)));
+            effect.CurrentTechnique.Passes[0].Apply();
+
             context.Draw(PrimitiveType.TriangleList, vertices.ElementCount);
         }
 
@@ -185,7 +180,7 @@ namespace Brace.GameLogic
                     values[baseIndex + 5] = new VertexPositionNormalColor(new Vector3(xStart + xDist, segments[i + 1, j + 1], zStart + zDist), normals[i + 1, j + 1], colors[i + 1, j + 1]);
                 }
             }
-
+            
             return values;
         }
 
@@ -216,14 +211,14 @@ namespace Brace.GameLogic
             // num
             float[] scalePoints = new float[7] { 0.37f, 0.4f, 0.45f, 0.7f, 0.75f, 0.8f, 1.0f };
             Color[] colours = new Color[8] {
-                Color.DarkBlue,
-                Color.Blue,
-                Color.Yellow,
+                Color.Khaki,
+                Color.Beige,
+                Color.Khaki,
+                Color.DarkKhaki,
+                Color.LawnGreen,
+                Color.ForestGreen,
                 Color.Green,
-                Color.DarkGreen,
-                Color.DarkGray,
-                Color.Gray,
-                Color.White
+                Color.LimeGreen
             };
 
             // Find where the scale is in the scalePoints array

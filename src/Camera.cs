@@ -24,7 +24,8 @@ namespace Brace
 
         // Vectors related to View
         private Vector3 targetPosition, targetLookingAt, targetUp;
-        private Vector3 position, lookingAt, up;
+        private Vector3 lookingAt, up;
+        public Vector3 position { get; private set; }
 
         // View and proj matricies
         public Matrix View { get; private set; }
@@ -36,7 +37,7 @@ namespace Brace
             this.game = game;
 
             // View setup
-            Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 100.0f);
+            Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 500.0f);
             SetTarget(track);
             SetViewType(ViewType.Follow);
         }
@@ -57,7 +58,7 @@ namespace Brace
 
                 case (ViewType.TopDown):
                     targetLookingAt = tracking.EyeLocation();
-                    targetPosition = targetLookingAt + 30 * Vector3.UnitY;
+                    targetPosition = targetLookingAt + 150 * Vector3.UnitY;
                     targetUp = Vector3.UnitX;
                     break;
 
