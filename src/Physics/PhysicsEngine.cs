@@ -39,11 +39,11 @@ namespace Brace.Physics
 
         private void ResolveCollisions()
         {
-            //for (int i = 0; i < numberOfResolutionIterations; ++i)
-            //{
+            for (int i = 0; i < numberOfResolutionIterations; ++i)
+            {
                 ImpulseResolution();
                 PositionalCorrection();
-            //}
+            }
             ApplyFriction();
         }
 
@@ -161,13 +161,7 @@ namespace Brace.Physics
                     }
                 }
             }
-            Debug.WriteLine("Contacts");
-            foreach (Contact contact in contacts)
-            {
-                
-                Debug.WriteLine(contact.ToString());
-                
-            }
+         
                         
         }
 
@@ -223,8 +217,6 @@ namespace Brace.Physics
             Vector3 targetPoint = a.GetClosestPoint(lowestPoint);
             
             Contact result = null;
-            Debug.WriteLine("TargetPoint:" + targetPoint.ToString());
-            Debug.WriteLine("LowestPoint:" + lowestPoint.ToString());
             if (BelowPoint(lowestPoint,targetPoint))
             {
                 result = new Contact(a, targetPoint, b, lowestPoint);

@@ -13,7 +13,7 @@ namespace Brace.GameLogic
     class Landscape : Actor
     {
         private Random random = new Random();
-        private float xzScale = 200;
+        private float xzScale = 20;
 
         // Verticies
         private float[,] segments;
