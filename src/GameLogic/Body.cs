@@ -1,4 +1,4 @@
-﻿using Brace.PhysicsEngine;
+﻿using Brace.Physics;
 using SharpDX;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Input;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Brace.GameLogic
 {
-    class Body : Actor
+    public class Body : Unit 
     {
         MouseState previousMouseState;
         MouseState currentMouseState;
@@ -18,20 +18,26 @@ namespace Brace.GameLogic
         float prevTime=0;
         float movementSpeed = 5;
 
-        Body(Vector3 position, Vector3 rotation, PhysicsModel pObject)
-            : base(position, rotation, pObject)
-        {
 
+        public Body(Vector3 position, Vector3 rotation) : base(position,rotation,null)
+        {
+            solid = false;
+            visible = false;
+            BraceGame.get().Camera.SetTarget(this);
+            BraceGame.get().Camera.SetViewType(Camera.ViewType.FirstPerson);
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            
+
+            
         }
 
         public override void Draw(SharpDX.Toolkit.Graphics.GraphicsDevice context, Matrix view, Matrix projection)
         {
-            throw new NotImplementedException();
         }
+
+
     }
 }

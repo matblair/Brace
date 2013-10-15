@@ -33,7 +33,7 @@ namespace Brace
         public MainPage()
         {
             InitializeComponent();
-            game = new BraceGame();
+            game = BraceGame.get();
             game.Run(this);
         }
     }
