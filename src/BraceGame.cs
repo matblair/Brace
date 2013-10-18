@@ -26,7 +26,6 @@ namespace Brace
         private bool cameraToggling=false;
         private List<Actor> actors;
         private static BraceGame game;
-        private Controller controller;
 
         public Physics.PhysicsEngine physicsWorld;
 
@@ -77,8 +76,7 @@ namespace Brace
             actors = InitializeActors();
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
-            Camera.SetViewType(Brace.Camera.ViewType.TopDown);
-            controller = new UnitController((Unit)actors[0]);
+            Camera.SetViewType(Brace.Camera.ViewType.Follow);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
             unitShader = Content.Load<Effect>("CelShader");
@@ -114,12 +112,19 @@ namespace Brace
         {
             // Handle base.Update
             base.Update(gameTime);
-            controller.Update(gameTime);
             input.Update();
 
             foreach (Actor actor in actors)
             {
-                actor.Update(gameTime);
+                if (actor.doomed)
+                {
+                    actors.Remove(actor);
+                }
+                else
+                {
+                    actor.Update(gameTime);
+                }
+                
             }
 
             StepPhysicsModel(gameTime);

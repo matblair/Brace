@@ -152,7 +152,6 @@ namespace Brace.Physics
             {
                 body.contacts.Clear();
             }
-            int count = 0;
           
             for (int i=0; i<bodies.Count-1;++i) {
                 PhysicsModel target = bodies[i];

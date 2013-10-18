@@ -15,15 +15,14 @@ namespace Brace
         protected Boolean solid;
         protected Boolean paused;
         protected Boolean visible;
-
-        public Vector3 pos { get; set; }
+        public Boolean doomed;
+        public Vector3 position { get; set; }
         public Vector3 rot { get; set; }
 
-        public PhysicsModel pObject;
 
         public Actor(Vector3 position, Vector3 rotation)
         {
-            this.pos = position;
+            this.position = position;
             this.rot = rotation;
             solid = true;
             paused = true;
@@ -32,5 +31,6 @@ namespace Brace
     
         public abstract void Update(GameTime gametime);
         public abstract void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect);
+        
     }
 }

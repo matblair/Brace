@@ -12,6 +12,6 @@ namespace Brace.GameLogic
             this.target = target;
         }
         protected Unit target;
-        public abstract void Update(GameTime dt);
+        public abstract void Update();
     }
 }
