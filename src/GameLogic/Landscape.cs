@@ -28,7 +28,7 @@ namespace Brace.GameLogic
             //build physics object
             pObject = new PhysicsModel();
             TerrainBody bodyDef = new TerrainBody(pObject,segments,xzScale);
-            pObject.Initialize(20, 1,1, 1, Vector3.Zero, Vector3.Zero, bodyDef);
+            pObject.Initialize(20, 1,1, 1, Vector3.Zero, Vector3.Zero, bodyDef,null);
 
             //add to physics sim
             BraceGame.get().physicsWorld.AddBody(pObject);
@@ -56,7 +56,7 @@ namespace Brace.GameLogic
             context.SetVertexBuffer(vertices);
             context.SetVertexInputLayout(inputLayout);
 
-            Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
+            Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(position);
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["worldInvTrp"].SetValue(Matrix.Transpose(Matrix.Invert(world)));
             effect.CurrentTechnique.Passes[0].Apply();

@@ -8,26 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Brace
+namespace Brace.GameLogic
 {
-    public class Unit : Actor, ITrackable
+    abstract public class Unit : Actor, ITrackable
     {
         private Model model;
 
-    
+
         public Unit(Vector3 position, Vector3 rotation, Model model) : base(position, rotation)
         {
             this.model = model;
+            InitializePhysicsObject();
         }
 
-        public override void Update(GameTime gameTime)
-        {
+        public abstract override void Update(GameTime gametime);
+        protected abstract void InitializePhysicsObject();
 
-        }
+
 
         public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
         {
-            Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(pos);
+            Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(position);
             model.Draw(context, world, view, projection, effect);
         }
 
@@ -39,12 +40,14 @@ namespace Brace
 
         public Vector3 BodyLocation()
         {
-            return pos;
+            return position;
         }
 
         public Vector3 EyeLocation()
         {
-            return pos;
+            return position;
         }
+
+        
     }
 }

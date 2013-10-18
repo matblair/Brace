@@ -15,19 +15,20 @@ namespace Brace.GameLogic
     {
         public Cube(Vector3 position) : base(position, Vector3.Zero, Assets.cube)
         {
+            
+        }
+        protected override void InitializePhysicsObject() {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(1, 0f, 0.1f, 0.1f, position, Vector3.Zero, bodyDef);
+            pObject.Initialize(1, 1, 0.2f, 0.2f, position, Vector3.Zero, bodyDef,this);
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
-
         public Cube(Vector3 position, bool passive)
             : base(position, Vector3.Zero, Assets.cube)
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(1, 0f, 0.1f, 0.1f, position, Vector3.Zero, bodyDef); 
             BraceGame.get().physicsWorld.AddBody(pObject);
 
             if (passive)
@@ -44,7 +45,7 @@ namespace Brace.GameLogic
         public override void Update(GameTime gameTime)
         {
 
-            this.pos = pObject.position;
+            this.position = pObject.position;
 
             
         }
