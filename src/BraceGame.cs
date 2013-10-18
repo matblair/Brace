@@ -24,9 +24,18 @@ namespace Brace
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
         private bool cameraToggling=false;
-        private Actor[] actors;
+        private List<Actor> actors;
         private static BraceGame game;
+        private Controller controller;
+
         public Physics.PhysicsEngine physicsWorld;
+
+        //Our actors
+        private GameLogic.Landscape landscape;
+        //Rendering stuff
+        private Effect unitShader;
+        private Effect landscapeEffect;
+        private TrackingLight playerLamp;
 
         public static BraceGame get() 
         {
@@ -66,8 +75,14 @@ namespace Brace
             // Load camera and models
             LoadAssets();
             actors = InitializeActors();
-            Camera = new Camera(this, (Unit)actors[1]); // Give this an actor
 
+            Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
+            Camera.SetViewType(Brace.Camera.ViewType.TopDown);
+            controller = new UnitController((Unit)actors[0]);
+            playerLamp = new TrackingLight((Unit)actors[0]);
+            //Load shaders
+            unitShader = Content.Load<Effect>("CelShader");
+            landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
             base.LoadContent();
         }
 
@@ -77,18 +92,20 @@ namespace Brace
             Assets.cube = Content.Load<Model>("Cube");
         }
 
-        private Actor[] InitializeActors()
+        private List<Actor> InitializeActors()
         {
-            var newActors = new Actor[] {
-                new GameLogic.Landscape(this),
-                //new Unit(Vector3.UnitY*10, Vector3.Zero, Assets.spaceship),
-                new Cube(Vector3.Zero,false),
-                new Cube( Vector3.UnitY*20+Vector3.UnitZ,false),
-                new Cube( Vector3.UnitY*20-Vector3.UnitZ,false),
-                new Cube( Vector3.UnitY*20+Vector3.UnitX,false),
-                new Cube( Vector3.UnitY*20-Vector3.UnitX,false),
+            List<Actor> newActors = new List<Actor>();
+            newActors.Add(new Cube(Vector3.Zero));
+            for (int i = -3; i < 3; ++i)
+            {
+                for (int j = -3; j < 3; ++j)
+                {
+                    newActors.Add(new Cube(new Vector3(i,10,j)));
+                }
+            }
 
-                };
+
+            landscape = new GameLogic.Landscape(this);
 
             return newActors;
         }
@@ -97,30 +114,8 @@ namespace Brace
         {
             // Handle base.Update
             base.Update(gameTime);
-
+            controller.Update(gameTime);
             input.Update();
-
-            // Blerrurhhjgsjkdh. Camera toggling with Tab.
-            if(input.toggleCamera()) {
-                if (!cameraToggling)
-                {
-                    Camera.SetViewType((Camera.ViewType)((int)(Camera.CurrentViewType + 1) % Enum.GetNames(typeof(Camera.ViewType)).Length));
-                    cameraToggling = true;
-                }
-            }
-            else if (input.toggleCameraReverse())
-            {
-                if (!cameraToggling)
-                {
-                    int numberOfViews = Enum.GetNames(typeof(Camera.ViewType)).Length;
-                    Camera.SetViewType((Camera.ViewType)((int)(Camera.CurrentViewType + numberOfViews - 1) % numberOfViews));
-                    cameraToggling = true;
-                }
-            }
-            else
-            {
-                cameraToggling = false;
-            }
 
             foreach (Actor actor in actors)
             {
@@ -130,10 +125,30 @@ namespace Brace
             StepPhysicsModel(gameTime);
 
             
-            
+            //Update tracking lights
+            playerLamp.Update(gameTime);
 
-            // Update the camera
+            // Update the camera 
             Camera.Update(gameTime);
+
+            // Now update the shaders
+            //First the unit shader
+            unitShader.Parameters["View"].SetValue(Camera.View);
+            unitShader.Parameters["Projection"].SetValue(Camera.Projection);
+            unitShader.Parameters["cameraPos"].SetValue(Camera.position);
+           
+            //Then the landscape shader
+            landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+            Debug.WriteLine("PLAYER LAMP");
+            Debug.WriteLine(playerLamp.lightPntPos);
+            Debug.WriteLine("OBJ TRACK POS");
+            Unit tracking = (Unit)actors[0];
+            Debug.WriteLine(tracking.EyeLocation());
+
+            landscapeEffect.Parameters["View"].SetValue(Camera.View);
+            landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
+            landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
+
         }
 
         private void StepPhysicsModel(GameTime gameTime)
@@ -145,11 +160,14 @@ namespace Brace
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CadetBlue);
+            GraphicsDevice.Clear(Color.DarkRed);
+            //First draw the landscape
+            landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
 
+            //Then teh actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,null);
             }
 
             // Show FPS

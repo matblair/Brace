@@ -101,8 +101,5 @@ namespace Brace
             // False until I implement the gestures
             return false;
         }
-
-
-
     }
 }
