@@ -12,6 +12,8 @@ namespace Brace.GameLogic
     using Brace.Physics;
     class Landscape : Actor
     {
+        public PhysicsModel pObject;
+
         private Random random = new Random();
         private float xzScale = 200;
 

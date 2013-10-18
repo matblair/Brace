@@ -13,6 +13,7 @@ namespace Brace.GameLogic
     abstract public class Unit : Actor, ITrackable
     {
         private Model model;
+        public PhysicsModel pObject;
 
 
         public Unit(Vector3 position, Vector3 rotation, Model model) : base(position, rotation)
@@ -24,6 +25,10 @@ namespace Brace.GameLogic
         public abstract override void Update(GameTime gametime);
         protected abstract void InitializePhysicsObject();
 
+        public void DestroyPhysicsObject()
+        {
+            BraceGame.get().physicsWorld.RemoveBody(pObject);
+        }
 
 
         public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)

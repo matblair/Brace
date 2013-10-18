@@ -19,7 +19,6 @@ namespace Brace
         public Vector3 position { get; set; }
         public Vector3 rot { get; set; }
 
-        public PhysicsModel pObject;
 
         public Actor(Vector3 position, Vector3 rotation)
         {
