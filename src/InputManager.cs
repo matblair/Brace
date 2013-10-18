@@ -96,11 +96,12 @@ namespace Brace
             return keyboardState.IsKeyDown(toggleCameraKey) && keyboardState.IsKeyDown(shiftKey);
         }
 
-        public bool attacked()
+        public bool isAttacking()
         {
             // False until I implement the gestures
             return false;
         }
+
 
 
     }
