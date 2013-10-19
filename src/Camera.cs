@@ -13,7 +13,7 @@ namespace Brace
     {
         // General useful things
         private BraceGame game;
-        private static float MOVE_SPEED=60f, PAN_SPEED=10f, ORIENTATION_SPEED=0.5f;
+        private static float MOVE_SPEED=60f, PAN_SPEED=30f, ORIENTATION_SPEED=0.5f;
 
         // Support for different view types
         public enum ViewType { FirstPerson, TopDown, Follow };
@@ -80,8 +80,7 @@ namespace Brace
             }
             else
             {
-                posDir.Normalize();
-                position += posDir * MOVE_SPEED * delta / 1000f;
+                position += posDir / posDir.Length() * (float)Math.Log(posDir.Length() + 1) * MOVE_SPEED * delta / 1000f;
             }
 
             Vector3 lookDir = targetLookingAt - lookingAt;
@@ -91,8 +90,7 @@ namespace Brace
             }
             else
             {
-                lookDir.Normalize();
-                lookingAt += lookDir * PAN_SPEED * delta / 1000f;
+                lookingAt += lookDir * lookDir.Length() * delta / 1000f;
             }
 
             Vector3 upDir = targetUp - up;
