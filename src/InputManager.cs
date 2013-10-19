@@ -19,7 +19,9 @@ namespace Brace
         private MouseManager mouse;
         private Accelerometer accelerometer;
         private GestureRecognizer gestureRecogniser;
+
         private CoreWindow window;
+        private Camera camera;
 
         private Keys lookLeftKey = Keys.Left;
         private Keys lookDownKey = Keys.Down;
@@ -35,15 +37,16 @@ namespace Brace
         public KeyboardState keyboardState { get; private set; }
         public MouseState mouseState { get; private set; }
 
-        private int taps;
-        private readonly int playerBoundBox = 50;
+        private readonly int playerBoundBox = 100;
 
         private bool isAiming;
+        private Vector2 aimDirection;
         private bool spinAttack;
-        private bool slashing;
 
         public InputManager(BraceGame game)
         {
+            camera = game.Camera;
+
             // Initialise the mouse and keyboard
             keys = new KeyboardManager(game);
             mouse = new MouseManager(game);
@@ -82,6 +85,16 @@ namespace Brace
 
         public void Update()
         {
+            // TODO REMOVE THIS WHEN BETTER SOLUTION IS IMPLEMENTED
+            if (camera == null)
+            {
+                camera = BraceGame.get().Camera;
+            }
+            if (camera.CurrentViewType != Camera.ViewType.TopDown)
+            {
+                camera.SetViewType(Camera.ViewType.TopDown);
+            }
+
             keyboardState = keys.GetState();
             mouseState = mouse.GetState();
         }
@@ -95,13 +108,7 @@ namespace Brace
 
         public Vector2 shotDirection()
         {
-            Vector2 v = new Vector2(0, 0);
-            return v;
-        }
-
-        public bool performSpinAttack()
-        {
-            return spinAttack;
+            return aimDirection;
         }
 
         public bool isMoving()
@@ -115,74 +122,110 @@ namespace Brace
             return v;
         }
 
-        // 2d stuff
-        public bool performSlashAttack()
-        {
-            return slashing;
-        }
-
-        
+       
 
         // Gesture events
         void OnTapped(object sender, TappedEventArgs e)
         {
-            //Debug.WriteLine("Tapped event");
+            Debug.WriteLine("Tapped event");
         }
 
         void OnHolding(object sender, HoldingEventArgs e)
         {
-            //Debug.WriteLine("Holding event");
-            BraceGame game = BraceGame.get();
-            double h = window.Bounds.Height;
-            double w = window.Bounds.Width;
-            double x = e.Position.X;
-            double y = e.Position.Y;
-            double halfOfBoundingBox = playerBoundBox / 2;
-            if (x < w / 2 - halfOfBoundingBox && x > w / 2 + halfOfBoundingBox)
-            {
-                
-                if (y < h / 2 - halfOfBoundingBox && y > h / 2 + halfOfBoundingBox)
-                {
-                    isAiming = true;
-                    //Debug.WriteLine("IS AIMING!!!");
-                }
-            }
+            Debug.WriteLine("Holding event");
+            return;
         }
 
         void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
         {
-            //Debug.WriteLine("Manipulation started");
+            Debug.WriteLine("Manipulation started");
         }
 
         void OnManipulationUpdated(object sender, ManipulationUpdatedEventArgs e)
         {
-            if (isAiming)
-            {
-                // calculate direction of shot
-            }
+            
+        }
+
+        Vector2 getVectorToPointer(Windows.Foundation.Point p)
+        {
+            // Direction of pointer on screen from center
+            float x = (float)(window.Bounds.Width / 2 - p.X);
+            float y = (float)(window.Bounds.Height / 2 - p.Y);
+            return new Vector2(x, y);
         }
 
         void OnManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
-            //Debug.WriteLine("Manipulation completed");
+            Debug.WriteLine("Manipulation completed");
         }
 
         // Raw touch input events
         void OnPointerPressed(CoreWindow sender, PointerEventArgs args)
         {
+            Debug.WriteLine("Pointer pressed");
             gestureRecogniser.ProcessDownEvent(args.CurrentPoint);
+            
+            Vector2 point = getVectorToPointer(args.CurrentPoint.Position);
+            double x = point.X;
+            double y = point.Y;
+
+            double h = window.Bounds.Height;
+            double w = window.Bounds.Width;
+            
+            double halfOfBoundingBox = playerBoundBox / 2;
+
+            if (x > -halfOfBoundingBox && x < halfOfBoundingBox)
+            {
+                Debug.WriteLine("world");
+                if (y > -halfOfBoundingBox && y < halfOfBoundingBox)
+                {
+                    isAiming = true;
+
+                    Vector3 vd = camera.GetCameraTarget().ViewDirection();
+                    aimDirection = new Vector2(vd.X, vd.Z);
+                    Debug.WriteLine("------------------------ IS AIMING");
+                }
+            }
         }
 
         void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
         {
             gestureRecogniser.ProcessMoveEvents(args.GetIntermediatePoints());
+
+            if (isAiming)
+            {
+                UpdateAim(args.CurrentPoint.Position);
+            }
         }
 
         void OnPointerReleased(CoreWindow sender, PointerEventArgs args)
         {
             gestureRecogniser.ProcessUpEvent(args.CurrentPoint);
+
+            if (isAiming)
+            {
+                Debug.WriteLine("SHOT FIRED GET DOWN! (" + aimDirection.X + ", " + aimDirection.Y + ")");
+            }
             isAiming = false;
         }
+
+        void UpdateAim(Windows.Foundation.Point p)
+        {
+            if (this.camera.CurrentViewType == Camera.ViewType.FirstPerson)
+            {
+                // Set aim depending on the camera target view direction
+                Vector3 fps = camera.GetCameraTarget().ViewDirection();
+                aimDirection = new Vector2(fps.X, fps.Z);
+            }
+            else if (this.camera.CurrentViewType == Camera.ViewType.TopDown)
+            {
+                // Set aim depending on the position of the pointer from the center of the screen
+                Vector2 pointer = getVectorToPointer(p);
+                aimDirection = pointer;
+                Debug.WriteLine("Top view aim set: (" + pointer.X + ", " + pointer.Y + ")");
+            }
+        }
+
 
         // Walking methods
         public bool WalkingForward()

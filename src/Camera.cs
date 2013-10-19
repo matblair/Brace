@@ -120,5 +120,10 @@ namespace Brace
         {
             this.CurrentViewType = type;
         }
+
+        public ITrackable GetCameraTarget()
+        {
+            return tracking;
+        }
     }
 }
