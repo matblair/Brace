@@ -36,6 +36,11 @@ namespace Brace
         public MouseState mouseState { get; private set; }
 
         private int taps;
+        private readonly int playerBoundBox = 50;
+
+        private bool isAiming;
+        private bool spinAttack;
+        private bool slashing;
 
         public InputManager(BraceGame game)
         {
@@ -48,15 +53,31 @@ namespace Brace
 
             // Set up gesture recogniser
             window = Window.Current.CoreWindow;
-            this.gestureRecogniser = new Windows.UI.Input.GestureRecognizer();
+            gestureRecogniser = new Windows.UI.Input.GestureRecognizer();
 
-            //this.gestureRecogniser.ShowGestureFeedback = true;
+            this.gestureRecogniser.ShowGestureFeedback = false;
 
-            this.gestureRecogniser.GestureSettings = GestureSettings.Tap;
+            gestureRecogniser.GestureSettings =
+                                                GestureSettings.Tap |
+                                                GestureSettings.Hold |
+                                                GestureSettings.ManipulationTranslateX |
+                                                GestureSettings.ManipulationTranslateY |
+                                                GestureSettings.CrossSlide;
+
+            gestureRecogniser.Tapped += OnTapped;
+            gestureRecogniser.Holding += OnHolding;
+            gestureRecogniser.ManipulationStarted += OnManipulationStarted;
+            gestureRecogniser.ManipulationUpdated += OnManipulationUpdated;
+            gestureRecogniser.ManipulationCompleted += OnManipulationCompleted;
+
 
             window.PointerPressed += OnPointerPressed;
             window.PointerMoved += OnPointerMoved;
             window.PointerReleased += OnPointerReleased;
+
+            // Set the flags
+            isAiming = false;
+            spinAttack = false;
         }
 
         public void Update()
@@ -65,24 +86,102 @@ namespace Brace
             mouseState = mouse.GetState();
         }
 
-        // Gesture methods
+        // interface
+
+        public bool isShooting()
+        {
+            return isAiming;
+        }
+
+        public Vector2 shotDirection()
+        {
+            Vector2 v = new Vector2(0, 0);
+            return v;
+        }
+
+        public bool performSpinAttack()
+        {
+            return spinAttack;
+        }
+
+        public bool isMoving()
+        {
+            return false;
+        }
+
+        public Vector2 moveTo()
+        {
+            Vector2 v = new Vector2 (0,0);
+            return v;
+        }
+
+        // 2d stuff
+        public bool performSlashAttack()
+        {
+            return slashing;
+        }
+
+        
+
+        // Gesture events
+        void OnTapped(object sender, TappedEventArgs e)
+        {
+            //Debug.WriteLine("Tapped event");
+        }
+
+        void OnHolding(object sender, HoldingEventArgs e)
+        {
+            //Debug.WriteLine("Holding event");
+            BraceGame game = BraceGame.get();
+            double h = window.Bounds.Height;
+            double w = window.Bounds.Width;
+            double x = e.Position.X;
+            double y = e.Position.Y;
+            double halfOfBoundingBox = playerBoundBox / 2;
+            if (x < w / 2 - halfOfBoundingBox && x > w / 2 + halfOfBoundingBox)
+            {
+                
+                if (y < h / 2 - halfOfBoundingBox && y > h / 2 + halfOfBoundingBox)
+                {
+                    isAiming = true;
+                    //Debug.WriteLine("IS AIMING!!!");
+                }
+            }
+        }
+
+        void OnManipulationStarted(object sender, ManipulationStartedEventArgs e)
+        {
+            //Debug.WriteLine("Manipulation started");
+        }
+
+        void OnManipulationUpdated(object sender, ManipulationUpdatedEventArgs e)
+        {
+            if (isAiming)
+            {
+                // calculate direction of shot
+            }
+        }
+
+        void OnManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
+        {
+            //Debug.WriteLine("Manipulation completed");
+        }
+
+        // Raw touch input events
         void OnPointerPressed(CoreWindow sender, PointerEventArgs args)
         {
-            Debug.WriteLine("Pointer pressed");
-            taps += 1;
-            Debug.WriteLine(taps);
-            Debug.WriteLine(args.CurrentPoint.Position.X);
-            Debug.WriteLine(args.CurrentPoint.Position.Y);
+            gestureRecogniser.ProcessDownEvent(args.CurrentPoint);
         }
 
         void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
         {
-            Debug.WriteLine("Pointer moved");
+            gestureRecogniser.ProcessMoveEvents(args.GetIntermediatePoints());
         }
 
         void OnPointerReleased(CoreWindow sender, PointerEventArgs args)
         {
-
+            gestureRecogniser.ProcessUpEvent(args.CurrentPoint);
+            isAiming = false;
         }
 
         // Walking methods
