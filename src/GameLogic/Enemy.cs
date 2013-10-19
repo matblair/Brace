@@ -14,6 +14,13 @@ namespace Brace.GameLogic
     {
         EnemyController controller;
 
+        private readonly int DAMAGE = 1;
+        private readonly int ATTACKCOOLDOWN = 1000;
+        private int attackCounter;
+
+        private readonly int MAXSPEED = 1;
+        private readonly int MAXHEALTH = 100;
+
         Enemy(Vector3 position, Vector3 rotation)
             : base(position, rotation, Assets.cube)
         {
@@ -31,9 +38,22 @@ namespace Brace.GameLogic
         {
             controller.Update(gameTime);
         }
-        public void Move()
+        public void Attack(Player target)
         {
-
+            if (attackCounter > ATTACKCOOLDOWN)
+            {
+                target.lowerHealth(DAMAGE);
+                attackCounter = 0;
+            }
+            return;
+        }
+        public void Move(Vector2 destination)
+        {
+            Vector2 direction = destination - new Vector2(position.X, position.Z);
+            direction.Normalize();
+            Vector2 targetSpeed = new Vector2(direction.X * MAXSPEED, direction.X * MAXSPEED);
+            Vector3 force = pObject.mass * new Vector3(targetSpeed.X, 0, targetSpeed.Y);
+            pObject.ApplyImpulse(force);
         }
     }
 }

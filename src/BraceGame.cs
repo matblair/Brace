@@ -27,6 +27,8 @@ namespace Brace
         private List<Actor> actors;
         private static BraceGame game;
 
+        private Player player;
+
         public Physics.PhysicsEngine physicsWorld;
 
         //Our actors
@@ -74,6 +76,8 @@ namespace Brace
             // Load camera and models
             LoadAssets();
             actors = InitializeActors();
+            player = (Player)actors[0];
+
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.TopDown);
@@ -94,7 +98,6 @@ namespace Brace
         {
             List<Actor> newActors = new List<Actor>();
             newActors.Add(new Player(Vector3.UnitY*5, Vector3.Zero));
-
            
 
             landscape = new GameLogic.Landscape(this);
@@ -171,14 +174,18 @@ namespace Brace
             base.Draw(gameTime);
         }
 
-        internal void addActor(Projectile projectile)
+        internal void AddActor(Projectile projectile)
         {
             actors.Add(projectile);
         }
 
-        internal void removeActor(Projectile projectile)
+        internal void RemoveActor(Projectile projectile)
         {
             actors.Remove(projectile);
+        }
+        internal Player getPlayer()
+        {
+            return player;
         }
     }
 }

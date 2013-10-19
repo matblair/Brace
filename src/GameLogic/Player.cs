@@ -26,6 +26,8 @@ namespace Brace.GameLogic
 
 
         private readonly int MAXSPEED = 1;
+
+        private int health;
         private readonly int MAXHEALTH = 100;
 
 
@@ -38,6 +40,8 @@ namespace Brace.GameLogic
         {
             controller = new PlayerController(this);
             chargeTime = 0;
+            health = MAXHEALTH;
+
         }
         protected override void InitializePhysicsObject()
         {
@@ -51,16 +55,8 @@ namespace Brace.GameLogic
         {
             position = pObject.position;
             controller.Update(gameTime);
-            
-           
-
         }
 
-        private void SwingSword(Vector2 direction)
-        {
-
-
-        }
 
         private void ShootArrow(Vector2 direction)
         {
@@ -69,13 +65,13 @@ namespace Brace.GameLogic
             }
             else if (chargeTime > MAXIMUMCHARGETIME)
             {
-                BraceGame.get().addActor(new Projectile(position, new Vector3(pObject.velocity.X, 0, pObject.velocity.Y) * 1, MAXARROWDAMAGE));
+                BraceGame.get().AddActor(new Projectile(position, new Vector3(pObject.velocity.X, 0, pObject.velocity.Y) * 1, MAXARROWDAMAGE));
                 chargeTime = 0;
             }
             else
             {
                 int actualDamage = (MAXARROWDAMAGE - MINARROWDAMAGE) * (chargeTime - MINIMUMCHARGETIME) / (MAXIMUMCHARGETIME - MINIMUMCHARGETIME) + MINARROWDAMAGE;
-                BraceGame.get().addActor(new Projectile(position + new Vector3(direction.X, 0, direction.Y)*1, new Vector3(direction.X, 0, direction.Y), actualDamage));
+                BraceGame.get().AddActor(new Projectile(position + new Vector3(direction.X, 0, direction.Y)*1, new Vector3(direction.X, 0, direction.Y), actualDamage));
                 chargeTime = 0;
             }
             
@@ -92,6 +88,21 @@ namespace Brace.GameLogic
             Vector2 targetSpeed = new Vector2(direction.X * MAXSPEED, direction.X * MAXSPEED);
             Vector3 force = pObject.mass * new Vector3(targetSpeed.X, 0, targetSpeed.Y);
             pObject.ApplyImpulse(force);
+        }
+
+
+        internal void lowerHealth(int damage)
+        {
+            health -= damage;
+            if (health < 0)
+            {
+                die();
+            }
+        }
+
+        private void die()
+        {
+            throw new NotImplementedException();
         }
 
     }
