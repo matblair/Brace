@@ -13,7 +13,7 @@ namespace Brace.GameLogic
 {
     class Cube : Unit
     {
-        public Cube(Vector3 position) : base(position, Vector3.Zero, Assets.cube)
+        public Cube(Vector3 position) : base(position, Vector3.Zero, Assets.cube, Assets.cubeTexture)
         {
             
         }

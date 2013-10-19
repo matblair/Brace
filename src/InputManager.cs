@@ -47,44 +47,69 @@ namespace Brace
         }
         public bool WalkingForward()
         {
-           
-            return keyboardState.IsKeyDown(walkForwardKey);
+            if(keyboardState.IsKeyDown(walkForwardKey)) 
+            {
+                return true;
+            }
+            return false;
         }
         public bool WalkingRight()
         {
-            return keyboardState.IsKeyDown(walkRightKey);
+            if (keyboardState.IsKeyDown(walkRightKey))
+            {
+                return true;
+            }
+            return false;
         }
         public bool WalkingBack()
         {
-            
-            return keyboardState.IsKeyDown(walkBackKey);
+            if (keyboardState.IsKeyDown(walkBackKey))
+            {
+                return true;
+            }
+            return false;
         }
         public bool WalkingLeft()
         {
-            
-            return keyboardState.IsKeyDown(walkLeftKey);
+            if (keyboardState.IsKeyDown(walkLeftKey))
+            {
+                return true;
+            }
+            return false;
         }
         public bool LookingUp()
         {
-            
-            return keyboardState.IsKeyDown(lookUpKey);
+            if (keyboardState.IsKeyDown(lookUpKey))
+            {
+                return true;
+            }
+            return false;
         }
 
 
         public bool LookingRight()
         {
-            
-            return keyboardState.IsKeyDown(lookRightKey);
+            if (keyboardState.IsKeyDown(lookRightKey))
+            {
+                return true;
+            }
+            return false;
         }
         public bool LookingDown()
         {
-            
-            return keyboardState.IsKeyDown(lookDownKey);
+            if (keyboardState.IsKeyDown(lookDownKey))
+            {
+                return true;
+            }
+            return false;
         }
         public bool LookingLeft()
         {
-            
-            return keyboardState.IsKeyDown(lookLeftKey);
+            if (keyboardState.IsKeyDown(lookLeftKey))
+            {
+                return true;
+            }
+            return false;
         }
 
 
