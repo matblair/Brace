@@ -1,6 +1,8 @@
 ﻿using Brace.GameLogic;
 using Brace.Utils;
 using SharpDX;
+using SharpDX.DXGI;
+using SharpDX.Windows;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.Toolkit.Input;
@@ -26,7 +28,8 @@ namespace Brace
         private bool cameraToggling=false;
         private List<Actor> actors;
         private static BraceGame game;
-
+      
+        //Our Physics engine
         public Physics.PhysicsEngine physicsWorld;
 
         //Our actors
@@ -74,23 +77,24 @@ namespace Brace
             // Load camera and models
             LoadAssets();
             actors = InitializeActors();
-
+           
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.Follow);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
-            unitShader = Content.Load<Effect>("CelShader");
+            unitShader = Content.Load<Effect>("CubeCelShader");
             landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
+
             base.LoadContent();
         }
 
         private void LoadAssets()
         {
             Assets.spaceship = Content.Load<Model>("Cube");
-            Assets.cube = Content.Load<Model>("Cube");
+            Assets.cube = Content.Load<Model>("batman");
         }
 
-        private List<Actor> InitializeActors()
+        private Actor[] InitializeActors()
         {
             List<Actor> newActors = new List<Actor>();
             newActors.Add(new Cube(Vector3.Zero));
@@ -111,45 +115,41 @@ namespace Brace
         protected override void Update(GameTime gameTime)
         {
             // Handle base.Update
-            base.Update(gameTime);
-            input.Update();
-          
-            foreach (Actor actor in actors)
-            {
-                if (actor.doomed)
-                {
-                    actors.Remove(actor);
-                }
-                else
-                {
-                    actor.Update(gameTime);
-                }
-                
-            }
+           base.Update(gameTime);
+           input.Update();
+         
+           foreach (Actor actor in actors)
+           {
+               if (actor.doomed)
+               {
+                   actors.Remove(actor);
+               }
+               else
+               {
+                   actor.Update(gameTime);
+               }
+               
+           }
 
-            StepPhysicsModel(gameTime);
+           //Update the physics model
+           StepPhysicsModel(gameTime);
 
-            
-            //Update tracking lights
-            playerLamp.Update(gameTime);
+           
+           //Update tracking lights
+           playerLamp.Update(gameTime);
 
-            // Update the camera 
-            Camera.Update(gameTime);
+           // Update the camera 
+           Camera.Update(gameTime);
 
             // Now update the shaders
             //First the unit shader
             unitShader.Parameters["View"].SetValue(Camera.View);
             unitShader.Parameters["Projection"].SetValue(Camera.Projection);
             unitShader.Parameters["cameraPos"].SetValue(Camera.position);
-           
+            unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+
             //Then the landscape shader
             landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-            Debug.WriteLine("PLAYER LAMP");
-            Debug.WriteLine(playerLamp.lightPntPos);
-            Debug.WriteLine("OBJ TRACK POS");
-            Unit tracking = (Unit)actors[0];
-            Debug.WriteLine(tracking.EyeLocation());
-
             landscapeEffect.Parameters["View"].SetValue(Camera.View);
             landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
             landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
@@ -169,10 +169,10 @@ namespace Brace
             //First draw the landscape
             landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
 
-            //Then teh actors
+            //Then the actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,null);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, unitShader);
             }
 
             // Show FPS

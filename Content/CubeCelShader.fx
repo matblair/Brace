@@ -8,19 +8,20 @@ float4x4 worldInvTrp;
 // Our world lighting setups Will obviously need to be changed at a later 
 // date in order to properly having moving light sources etc.
 float3 lightPntPos;
-float4 lightPntCol = float4(1.0f, 0.5f, 0.1f, 1.0f);
+//float4 lightPntCol = float4(1.0f, 0.5f, 0.1f, 1.0f);
+float4 lightPntCol = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 float4 sunPntCol = float4(0.55, 0.1, 0.9, 1);
 // The direction of the diffuse light (I.E. our sun, this is static)
 float3 sunPntPos = float3(-1000,20, 100);
  // The intensity of the diffuse light
-float sunIntensity = 0.15f;
+float sunIntensity = 0.05f;
 
 struct VS_IN
 {
-	float4 pos : POSITION;
+	float4 pos : SV_POSITION;
 	float4 nrm : NORMAL;
-	float4 col : COLOR;
+	float4 col : TEXCOORD;
 // Other vertex properties, e.g. texture co-ords, surface Kd, Ks, etc
 };
 
@@ -80,19 +81,16 @@ float4 PS( PS_IN input ) : SV_Target
 	float3 R = normalize(2*LdotN*interpNormal.xyz - L.xyz);
 	//float3 R = normalize(0.5*(L.xyz+V.xyz)); //Blinn-Phong equivalent
 	float3 spe = fAtt*lightPntCol.rgb*Ks*pow(saturate(dot(V,R)),specN);
-	float speIntensity =  0.3126 * spe.r + 0.7152 * spe.g + 0.0722 * spe.b;
 
 	// Combine components
 	float4 lampCol = float4(0.0f,0.0f,0.0f,0.0f);
 	lampCol.rgb = amb.rgb+dif.rgb+spe.rgb;
-	lampCol.a = input.col.a;
 
-	
 	//Now calculate the suns
 	// Calculate ambient RGB intensities
 	float3 ambSun = input.col.rgb*sunPntCol.rgb*sunIntensity;
 	// Calculate diffuse RBG reflections
-	float fAttSun = 0.6; // Consider the sun difference around the map change to be negligible, therefore no fall off
+	float fAttSun = 0.2; // Consider the sun difference around the map change to be negligible, therefore no fall off
 	float KdSun = 5;
 	float3 LSun = normalize(sunPntPos.xyz - input.wpos.xyz);
 	float LdotNSun = saturate(dot(LSun,interpNormal.xyz));
@@ -101,7 +99,7 @@ float4 PS( PS_IN input ) : SV_Target
 	float specNSun = 10; // Numbers>>1 give more mirror-like highlights
 	float3 VSun = normalize(cameraPos.xyz - input.wpos.xyz);
 	float3 RSun = normalize(2*LdotNSun*interpNormal.xyz - LSun.xyz);
-	float3 speSun = fAtt*sunPntCol.rgb*0.90*pow(saturate(dot(VSun,RSun)),specNSun);
+	float3 speSun = fAtt*sunPntCol.rgb*0.15*pow(saturate(dot(VSun,RSun)),specNSun);
 
 	// Combine components
 	float4 sunCol = float4(0.0f,0.0f,0.0f,0.0f);
@@ -121,13 +119,10 @@ float4 PS( PS_IN input ) : SV_Target
 	} else if (totalIntensity > 0.70) {
 		returnCol = float4(0.85,0.85,0.85,1.0) * returnCol;
 	} else if (totalIntensity > 0.50) {
-		returnCol = float4(0.65,0.65,0.65,1.0) * returnCol;
+		returnCol = float4(0.55,0.55,0.55,1.0) * returnCol;
 	} else {
-		returnCol = float4(0.5,0.5,0.5,1.0) * returnCol;
+		returnCol = float4(0.3,0.3,0.3,1.0) * returnCol;
 	}
-
-
-
 	return returnCol;
 }
 
