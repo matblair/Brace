@@ -111,7 +111,7 @@ namespace Brace
             base.Update(gameTime);
             input.Update();
 
-            for (int i = 0; i < actors.Count(); ++i)
+            foreach (Actor actor in actors)
             {
                 if (actors[i].doomed)
                 {
