@@ -12,9 +12,7 @@ namespace Brace
 
     abstract public class Actor
     {
-        protected Boolean solid;
-        protected Boolean paused;
-        protected Boolean visible;
+        
         public Boolean doomed;
         public Vector3 position { get; set; }
         public Vector3 rot { get; set; }
@@ -24,9 +22,7 @@ namespace Brace
         {
             this.position = position;
             this.rot = rotation;
-            solid = true;
-            paused = true;
-            visible = true;
+            
         }
     
         public abstract void Update(GameTime gametime);

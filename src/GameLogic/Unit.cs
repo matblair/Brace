@@ -27,7 +27,7 @@ namespace Brace.GameLogic
 
         public void DestroyPhysicsObject()
         {
-            BraceGame.get().physicsWorld.RemoveBody(pObject);
+            //BraceGame.get().physicsWorld.RemoveBody(pObject);
         }
 
 

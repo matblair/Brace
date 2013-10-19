@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX.Toolkit;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace Brace.GameLogic
 
         public EnemyController(Enemy enemy) : base(enemy){}
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
         }
     }

@@ -29,7 +29,7 @@ namespace Brace.GameLogic
         }
         public override void Update(GameTime gameTime)
         {
-            controller.Update();
+            controller.Update(gameTime);
         }
         public void Move()
         {

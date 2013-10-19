@@ -45,30 +45,28 @@ namespace Brace.Physics
         public void ApplyForce(Vector3 force)
         {
 
-            if (bodyDefinition.bodyType == BodyType.dynamic)
+            if (bodyDefinition.bodyType == BodyType.stationary || bodyDefinition.bodyType == BodyType.terrain)
             {
-                forces += (force);
+                return;
             }
-            return;
-            
+            forces += (force);            
         }
         public void ApplyImpulse(Vector3 impulse)
         {
-            if (bodyDefinition.bodyType == BodyType.dynamic)
+            if (bodyDefinition.bodyType == BodyType.stationary || bodyDefinition.bodyType == BodyType.terrain)
             {
-                velocity += (impulse);
+                return;
             }
-            return;
+            velocity += (impulse);
         }
             
         public void Move(Vector3 amount)
         {
-            if (bodyDefinition.bodyType == BodyType.dynamic)
+            if (bodyDefinition.bodyType == BodyType.stationary||bodyDefinition.bodyType==BodyType.terrain)
             {
-                position += (amount);
+                return;
             }
-            return;
-         
+            position += (amount);
         }
 
     }

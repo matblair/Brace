@@ -8,37 +8,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Brace.src.GameLogic
+namespace Brace.GameLogic
 {
     class Projectile : Unit
     {
         Vector3 direction;
-        Projectile(Vector3 position, Vector3 direction)
-            : base(position, direction, Assets.cube)
+        private readonly int SPEED = 10;
+        int damage;
+        public Projectile(Vector3 position, Vector3 direction, int damage)
+            : base(position, Vector3.Zero, Assets.cube)
         {
             
             this.direction = direction;
             this.direction.Normalize();
+            this.damage = damage;
 
         }
         public override void Update(SharpDX.Toolkit.GameTime gametime)
         {
+            position = pObject.position;
             Move();
             CheckCollision();
         }
 
         private void CheckCollision()
         {
-            List<Contact> contacts = pObject.contacts;
-            foreach (Contact contact in contacts)
-            {
-                               
-            }
+            
         }
 
         private void Move()
         {
-            pObject.ApplyForce(direction);
+            pObject.ApplyImpulse(direction * SPEED);
         }
 
         protected override void InitializePhysicsObject()
@@ -46,7 +46,7 @@ namespace Brace.src.GameLogic
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
             pObject.Initialize(1, 1, 0.2f, 0.2f, position, Vector3.Zero, bodyDef, this);
-            pObject.bodyDefinition.bodyType = BodyType.dynamic;
+            pObject.bodyDefinition.bodyType = BodyType.passive;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
         private void Destroy()

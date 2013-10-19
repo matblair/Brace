@@ -76,7 +76,7 @@ namespace Brace
             actors = InitializeActors();
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
-            Camera.SetViewType(Brace.Camera.ViewType.Follow);
+            Camera.SetViewType(Brace.Camera.ViewType.TopDown);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
             unitShader = Content.Load<Effect>("CelShader");
@@ -93,15 +93,9 @@ namespace Brace
         private List<Actor> InitializeActors()
         {
             List<Actor> newActors = new List<Actor>();
-            newActors.Add(new Cube(Vector3.Zero));
-            for (int i = -3; i < 3; ++i)
-            {
-                for (int j = -3; j < 3; ++j)
-                {
-                    newActors.Add(new Cube(new Vector3(i,10,j)));
-                }
-            }
+            newActors.Add(new Player(Vector3.UnitY*5, Vector3.Zero));
 
+           
 
             landscape = new GameLogic.Landscape(this);
 
@@ -113,18 +107,17 @@ namespace Brace
             // Handle base.Update
             base.Update(gameTime);
             input.Update();
-          
-            foreach (Actor actor in actors)
+
+            for (int i = 0; i < actors.Count(); ++i)
             {
-                if (actor.doomed)
+                if (actors[i].doomed)
                 {
-                    actors.Remove(actor);
+                    actors.Remove(actors[i]);
                 }
                 else
                 {
-                    actor.Update(gameTime);
+                    actors[i].Update(gameTime);
                 }
-                
             }
 
             StepPhysicsModel(gameTime);
@@ -144,11 +137,7 @@ namespace Brace
            
             //Then the landscape shader
             landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-            Debug.WriteLine("PLAYER LAMP");
-            Debug.WriteLine(playerLamp.lightPntPos);
-            Debug.WriteLine("OBJ TRACK POS");
             Unit tracking = (Unit)actors[0];
-            Debug.WriteLine(tracking.EyeLocation());
 
             landscapeEffect.Parameters["View"].SetValue(Camera.View);
             landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
@@ -180,6 +169,16 @@ namespace Brace
 
             // Handle base.Draw
             base.Draw(gameTime);
+        }
+
+        internal void addActor(Projectile projectile)
+        {
+            actors.Add(projectile);
+        }
+
+        internal void removeActor(Projectile projectile)
+        {
+            actors.Remove(projectile);
         }
     }
 }

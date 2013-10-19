@@ -13,7 +13,7 @@ namespace Brace.GameLogic
         public PlayerController(Player player) : base(player)
         { 
         }
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
         }
     }

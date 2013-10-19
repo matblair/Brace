@@ -61,7 +61,6 @@
     <Compile Include="src\GameLogic\Unit.cs" />
     <Compile Include="src\ITrackable.cs" />
     <Compile Include="src\OriginTrackable.cs" />
-    <Compile Include="src\Physics\AABB.cs" />
     <Compile Include="src\Physics\Contact.cs" />
     <Compile Include="src\Physics\PhysicsBody.cs" />
     <Compile Include="src\Physics\PhysicsEngine.cs" />
