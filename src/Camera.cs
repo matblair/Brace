@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +13,7 @@ namespace Brace
     {
         // General useful things
         private BraceGame game;
-        private static float MOVE_SPEED=60f, PAN_SPEED=10f, ORIENTATION_SPEED=0.5f;
+        private static float MOVE_SPEED=60f, PAN_SPEED=30f, ORIENTATION_SPEED=2f;
 
         // Support for different view types
         public enum ViewType { FirstPerson, TopDown, Follow };
@@ -40,7 +40,11 @@ namespace Brace
             // View setup
             Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 500.0f);
             SetTarget(track);
-            SetViewType(ViewType.TopDown);
+            SetViewType(ViewType.Follow);
+
+            this.position = 50 * Vector3.UnitY;
+            this.up = Vector3.UnitX;
+            this.lookingAt = Vector3.Zero;
         }
 
         // Update the camera and associated things
@@ -81,8 +85,7 @@ namespace Brace
             }
             else
             {
-                posDir.Normalize();
-                position += posDir * MOVE_SPEED * delta / 1000f;
+                position += posDir / posDir.Length() * (float)Math.Log(posDir.Length() + 1) * MOVE_SPEED * delta / 1000f;
             }
 
             Vector3 lookDir = targetLookingAt - lookingAt;
@@ -92,12 +95,11 @@ namespace Brace
             }
             else
             {
-                lookDir.Normalize();
-                lookingAt += lookDir * PAN_SPEED * delta / 1000f;
+                lookingAt += lookDir * lookDir.Length() * delta / 1000f;
             }
 
             Vector3 upDir = targetUp - up;
-            if (upDir.Length() < ORIENTATION_SPEED * delta / 1000f)
+            if (Math.Pow(upDir.Length(), 2) < ORIENTATION_SPEED * delta / 1000f)
             {
                 up = targetUp;
             }

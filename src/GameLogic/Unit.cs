@@ -12,14 +12,18 @@ namespace Brace.GameLogic
 {
     abstract public class Unit : Actor, ITrackable
     {
+
         private Model model;
+        private Texture texture;
         public PhysicsModel pObject;
 
 
-        public Unit(Vector3 position, Vector3 rotation, Model model) : base(position, rotation)
+        public Unit(Vector3 position, Vector3 rotation, Model model, Texture text)
+            : base(position, rotation)
         {
             this.model = model;
             InitializePhysicsObject();
+            pObject.extraData = this;
         }
 
         public abstract override void Update(GameTime gametime);
@@ -34,7 +38,20 @@ namespace Brace.GameLogic
         public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
         {
             Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(position);
-            model.Draw(context, world, view, projection, effect);
+            Matrix worldInvTranspose = Matrix.Transpose(Matrix.Invert(world));
+            effect.Parameters["World"].SetValue(world);
+            effect.Parameters["worldInvTrp"].SetValue(worldInvTranspose);
+
+            // Draw the models
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    //effect.Parameters["Texture"].SetResource(part.Effect.Parameters["Texture"].GetResource<Texture2D>());
+                    effect.CurrentTechnique.Passes[0].Apply();
+                    part.Draw(context);
+                }
+            }
         }
 
         public Vector3 ViewDirection()

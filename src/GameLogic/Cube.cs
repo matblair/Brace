@@ -13,19 +13,19 @@ namespace Brace.GameLogic
 {
     class Cube : Unit
     {
-        public Cube(Vector3 position) : base(position, Vector3.Zero, Assets.cube)
+        public Cube(Vector3 position) : base(position, Vector3.Zero, Assets.cube, Assets.cubeTexture)
         {
             
         }
         protected override void InitializePhysicsObject() {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(1, 1, 0.2f, 0.2f, position, Vector3.Zero, bodyDef,this);
+            pObject.Initialize(1, 0, 0.2f, 0.2f, position, Vector3.Zero, bodyDef);
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
         public Cube(Vector3 position, bool passive)
-            : base(position, Vector3.Zero, Assets.cube)
+            : base(position, Vector3.Zero, Assets.cube, Assets.cubeTexture)
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);

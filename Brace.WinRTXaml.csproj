@@ -43,6 +43,7 @@
     <Compile Include="src\Camera.cs" />
     <Compile Include="src\BraceGame.cs" />
     <Compile Include="src\GameLogic\Enemy.cs" />
+    <Compile Include="src\GameLogic\EnemyBehaviour.cs" />
     <Compile Include="src\GameLogic\EnemyController.cs" />
     <Compile Include="src\GameLogic\EnemySpawner.cs" />
     <Compile Include="src\GameLogic\Player.cs" />
@@ -61,7 +62,6 @@
     <Compile Include="src\GameLogic\Unit.cs" />
     <Compile Include="src\ITrackable.cs" />
     <Compile Include="src\OriginTrackable.cs" />
-    <Compile Include="src\Physics\AABB.cs" />
     <Compile Include="src\Physics\Contact.cs" />
     <Compile Include="src\Physics\PhysicsBody.cs" />
     <Compile Include="src\Physics\PhysicsEngine.cs" />
@@ -79,6 +79,7 @@
     <AppxManifest Include="PackageXaml.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="packages.config" />
     <ToolkitModel Include="Content\cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ToolkitModel>
@@ -89,6 +90,9 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <ToolkitFxc Include="Content\CubeCelShader.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
     <ToolkitFxc Include="Content\LandscapeCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
@@ -115,6 +119,12 @@
     <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="TCD.Controls">
+      <HintPath>packages\TCD.Controls.2.1.0\lib\netcore45\TCD.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="TCD.Controls.Settings">
+      <HintPath>packages\TCD.Controls.2.1.0\lib\netcore45\TCD.Controls.Settings.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
