@@ -115,7 +115,7 @@ namespace Brace
             landscape = new GameLogic.Landscape(this);
 
 
-            for (int t = 0; t < 500; t++)
+            for (int t = 0; t < 30; t++)
             {
                 float x = rand.Next(-50, 50);
                 float y = rand.Next(-50, 50);
