@@ -97,7 +97,16 @@ namespace Brace
         private List<Actor> InitializeActors()
         {
             List<Actor> newActors = new List<Actor>();
-            newActors.Add(new Player(Vector3.UnitY*5, Vector3.Zero));
+            newActors.Add(new Player(Vector3.Zero, Vector3.Zero));
+            double angle=0;
+            int NUMBEROFENEMIES = 10;
+            for (int i = 0; i < NUMBEROFENEMIES; ++i)
+            {
+                angle += 360 / NUMBEROFENEMIES;
+                newActors.Add(new Enemy(new Vector3((float)(NUMBEROFENEMIES * Math.Cos(angle)), 0, (float)(NUMBEROFENEMIES * Math.Sin(angle))), Vector3.Zero));
+            }
+            
+
            
 
             landscape = new GameLogic.Landscape(this);
@@ -111,16 +120,19 @@ namespace Brace
             base.Update(gameTime);
             input.Update();
 
-            foreach (Actor actor in actors)
+            for(int i=0;i<actors.Count();++i)
             {
                 if (actors[i].doomed)
                 {
                     actors.Remove(actors[i]);
+                    --i;
+                    continue;
                 }
                 else
                 {
                     actors[i].Update(gameTime);
                 }
+                
             }
 
             StepPhysicsModel(gameTime);
@@ -174,14 +186,14 @@ namespace Brace
             base.Draw(gameTime);
         }
 
-        internal void AddActor(Projectile projectile)
+        internal void AddActor(Actor actor)
         {
-            actors.Add(projectile);
+            actors.Add(actor);
         }
 
-        internal void RemoveActor(Projectile projectile)
+        internal void RemoveActor(Actor actor)
         {
-            actors.Remove(projectile);
+            actors.Remove(actor);
         }
         internal Player getPlayer()
         {

@@ -1,4 +1,5 @@
-﻿using SharpDX.Toolkit;
+﻿using SharpDX;
+using SharpDX.Toolkit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,8 @@ namespace Brace.GameLogic
 
         public override void Update(GameTime gameTime)
         {
+            Player player = BraceGame.get().getPlayer();
+            ((Enemy)target).Move(new Vector2(player.position.X,player.position.Z));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Brace.Physics
         public float friction;
         public object extraData;
 
-        public void Initialize(float mass, float restitution, float linearDamp, float friction, Vector3 iPosition, Vector3 iVelocity, PhysicsBody bodyDefinition, Object extraData)
+        public void Initialize(float mass, float restitution, float linearDamp, float friction, Vector3 iPosition, Vector3 iVelocity, PhysicsBody bodyDefinition)
         {
             this.mass = mass;
             this.restitution = restitution;
@@ -39,7 +39,6 @@ namespace Brace.Physics
             this.linearDamp = linearDamp;
             this.friction = friction;
             contacts = new List<Contact>();
-            this.extraData = extraData;
         }
 
         public void ApplyForce(Vector3 force)

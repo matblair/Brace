@@ -20,7 +20,7 @@ namespace Brace.Physics
         }
         List<Contact> contacts;
         List<PhysicsModel> bodies;
-        private const int numberOfResolutionIterations = 10;
+        private const int numberOfResolutionIterations = 8;
         private const float gravity= -9.8f;
 
         public PhysicsEngine()
@@ -73,7 +73,7 @@ namespace Brace.Physics
 
         private void PositionalCorrection(Contact contact)
         {
-                const float percentageOfIntersection = 0.2f;
+                const float percentageOfIntersection = 0.1f;
                 float movedist = contact.distance*percentageOfIntersection;
                 PhysicsModel body1 = contact.x.parent;
                 PhysicsModel body2 = contact.y.parent;
@@ -87,7 +87,7 @@ namespace Brace.Physics
                 PhysicsModel body1 = contact.x.parent;
                 PhysicsModel body2 = contact.y.parent;
                 Vector3 relativeVelBefore = body2.velocity - body1.velocity;
-                float contactVelocity = Vector3.Dot(relativeVelBefore, contact.normal);
+                float contactVelocity = Vector3.Dot(contact.normal, relativeVelBefore);
 
                 //nothing to solve
                 if (contactVelocity < 0)

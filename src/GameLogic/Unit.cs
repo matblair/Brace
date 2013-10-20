@@ -20,6 +20,7 @@ namespace Brace.GameLogic
         {
             this.model = model;
             InitializePhysicsObject();
+            pObject.extraData = this;
         }
 
         public abstract override void Update(GameTime gametime);
@@ -27,7 +28,7 @@ namespace Brace.GameLogic
 
         public void DestroyPhysicsObject()
         {
-            //BraceGame.get().physicsWorld.RemoveBody(pObject);
+            BraceGame.get().physicsWorld.RemoveBody(pObject);
         }
 
 

@@ -21,7 +21,7 @@ namespace Brace.Physics
                 this.bodyType = BodyType.dynamic;
             }
             spheres = new List<Sphere>();
-            spheres.Add(new Sphere(Vector3.Zero,1));
+            spheres.Add(new Sphere(Vector3.Zero,3));
         }
 
 
