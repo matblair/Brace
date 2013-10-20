@@ -43,6 +43,7 @@
     <Compile Include="src\Camera.cs" />
     <Compile Include="src\BraceGame.cs" />
     <Compile Include="src\GameLogic\Enemy.cs" />
+    <Compile Include="src\GameLogic\EnemyBehaviour.cs" />
     <Compile Include="src\GameLogic\EnemyController.cs" />
     <Compile Include="src\GameLogic\EnemySpawner.cs" />
     <Compile Include="src\GameLogic\Player.cs" />

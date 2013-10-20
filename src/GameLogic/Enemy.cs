@@ -19,8 +19,9 @@ namespace Brace.GameLogic
         private int attackCounter;
 
         private readonly int MAXSPEED = 1;
-        private readonly int MAXHEALTH = 100;
+        private readonly int MAXHEALTH = 1;
         private int health;
+
         public Enemy(Vector3 position, Vector3 rotation)
            : base(position, rotation, Assets.cube, Assets.cubeTexture)
         {
@@ -31,7 +32,7 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(30, 0.3f, 0.2f, 0.2f, position, Vector3.Zero, bodyDef);
+            pObject.Initialize(30, 0.3f, 0.25f, 0.7f, position, Vector3.Zero, bodyDef);
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
@@ -66,7 +67,7 @@ namespace Brace.GameLogic
             }
         }
 
-        private void die()
+        public void die()
         {
             DestroyPhysicsObject();
             doomed = true;

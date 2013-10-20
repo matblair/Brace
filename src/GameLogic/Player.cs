@@ -43,7 +43,7 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(30, 0.3f, 0.2f, 0.4f, position, Vector3.Zero, bodyDef);
+            pObject.Initialize(30, 0.3f, 0.1f, 0.7f, position, Vector3.Zero, bodyDef);
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
@@ -56,7 +56,7 @@ namespace Brace.GameLogic
             
                 if (chargeTime > MAXIMUMCHARGETIME)
                 {
-                    //ShootArrow(Vector2.UnitX);
+                    ShootArrow(Vector2.UnitY);
                 }
                 chargeTime += gameTime.ElapsedGameTime.Milliseconds;
                 

@@ -22,6 +22,7 @@ namespace Brace.GameLogic
             if (BraceGame.get().input.isMoving())
             {
                 moveLocation = BraceGame.get().input.moveTo();
+                ((Player)target).Move(moveLocation);
             }
             if (BraceGame.get().input.isShooting())
             {
@@ -33,7 +34,7 @@ namespace Brace.GameLogic
                 ((Player)target).ShootArrow(shootingDirection);
                 shooting = false;
             }
-            ((Player)target).Move(Vector2.Zero);
+            
         }
     }
 }

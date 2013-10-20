@@ -99,7 +99,7 @@ namespace Brace
             List<Actor> newActors = new List<Actor>();
             newActors.Add(new Player(Vector3.Zero, Vector3.Zero));
             double angle=0;
-            int NUMBEROFENEMIES = 10;
+            int NUMBEROFENEMIES = 15;
             for (int i = 0; i < NUMBEROFENEMIES; ++i)
             {
                 angle += 360 / NUMBEROFENEMIES;

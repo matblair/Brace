@@ -125,7 +125,7 @@ namespace Brace.Physics
 
         private void ApplyLinearDamp(PhysicsModel body, float dt)
         {
-            body.ApplyImpulse(-body.velocity*(body.linearDamp)*dt);
+            body.ApplyImpulse(-body.velocity*(body.linearDamp));
         }
 
         private void ApplyGravity(PhysicsModel body, float dt)
@@ -251,7 +251,7 @@ namespace Brace.Physics
             List<Sphere> spheres = body.spheres;
             for (int i = 0; i < spheres.Count; ++i)
             {
-                if (lowest.position.Y > spheres[i].position.Y)
+                if (lowest.position.Y-lowest.radius > spheres[i].position.Y-spheres[i].radius)
                 {
                     lowest = spheres[i];
                 }
