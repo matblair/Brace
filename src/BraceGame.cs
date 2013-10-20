@@ -17,13 +17,13 @@ namespace Brace
 
     public class BraceGame : Game
     {
+        public bool paused = true;
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteFont DefaultFont { get; private set; }
 
         public InputManager input { get; private set; }
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
-        private bool cameraToggling=false;
         private List<Actor> actors;
         private static BraceGame game;
 
@@ -114,12 +114,19 @@ namespace Brace
             return newActors;
         }
 
+        public void Start()
+        {
+            this.paused = false;
+        }
+
         protected override void Update(GameTime gameTime)
         {
             // Handle base.Update
             base.Update(gameTime);
             input.Update();
 
+            if (!paused)
+            {
             for(int i=0;i<actors.Count();++i)
             {
                 if (actors[i].doomed)
@@ -127,7 +134,8 @@ namespace Brace
                     actors.Remove(actors[i]);
                     --i;
                     continue;
-                }
+<<<<<<< .mine=======
+>>>>>>> .theirs                }
                 else
                 {
                     actors[i].Update(gameTime);
@@ -135,16 +143,13 @@ namespace Brace
                 
             }
 
-            StepPhysicsModel(gameTime);
+                StepPhysicsModel(gameTime);
 
-            
-            //Update tracking lights
-            playerLamp.Update(gameTime);
 
-            // Update the camera 
-            Camera.Update(gameTime);
+                //Update tracking lights
+                playerLamp.Update(gameTime);
 
-            // Now update the shaders
+<<<<<<< .mine            // Now update the shaders
             //First the unit shader
             unitShader.Parameters["View"].SetValue(Camera.View);
             unitShader.Parameters["Projection"].SetValue(Camera.Projection);
@@ -153,11 +158,27 @@ namespace Brace
             //Then the landscape shader
             landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
             Unit tracking = (Unit)actors[0];
+=======                // Update the camera 
+                Camera.Update(gameTime);
+>>>>>>> .theirs
+                // Now update the shaders
+                //First the unit shader
+                unitShader.Parameters["View"].SetValue(Camera.View);
+                unitShader.Parameters["Projection"].SetValue(Camera.Projection);
+                unitShader.Parameters["cameraPos"].SetValue(Camera.position);
 
-            landscapeEffect.Parameters["View"].SetValue(Camera.View);
-            landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
-            landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
+                //Then the landscape shader
+                landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+                Debug.WriteLine("PLAYER LAMP");
+                Debug.WriteLine(playerLamp.lightPntPos);
+                Debug.WriteLine("OBJ TRACK POS");
+                Unit tracking = (Unit)actors[0];
+                Debug.WriteLine(tracking.EyeLocation());
 
+                landscapeEffect.Parameters["View"].SetValue(Camera.View);
+                landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
+                landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
+            }
         }
 
         private void StepPhysicsModel(GameTime gameTime)
@@ -169,7 +190,8 @@ namespace Brace
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkRed);
+            GraphicsDevice.Clear(new Color(0xFF54082E));
+
             //First draw the landscape
             landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
 
