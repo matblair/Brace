@@ -164,7 +164,14 @@ namespace Brace
         void OnPointerReleased(CoreWindow sender, PointerEventArgs args)
         {
             isAiming = false;
-            gestureRecogniser.ProcessUpEvent(args.CurrentPoint);
+            try
+            {
+                gestureRecogniser.ProcessUpEvent(args.CurrentPoint);
+            }
+            catch (System.Exception e)
+            {
+                // 
+            }
         }
 
         void UpdateAim(Windows.Foundation.Point p)

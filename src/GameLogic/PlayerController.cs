@@ -19,22 +19,24 @@ namespace Brace.GameLogic
         }
         public override void Update(GameTime gameTime)
         {
-            if (BraceGame.get().input.isMoving())
-            {
-                moveLocation = BraceGame.get().input.moveTo();
-                ((Player)target).Move(moveLocation);
-            }
             if (BraceGame.get().input.isShooting())
             {
                 shooting = true;
                 shootingDirection = BraceGame.get().input.shotDirection();
                 ((Player)target).ChargeArrow(gameTime);
             }
-            else if(shooting==true) {
+
+            else if (shooting == true)
+            {
                 ((Player)target).ShootArrow(shootingDirection);
                 shooting = false;
             }
-            
+
+            else
+            {
+                moveLocation = BraceGame.get().input.moveTo();
+                ((Player)target).Move(moveLocation);
+            }
         }
     }
 }

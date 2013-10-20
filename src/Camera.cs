@@ -40,7 +40,7 @@ namespace Brace
             // View setup
             Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 500.0f);
             SetTarget(track);
-            SetViewType(ViewType.Follow);
+            SetViewType(ViewType.TopDown);
 
             this.position = 50 * Vector3.UnitY;
             this.up = Vector3.UnitX;
