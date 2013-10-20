@@ -15,7 +15,7 @@ namespace Brace.GameLogic
         EnemyController controller;
 
         Enemy(Vector3 position, Vector3 rotation)
-            : base(position, rotation, Assets.cube)
+            : base(position, rotation, Assets.cube, Assets.cubeTexture)
         {
             controller = new EnemyController(this);
         }
