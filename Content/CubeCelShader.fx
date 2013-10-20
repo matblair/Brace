@@ -4,6 +4,16 @@ float4x4 View;
 float4x4 Projection;
 float4 cameraPos;
 float4x4 worldInvTrp;
+ 
+//Texture
+Texture2D<float4> Texture;
+
+//Our texture sampler
+sampler textureSampler {
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
 
 // Our world lighting setups Will obviously need to be changed at a later 
 // date in order to properly having moving light sources etc.
@@ -15,12 +25,13 @@ float4 sunPntCol = float4(0.55, 0.1, 0.9, 1);
 // The direction of the diffuse light (I.E. our sun, this is static)
 float3 sunPntPos = float3(-1000, 20, 100);
  // The intensity of the diffuse light
-float sunIntensity = 0.05f;
+float sunIntensity = 0.25f;
 
 struct VS_IN
 {
 	float4 pos : SV_POSITION;
 	float4 nrm : NORMAL;
+	//float3 tex : TEXCOORD;
 // Other vertex properties, e.g. texture co-ords, surface Kd, Ks, etc
 };
 
@@ -49,7 +60,9 @@ PS_IN VS( VS_IN input )
     output.pos = mul(viewPos, Projection);
 
 	// Just pass along the colour at the vertex
+	//float4 textureColor = Texture.Sample(textureSampler, input.tex);
 	output.col = float4(1,1,1,1);
+	//output.col = textureColor;
 
 	return output;
 }
@@ -136,3 +149,91 @@ technique Lighting
         PixelShader = PS;
     }
 }
+/*
+float4x4 World;
+float4x4 View;
+float4x4 Projection;
+float4x4 WorldInverseTranspose;
+ 
+float4 AmbientColor = float4(1, 1, 1, 1);
+float AmbientIntensity = 0.1;
+ 
+float4 DiffuseLightDirection = float4(1, 0, 0, 0);
+float4 DiffuseColor = float4(1, 1, 1, 1);
+float DiffuseIntensity = 1.0;
+ 
+float Shininess = 200;
+float4 SpecularColor = float4(1, 1, 1, 1);
+float SpecularIntensity = 1;
+float4 ViewVector = float4(1, 0, 0, 0);
+ 
+// Our 2D Texture from the model.
+Texture2D<float4> Texture;
+
+// Our world lighting setups Will obviously need to be changed at a later 
+// date in order to properly having moving light sources etc.
+float3 lightPntPos;
+//float4 lightPntCol = float4(1.0f, 0.5f, 0.1f, 1.0f);
+float4 lightPntCol = float4(1.0f, 0.5f, 0.1f, 1.0f);
+
+float4 sunPntCol = float4(0.55, 0.1, 0.9, 1);
+// The direction of the diffuse light (I.E. our sun, this is static)
+float3 sunPntPos = float3(-1000, 20, 100);
+ // The intensity of the diffuse light
+float sunIntensity = 0.05f;
+
+sampler textureSampler {
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+ 
+struct VertexShaderInput
+{
+    float4 Position : SV_POSITION;
+    float4 Normal : NORMAL;
+    float2 TextureCoordinate : TEXCOORD0;
+};
+ 
+struct VertexShaderOutput
+{
+    float4 Position : SV_POSITION;
+    float4 Color : COLOR;
+    float4 Normal : TEXCOORD0;
+    float2 TextureCoordinate : TEXCOORD1;
+};
+ 
+VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
+{
+    VertexShaderOutput output;
+ 
+    float4 worldPosition = mul(input.Position, World);
+    float4 viewPosition = mul(worldPosition, View);
+    output.Position = mul(viewPosition, Projection);
+ 
+    float4 normal = normalize(mul(input.Normal, WorldInverseTranspose));
+    float lightIntensity = dot(normal, DiffuseLightDirection);
+    output.Color = saturate(DiffuseColor * DiffuseIntensity * lightIntensity);
+ 
+    output.Normal = normal;
+ 
+    output.TextureCoordinate = input.TextureCoordinate;
+    return output;
+}
+ 
+float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET
+{
+    float4 textureColor = Texture.Sample(textureSampler, input.TextureCoordinate);
+    return textureColor;
+}
+ 
+technique Textured
+{
+    pass Pass1
+    {
+		Profile = 9.1;
+        VertexShader = VertexShaderFunction;s
+        PixelShader = PixelShaderFunction;
+    }
+}
+*/

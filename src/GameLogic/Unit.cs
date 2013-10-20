@@ -14,14 +14,15 @@ namespace Brace.GameLogic
     {
 
         private Model model;
-        private Texture texture;
+        private Texture2D texture;
         public PhysicsModel pObject;
 
 
-        public Unit(Vector3 position, Vector3 rotation, Model model, Texture text)
+        public Unit(Vector3 position, Vector3 rotation, Model model, Texture2D text)
             : base(position, rotation)
         {
             this.model = model;
+            this.texture = text;
             InitializePhysicsObject();
         }
 

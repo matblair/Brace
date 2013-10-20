@@ -76,7 +76,7 @@ namespace Brace
             actors = InitializeActors();
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
-            Camera.SetViewType(Brace.Camera.ViewType.Follow);
+            Camera.SetViewType(Brace.Camera.ViewType.TopDown);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
             unitShader = Content.Load<Effect>("CubeCelShader");
@@ -87,13 +87,18 @@ namespace Brace
         private void LoadAssets()
         {
             Assets.spaceship = Content.Load<Model>("Cube");
-            Assets.cube = Content.Load<Model>("Cube");
+            Assets.cube = Content.Load<Model>("cube");
+            Assets.cubeTexture = Content.Load<Texture2D>("Archer");
+            Assets.tree = Content.Load<Model>("treeeeee");
         }
 
         private List<Actor> InitializeActors()
         {
             List<Actor> newActors = new List<Actor>();
             newActors.Add(new Cube(Vector3.Zero));
+         
+            Random rand = new Random();
+
             for (int i = -3; i < 3; ++i)
             {
                 for (int j = -3; j < 3; ++j)
@@ -102,8 +107,17 @@ namespace Brace
                 }
             }
 
-
             landscape = new GameLogic.Landscape(this);
+
+
+            for (int t = 0; t < 500; t++)
+            {
+                float x = rand.Next(-50, 50);
+                float y = rand.Next(-50, 50);
+                float h = landscape.HeightAt(x, y);
+                newActors.Add(new Tree(new Vector3(x, h, y)));
+            }
+
 
             return newActors;
         }
