@@ -142,16 +142,32 @@ namespace Brace
 
                 // Update the camera 
                 Camera.Update(gameTime);
+<<<<<<< HEAD
                
+=======
+
+>>>>>>> master
                 // Now update the shaders
                 //First the unit shader
                 unitShader.Parameters["View"].SetValue(Camera.View);
                 unitShader.Parameters["Projection"].SetValue(Camera.Projection);
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
+<<<<<<< HEAD
                 unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
 
                 //Then the landscape shader
                 landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+=======
+
+                //Then the landscape shader
+                landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+                Debug.WriteLine("PLAYER LAMP");
+                Debug.WriteLine(playerLamp.lightPntPos);
+                Debug.WriteLine("OBJ TRACK POS");
+                Unit tracking = (Unit)actors[0];
+                Debug.WriteLine(tracking.EyeLocation());
+
+>>>>>>> master
                 landscapeEffect.Parameters["View"].SetValue(Camera.View);
                 landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
                 landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
@@ -167,7 +183,11 @@ namespace Brace
 
         protected override void Draw(GameTime gameTime)
         {
+<<<<<<< HEAD
             GraphicsDevice.Clear(Color.Black);
+=======
+            GraphicsDevice.Clear(new Color(0xFF54082E));
+>>>>>>> master
 
             //First draw the landscape
             landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
