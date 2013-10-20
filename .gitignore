@@ -1,3 +1,5 @@
+.DS_Store
+*.orig
 MiniCube.WinRTXaml.csproj.user
 
 bin/
