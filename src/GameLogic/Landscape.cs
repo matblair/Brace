@@ -17,8 +17,6 @@ namespace Brace.GameLogic
         private Random random = new Random();
         private float xzScale = 200;
 
-        public Matrix world { get; private set; }
-
         // Verticies
         private float[,] segments;
         public VertexInputLayout inputLayout;

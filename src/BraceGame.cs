@@ -77,11 +77,13 @@ namespace Brace
             actors = InitializeActors();
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
-            Camera.SetViewType(Brace.Camera.ViewType.Follow);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
             unitShader = Content.Load<Effect>("CelShader");
             landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
+
+            input.Camera = Camera;
+
             base.LoadContent();
         }
 
