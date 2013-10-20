@@ -36,6 +36,7 @@ namespace Brace
         private Effect landscapeEffect;
         private TrackingLight playerLamp;
 
+
         public static BraceGame get() 
         {
             if (game == null)
@@ -144,11 +145,11 @@ namespace Brace
            
             //Then the landscape shader
             landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-            Debug.WriteLine("PLAYER LAMP");
-            Debug.WriteLine(playerLamp.lightPntPos);
-            Debug.WriteLine("OBJ TRACK POS");
+            //Debug.WriteLine("PLAYER LAMP");
+            //Debug.WriteLine(playerLamp.lightPntPos);
+           // Debug.WriteLine("OBJ TRACK POS");
             Unit tracking = (Unit)actors[0];
-            Debug.WriteLine(tracking.EyeLocation());
+            //Debug.WriteLine(tracking.EyeLocation());
 
             landscapeEffect.Parameters["View"].SetValue(Camera.View);
             landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);

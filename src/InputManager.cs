@@ -42,6 +42,7 @@ namespace Brace
         private bool isAiming;
         private Vector2 aimDirection;
         private bool spinAttack;
+        public Vector3 moveCoordinate;
 
         public InputManager(BraceGame game)
         {
@@ -128,6 +129,35 @@ namespace Brace
         void OnTapped(object sender, TappedEventArgs e)
         {
             Debug.WriteLine("Tapped event");
+            if (!isAiming)
+            {
+                // Not aiming, then this is point to move
+                float x = (float)(e.Position.X);
+                float y = (float)(e.Position.Y);
+                float z = 0;
+
+                Vector2 p = getVectorToPointer(e.Position);         // coordinate of tap from center of screen.
+                Vector3 tapVector = new Vector3(p.X + camera.position.X, p.Y + camera.position.Y, z);
+
+                Vector3 t = camera.GetCameraTarget().BodyLocation();
+
+                moveCoordinate = SharpDX.Vector3.Unproject(
+                                            tapVector,
+                                            camera.position.X,
+                                            camera.position.Z,
+                                            (float)window.Bounds.Width,
+                                            (float)window.Bounds.Height,
+                                            0.0f,
+                                            500f,
+                                            camera.View);
+
+                Debug.WriteLine("Move to world coordinate: (" + moveCoordinate.X + ", " + moveCoordinate.Y + ", " + moveCoordinate.Z + ")");
+                Debug.WriteLine("Camera location: (" + camera.position.X + ", " + camera.position.Y + ", " + camera.position.Z + ")");
+                
+                Debug.WriteLine("Target location: (" + t.X + ", " + t.Y + ", " + t.Z + ")");
+
+            }
+           
         }
 
         void OnHolding(object sender, HoldingEventArgs e)
@@ -163,29 +193,21 @@ namespace Brace
         void OnPointerPressed(CoreWindow sender, PointerEventArgs args)
         {
             Debug.WriteLine("Pointer pressed");
-            gestureRecogniser.ProcessDownEvent(args.CurrentPoint);
             
-            Vector2 point = getVectorToPointer(args.CurrentPoint.Position);
-            double x = point.X;
-            double y = point.Y;
-
-            double h = window.Bounds.Height;
-            double w = window.Bounds.Width;
-            
+            Vector2 p = getVectorToPointer(args.CurrentPoint.Position);
             double halfOfBoundingBox = playerBoundBox / 2;
 
-            if (x > -halfOfBoundingBox && x < halfOfBoundingBox)
+            if ((p.X > -halfOfBoundingBox && p.X < halfOfBoundingBox) && (p.Y > -halfOfBoundingBox && p.Y < halfOfBoundingBox))
             {
-                Debug.WriteLine("world");
-                if (y > -halfOfBoundingBox && y < halfOfBoundingBox)
-                {
-                    isAiming = true;
+                isAiming = true;
 
-                    Vector3 vd = camera.GetCameraTarget().ViewDirection();
-                    aimDirection = new Vector2(vd.X, vd.Z);
-                    Debug.WriteLine("------------------------ IS AIMING");
-                }
+                // Initialise aim direction to the view direction of the camera target
+                Vector3 vd = camera.GetCameraTarget().ViewDirection();
+                aimDirection = new Vector2(vd.X, vd.Z);
+                Debug.WriteLine("------------------------ IS AIMING");
             }
+            gestureRecogniser.ProcessDownEvent(args.CurrentPoint);
+
         }
 
         void OnPointerMoved(CoreWindow sender, PointerEventArgs args)
