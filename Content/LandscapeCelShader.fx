@@ -14,7 +14,7 @@ float4 sunPntCol = float4(0.55, 0.1, 0.9, 1);
 // The direction of the diffuse light (I.E. our sun, this is static)
 float3 sunPntPos = float3(-1000,20, 100);
  // The intensity of the diffuse light
-float sunIntensity = 0.15f;
+float sunIntensity = 0.05f;
 
 struct VS_IN
 {
@@ -113,6 +113,7 @@ float4 PS( PS_IN input ) : SV_Target
 	returnCol.a = input.col.a;
 	
 	float totalIntensity = 0.3126 * returnCol.r + 0.7152 * returnCol.g + 0.0722 * returnCol.b;
+
 	// Now we will cel shade the rendering by discretizing the color
 	if(totalIntensity >0.98 ) {
 		returnCol = float4(1.0,1.0,1.0,1.0) * returnCol;
@@ -125,7 +126,6 @@ float4 PS( PS_IN input ) : SV_Target
 	} else {
 		returnCol = float4(0.5,0.5,0.5,1.0) * returnCol;
 	}
-
 
 
 	return returnCol;

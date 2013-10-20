@@ -1,8 +1,6 @@
 ﻿using Brace.GameLogic;
 using Brace.Utils;
 using SharpDX;
-using SharpDX.DXGI;
-using SharpDX.Windows;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.Toolkit.Input;
@@ -19,17 +17,16 @@ namespace Brace
 
     public class BraceGame : Game
     {
+        public bool paused = true;
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteFont DefaultFont { get; private set; }
 
         public InputManager input { get; private set; }
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
-        private bool cameraToggling=false;
         private List<Actor> actors;
         private static BraceGame game;
-      
-        //Our Physics engine
+
         public Physics.PhysicsEngine physicsWorld;
 
         //Our actors
@@ -77,24 +74,23 @@ namespace Brace
             // Load camera and models
             LoadAssets();
             actors = InitializeActors();
-           
+
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.Follow);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
             unitShader = Content.Load<Effect>("CubeCelShader");
             landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
-
             base.LoadContent();
         }
 
         private void LoadAssets()
         {
             Assets.spaceship = Content.Load<Model>("Cube");
-            Assets.cube = Content.Load<Model>("batman");
+            Assets.cube = Content.Load<Model>("Cube");
         }
 
-        private Actor[] InitializeActors()
+        private List<Actor> InitializeActors()
         {
             List<Actor> newActors = new List<Actor>();
             newActors.Add(new Cube(Vector3.Zero));
@@ -112,48 +108,54 @@ namespace Brace
             return newActors;
         }
 
+        public void Start()
+        {
+            this.paused = false;
+        }
+
         protected override void Update(GameTime gameTime)
         {
             // Handle base.Update
-           base.Update(gameTime);
-           input.Update();
-         
-           foreach (Actor actor in actors)
-           {
-               if (actor.doomed)
-               {
-                   actors.Remove(actor);
-               }
-               else
-               {
-                   actor.Update(gameTime);
-               }
+            base.Update(gameTime);
+            input.Update();
+
+            if (!paused)
+            {
+                foreach (Actor actor in actors)
+                {
+                    if (actor.doomed)
+                    {
+                        actors.Remove(actor);
+                    }
+                    else
+                    {
+                        actor.Update(gameTime);
+                    }
+
+                }
+
+                StepPhysicsModel(gameTime);
+
+
+                //Update tracking lights
+                playerLamp.Update(gameTime);
+
+                // Update the camera 
+                Camera.Update(gameTime);
                
-           }
+                // Now update the shaders
+                //First the unit shader
+                unitShader.Parameters["View"].SetValue(Camera.View);
+                unitShader.Parameters["Projection"].SetValue(Camera.Projection);
+                unitShader.Parameters["cameraPos"].SetValue(Camera.position);
+                unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
 
-           //Update the physics model
-           StepPhysicsModel(gameTime);
-
-           
-           //Update tracking lights
-           playerLamp.Update(gameTime);
-
-           // Update the camera 
-           Camera.Update(gameTime);
-
-            // Now update the shaders
-            //First the unit shader
-            unitShader.Parameters["View"].SetValue(Camera.View);
-            unitShader.Parameters["Projection"].SetValue(Camera.Projection);
-            unitShader.Parameters["cameraPos"].SetValue(Camera.position);
-            unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-
-            //Then the landscape shader
-            landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-            landscapeEffect.Parameters["View"].SetValue(Camera.View);
-            landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
-            landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
-
+                //Then the landscape shader
+                landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+                landscapeEffect.Parameters["View"].SetValue(Camera.View);
+                landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
+                landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
+            }
         }
 
         private void StepPhysicsModel(GameTime gameTime)
@@ -165,14 +167,15 @@ namespace Brace
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkRed);
+            GraphicsDevice.Clear(Color.Black);
+
             //First draw the landscape
             landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
 
-            //Then the actors
+            //Then teh actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, unitShader);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader);
             }
 
             // Show FPS

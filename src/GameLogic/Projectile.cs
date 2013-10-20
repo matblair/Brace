@@ -14,7 +14,7 @@ namespace Brace.src.GameLogic
     {
         Vector3 direction;
         Projectile(Vector3 position, Vector3 direction)
-            : base(position, direction, Assets.cube)
+            : base(position, direction, Assets.cube, Assets.cubeTexture)
         {
             
             this.direction = direction;

@@ -36,7 +36,7 @@ namespace Brace
         // Update the camera and associated things
         public void Update(GameTime gameTime)
         {
-            lightPntPos = tracking.EyeLocation() + 1.5f * Vector3.UnitY + 1.5f * tracking.ViewDirection();
+            lightPntPos = tracking.EyeLocation() + 1.5f * Vector3.UnitY + 4.5f * tracking.ViewDirection();
         }
 
         // Set a new target object to track

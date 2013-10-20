@@ -38,55 +38,38 @@ float4x4 worldInvTrp;
 // Our world lighting setups Will obviously need to be changed at a later 
 // date in order to properly having moving light sources etc.
 float4 lightAmbCol = float4(0.8f, 0.8f, 0.8f, 1.0f);
-float4 lightPntPos;
+float4 lightPntPos = float4(-10.0f, 30.0f, 0.0f, 1.0f);
 float4 lightPntCol = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 // The direction of the diffuse light
 float3 DiffuseLightDirection = float3(10.0, 30.0, 0.0);
  
 // The color of the diffuse light
-float4 DiffuseColour = float4(0.3, 0.3, 1, 1);
+float4 DiffuseColour = float4(1, 1, 1, 1);
  
 // The intensity of the diffuse light
 float DiffuseIntensity = 1.5;
+
 
 // The line colour we will be using for outlines
 float4 LineColor = float4(0, 0, 0, 1);
 // The amount we will expand the vertices to draw the lines, i.e. line thickness
 float LineThickness = .3;
 
-//Our textures for textured objects
-Texture2D<float4> Texture;
-
-sampler textureSampler {
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
- 
 struct VS_IN
 {
-//	float4 pos : SV_POSITION;
-//	float4 nrm : NORMAL;
-//	float2 texcoord : TEXCOORD0;
-//	float	tangent : TANGENT;
-//	float	bitangent : BITANGENT;
-	float4 pos : SV_POSITION;
-    float4 nrm : NORMAL;
-    //float2 tex : TEXCOORD0;
-
+	float4 pos : POSITION;
+	float4 nrm : NORMAL;
+	float4 col : COLOR;
 // Other vertex properties, e.g. texture co-ords, surface Kd, Ks, etc
 };
-
 
 struct PS_IN
 {
 	float4 pos : SV_POSITION; //Position in camera co-ords
 	float4 col : COLOR;
 	float4 wpos : TEXCOORD0; //Position in world co-ords
-	float3 wnrm : TEXCOORD1; //Normal in world co-ords     
-	float2 texcoord : TEXCOORD2; // this is new
-
+	float3 wnrm : TEXCOORD1; //Normal in world co-ords 
 };
 
 
@@ -106,11 +89,8 @@ PS_IN CVS( VS_IN input )
     output.pos = mul(viewPos, Projection);
 
 	// Just pass along the colour at the vertex
-	//output.col = input.col;
-	//output.texcoord = input.tex;	
-	//float4 textureColor = Texture.Sample(textureSampler, input.tex);
+	output.col = input.col;
 
-	output.col = float4(1,1,1,1);
 	return output;
 }
 
@@ -118,107 +98,90 @@ PS_IN CVS( VS_IN input )
 
 float4 CPS( PS_IN input ) : SV_Target
 	{
+	
 	// Our interpolated normal might not be of length 1
 	float3 interpNormal = normalize(input.wnrm);
-
+	
 	// Calculate ambient RGB intensities
 	float Ka = 1;
-//	float3 amb = input.col.rgb*lightAmbCol.rgb*Ka;
+	float3 amb = input.col.rgb*lightAmbCol.rgb*Ka;
 	float ambientIntensity = dot(normalize(DiffuseLightDirection),interpNormal);
+	if(ambientIntensity<0) 
+		ambientIntensity =0;
 
-	float4 colSpe = float4(0,0,0,1);
-	//Check if in lantern range
-	float3 distToLamp = lightPntPos - input.wpos.xyz;
-	
-	if(length(distToLamp)<30){
-		
-		// Calculate diffuse RBG reflections
-		float fAtt = 1.0;
-		float Kd = 1;
-		float3 L = normalize(distToLamp);
-		float LdotN = saturate(dot(L,interpNormal.xyz));
-		float3 dif = fAtt*lightPntCol.rgb*Kd*input.col.rgb*LdotN;
-		float difIntensity = 0.3126 * dif.r + 0.7152 * dif.g + 0.0722 * dif.b;
-		
-		// Calculate specular reflections
-		float Ks = 1;
-		float specN = 0.8; 
-		float3 V = normalize(cameraPos.xyz - input.wpos.xyz);
-		float3 R = normalize(2*LdotN*interpNormal.xyz - L.xyz);
-		float3 spe = fAtt*lightPntCol.rgb*Ks*pow(saturate(dot(V,R)),specN);
-		float speIntensity =  0.3126 * spe.r + 0.7152 * spe.g + 0.0722 * spe.b;
-	
-		// Calculate ambient lighting intensity, just work on ambient for now add the others later.
-		colSpe.rgb= lightPntCol.rgb;
-		speIntensity += difIntensity;
-		//Discretize colours
-		if(speIntensity > 0.98 ) {
-			colSpe = float4(0.9,0.9,0.9,1.0)* colSpe;
-		} else if (speIntensity > 0.70 ) {
-			colSpe = float4(0.75,0.75,0.75,1.0) * colSpe;
-		}else if (speIntensity > 0.35) {
-			colSpe = float4(0.35,0.35,0.35,1.0) * colSpe;
-		} else if (speIntensity > 0.25) {
-			colSpe = float4(0.15,0.15,0.15,1.0) * colSpe;
-		} else {
-			colSpe = float4(0,0,0,0);
-		}
-
-	} else {
-		// Calculate diffuse RBG reflections
-		float fAtt = 1.5;
-		float Kd = 1;
-		float3 L = normalize(distToLamp);
-		float LdotN = saturate(dot(L,interpNormal.xyz));
-		float3 dif = fAtt*lightPntCol.rgb*Kd*input.col.rgb*LdotN;
-		float difIntensity = 0.3126 * dif.r + 0.7152 * dif.g + 0.0722 * dif.b;
-
-		// Calculate ambient lighting intensity, just work on ambient for now add the others later.
-		colSpe.rgb= lightPntCol.rgb;
-		colSpe.a = 1.0;
-
-		if(difIntensity > 0.9 ) {
-			colSpe = float4(0.9,0.9,0.9,1.0) * colSpe;
-		} else if (difIntensity > 0.50 ) {
-			colSpe = float4(0.75,0.75,0.75,1.0) * colSpe;
-		}else if (difIntensity > 0.35) {
-			colSpe = float4(0.35,0.35,0.35,1.0) * colSpe;
-		} else if (difIntensity > 0.2) {
-			colSpe = float4(0.15,0.15,0.15,1.0) * colSpe;
-		} else {
-			colSpe = float4(0,0,0,0);
-		}	
-	}  
-	
+	// Calculate diffuse RBG reflections
+	float fAtt = 1;
+	float Kd = 1;
+	float3 L = normalize(lightPntPos.xyz - input.wpos.xyz);
+	float LdotN = saturate(dot(L,interpNormal.xyz));
+	float3 dif = fAtt*lightPntCol.rgb*Kd*input.col.rgb*LdotN;
+	float difIntensity = 0.2126 * dif.r + 0.7152 * dif.g + 0.0722 * dif.b;
+	// Calculate specular reflections
+	float Ks = 1;
+	float specN = 1; // Numbers>>1 give more mirror-like highlights
+	float3 V = normalize(cameraPos.xyz - input.wpos.xyz);
+	float3 R = normalize(2*LdotN*interpNormal.xyz - L.xyz);
+	float3 spe = fAtt*lightPntCol.rgb*Ks*pow(saturate(dot(V,R)),specN);
+	float speIntensity =  0.2126 * spe.r + 0.7152 * spe.g + 0.0722 * spe.b;
+	// Calculate ambient lighting intensity, just work on ambient for now add the others later.
 
 	//Work out color based on just ambient
-	float4 ambC = input.col * DiffuseColour * DiffuseIntensity;
-	float4 colour = float4(0.0f,0.0f,0.0f,0.0f);
-	colour.rgb = ambC.rgb;
-	colour.a = input.col.a;
+	//float4 colour = input.col * DiffuseColour * DiffuseIntensity * ambientIntensity * speIntensity;
+	//colour.a = input.col.a;
 
 	// Combine reflection components 
-	//float4 colour = float4(0.0f,0.0f,0.0f,0.0f);
-	//colour.rgb = amb.rgb+dif.rgb+spe.rgb;
-	//colour.a = input.col.a; 
+	float4 colour = float4(0.0f,0.0f,0.0f,0.0f);
+	colour.rgb = amb.rgb+dif.rgb+spe.rgb;
+	colour.a = input.col.a; 
 
-	float totalIntensity = ambientIntensity;
+	float totalIntensity = speIntensity + ambientIntensity + difIntensity;
 
 	// Now we will cel shade the rendering by discretizing the color
 	if(totalIntensity > 0.95 ) {
 		colour = float4(1.0,1.0,1.0,1.0) * colour;
-	} else if (totalIntensity > 0.6) {
-		colour = float4(0.7,0.7,0.7,1.0) * colour;
-	} else if (totalIntensity > 0.35) {
-			colSpe = float4(0.35,0.35,0.35,1.0) * colSpe;
-	} else if (totalIntensity > 0.25) {
-			colSpe = float4(0.15,0.15,0.15,1.0) * colSpe;
+	} else if (totalIntensity > 0.55 ) {
+		colour = float4(0.75,0.75,0.75,1.0) * colour;
+	} else if (totalIntensity > 0.10) {
+		colour = float4(0.40,0.40,0.40,1.0) * colour;
 	} else {
-			colSpe = float4(0,0,0,0);
+		colour = float4(0.1,0.1,0.1,1.0) * colour;
+	
 	}
-	colour.rgb = colour.rgb + colSpe.rgb;
 	return colour;
 }
+
+// This is the vertex shader that goes through and calculates the
+// outline positions, and then proceeds to add them to the model.
+// To be used in the first shader pass. 
+PS_IN OVS( VS_IN input )
+{
+	PS_IN output = (PS_IN)0;
+
+    // Calculate where the vertex ought to be.  This line is equivalent
+    // to the transformations in the CelVertexShader.
+    float4 original = mul(mul(mul(input.pos, World), View), Projection);
+ 
+    // Calculates the normal of the vertex like it ought to be.
+    float4 normal = mul(mul(normalize(mul(float4(input.nrm.xyz, 0),World)), View), Projection);
+ 
+    // Take the correct "original" location and translate the vertex a little
+    // bit in the direction of the normal to draw a slightly expanded object.
+    // Later, we will draw over most of this with the right color, except the expanded
+    // part, which will leave the outline that we want.
+    output.pos = original + (mul(LineThickness, normal));
+    return output;
+}
+
+
+// This is pretty straightforward, used for our first pass where we will add 
+// the outlines to the models, simply returns the line color
+float4 OPS( PS_IN input ) : SV_Target
+{
+	return LineColor;
+}
+
+
+
 
 technique CelShading
 {
@@ -226,85 +189,9 @@ technique CelShading
 	// which will make it look better than shitty shading.
 	pass Pass2 
 	{
-		Profile = 9.3;
-		VertexShader = CVS;
-        PixelShader = CPS;
+		VertexShader = compile vs_2_0 CVS();
+        PixelShader = compile ps_2_0 CPS();
 		//CullMode = CCW;
 	}
 	
-} 
-
-/*
-float4x4 World;
-float4x4 View;
-float4x4 Projection;
-float4x4 worldInvTrp;
- 
-float4 AmbientColor = float4(1, 1, 1, 1);
-float AmbientIntensity = 0.1;
- 
-float4 DiffuseLightDirection = float4(1, 0, 0, 0);
-float4 DiffuseColor = float4(1, 1, 1, 1);
-float DiffuseIntensity = 1.0;
- 
-float Shininess = 200;
-float4 SpecularColor = float4(1, 1, 1, 1);
-float SpecularIntensity = 1;
-float4 ViewVector = float4(1, 0, 0, 0);
- 
-Texture2D<float4> Texture;
-
-sampler textureSampler {
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
- 
-struct VertexShaderInput
-{
-    float4 Position : SV_POSITION;
-    float4 Normal : NORMAL;
-    float2 TextureCoordinate : TEXCOORD0;
-};
- 
-struct VertexShaderOutput
-{
-    float4 Position : SV_POSITION;
-    float4 Color : COLOR;
-    float4 Normal : TEXCOORD0;
-    float2 TextureCoordinate : TEXCOORD1;
-};
- 
-VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
-{
-    VertexShaderOutput output;
- 
-    float4 worldPosition = mul(input.Position, World);
-    float4 viewPosition = mul(worldPosition, View);
-    output.Position = mul(viewPosition, Projection);
- 
-    float4 normal = normalize(mul(input.Normal, worldInvTrp));
-    float lightIntensity = dot(normal, DiffuseLightDirection);
-    output.Color = saturate(DiffuseColor * DiffuseIntensity * lightIntensity);
- 
-    output.Normal = normal;
- 
-    output.TextureCoordinate = input.TextureCoordinate;
-    return output;
 }
- 
-float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET
-{
-    float4 textureColor = Texture.Sample(textureSampler, input.TextureCoordinate);
-    return textureColor;
-}
- 
-technique Textured
-{
-    pass Pass1
-    {
-		Profile = 9.1;
-        VertexShader = VertexShaderFunction;
-        PixelShader = PixelShaderFunction;
-    }
-} */

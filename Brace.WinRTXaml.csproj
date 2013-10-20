@@ -42,6 +42,12 @@
     </Compile>
     <Compile Include="src\Camera.cs" />
     <Compile Include="src\BraceGame.cs" />
+    <Compile Include="src\GameLogic\Enemy.cs" />
+    <Compile Include="src\GameLogic\EnemyController.cs" />
+    <Compile Include="src\GameLogic\EnemySpawner.cs" />
+    <Compile Include="src\GameLogic\Player.cs" />
+    <Compile Include="src\GameLogic\PlayerController.cs" />
+    <Compile Include="src\GameLogic\Projectile.cs" />
     <Compile Include="src\TrackingLight.cs" />
     <Compile Include="src\FPSRenderer.cs" />
     <Compile Include="src\Actor.cs" />
@@ -73,15 +79,10 @@
     <AppxManifest Include="PackageXaml.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="packages.config" />
     <ToolkitModel Include="Content\cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ToolkitModel>
-    <None Include="Content\batman.mtl" />
-    <ToolkitModel Include="Content\batman.obj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </ToolkitModel>
-    <None Include="Content\OilBarrels.mtl" />
-    <ToolkitModel Include="Content\OilBarrels.obj" />
     <None Include="MiniCube.WinRTXaml_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -92,10 +93,6 @@
     <ToolkitFxc Include="Content\CubeCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
-    <Content Include="Content\OilBarrels\Blue1.JPG" />
-    <Content Include="Content\OilBarrels\Green1.JPG" />
-    <Content Include="Content\OilBarrels\Grey1.JPG" />
-    <Content Include="Content\OilBarrels\Red1.JPG" />
     <ToolkitFxc Include="Content\LandscapeCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
@@ -122,6 +119,12 @@
     <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="TCD.Controls">
+      <HintPath>packages\TCD.Controls.2.1.0\lib\netcore45\TCD.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="TCD.Controls.Settings">
+      <HintPath>packages\TCD.Controls.2.1.0\lib\netcore45\TCD.Controls.Settings.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">

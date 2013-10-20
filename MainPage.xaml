@@ -8,5 +8,8 @@
     mc:Ignorable="d"    
     d:DesignWidth="1280"
     d:DesignHeight="800">
- 
+    <TextBlock x:Name="menuTitle" Margin="400,300,400,0" TextWrapping="Wrap" Text="Brace" VerticalAlignment="Top" FontFamily="Global User Interface" FontSize="80" TextAlignment="Center"/>
+    <Button x:Name="menuPlayButton" Content="Start" HorizontalAlignment="Stretch" Margin="600,454,600,0" VerticalAlignment="Top" Click="menuPlayButton_Click" MaxWidth="80"/>
+    <Button x:Name="gamePauseButton" Content="| |" HorizontalAlignment="Right" Margin="0,30,30,0" VerticalAlignment="Top" Width="53" Height="45" Click="gamePauseButton_Click"/>
+
 </SwapChainBackgroundPanel>
