@@ -48,20 +48,15 @@ namespace Brace.GameLogic
         {
             position = pObject.position;
             controller.Update(gameTime);
-            
-            if (chargeTime > MAXIMUMCHARGETIME)
-            {
-                ShootArrow(Vector2.UnitY);
-            }
-            chargeTime += gameTime.ElapsedGameTime.Milliseconds;
         }
 
         public void ShootArrow(Vector2 direction)
         {
+            direction.Normalize();
+
             if (chargeTime > MAXIMUMCHARGETIME)
             {
                 Vector3 arrowIPosition = position + new Vector3(direction.X, 0, direction.Y) * 3;
-
                 BraceGame.get().AddActor(new Projectile(arrowIPosition, new Vector3(direction.X, 0, direction.Y), MAXARROWDAMAGE));
             }
             else if (chargeTime > MINIMUMCHARGETIME)
