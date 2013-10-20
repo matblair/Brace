@@ -31,8 +31,8 @@ namespace Brace.GameLogic
 
 
         PlayerController controller;
-        public Player(Vector3 position, Vector3 rotation)
-            : base(position, rotation, Assets.cube)
+        Player(Vector3 position, Vector3 rotation)
+            : base(position, rotation, Assets.cube, Assets.cubeTexture)
         {
             controller = new PlayerController(this);
             chargeTime = 0;

@@ -83,7 +83,7 @@ namespace Brace
             Camera.SetViewType(Brace.Camera.ViewType.TopDown);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
-            unitShader = Content.Load<Effect>("CelShader");
+            unitShader = Content.Load<Effect>("CubeCelShader");
             landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
             base.LoadContent();
         }
@@ -134,8 +134,7 @@ namespace Brace
                     actors.Remove(actors[i]);
                     --i;
                     continue;
-<<<<<<< .mine=======
->>>>>>> .theirs                }
+               }
                 else
                 {
                     actors[i].Update(gameTime);
@@ -149,32 +148,19 @@ namespace Brace
                 //Update tracking lights
                 playerLamp.Update(gameTime);
 
-<<<<<<< .mine            // Now update the shaders
-            //First the unit shader
-            unitShader.Parameters["View"].SetValue(Camera.View);
-            unitShader.Parameters["Projection"].SetValue(Camera.Projection);
-            unitShader.Parameters["cameraPos"].SetValue(Camera.position);
-           
-            //Then the landscape shader
-            landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-            Unit tracking = (Unit)actors[0];
-=======                // Update the camera 
+                // Update the camera 
                 Camera.Update(gameTime);
->>>>>>> .theirs
+               
+
                 // Now update the shaders
                 //First the unit shader
                 unitShader.Parameters["View"].SetValue(Camera.View);
                 unitShader.Parameters["Projection"].SetValue(Camera.Projection);
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
+                unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
 
                 //Then the landscape shader
                 landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-                Debug.WriteLine("PLAYER LAMP");
-                Debug.WriteLine(playerLamp.lightPntPos);
-                Debug.WriteLine("OBJ TRACK POS");
-                Unit tracking = (Unit)actors[0];
-                Debug.WriteLine(tracking.EyeLocation());
-
                 landscapeEffect.Parameters["View"].SetValue(Camera.View);
                 landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
                 landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
@@ -190,7 +176,7 @@ namespace Brace
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(new Color(0xFF54082E));
+            GraphicsDevice.Clear(Color.Black);
 
             //First draw the landscape
             landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
@@ -198,7 +184,7 @@ namespace Brace
             //Then teh actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,null);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader);
             }
 
             // Show FPS

@@ -22,7 +22,7 @@ namespace Brace.GameLogic
         private readonly int MAXHEALTH = 100;
         private int health;
         public Enemy(Vector3 position, Vector3 rotation)
-            : base(position, rotation, Assets.cube)
+           : base(position, rotation, Assets.cube, Assets.cubeTexture)
         {
             health = MAXHEALTH;
             controller = new EnemyController(this);

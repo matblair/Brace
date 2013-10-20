@@ -12,6 +12,10 @@ namespace Brace.Utils
     class Assets
     {
         public static Model spaceship;
-        public static Model cube;  
+        public static Model cube;
+        public static Texture cubeTexture;
+        public static Texture plantTexture;
+        public static Model plant;
+
     }
 }

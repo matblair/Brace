@@ -18,7 +18,7 @@ namespace Brace.GameLogic
         private int deathCounter = 0;
         int damage;
         public Projectile(Vector3 position, Vector3 direction, int damage)
-            : base(position, Vector3.Zero, Assets.cube)
+            : base(position, direction, Assets.cube, Assets.cubeTexture)
         {
             
             this.direction = direction;
