@@ -115,10 +115,10 @@ namespace Brace
             landscape = new GameLogic.Landscape(this);
 
 
-            for (int t = 0; t < 500; t++)
+            for (int t = 0; t < 100; t++)
             {
-                float x = rand.Next(-50, 50);
-                float y = rand.Next(-50, 50);
+                float x = rand.Next(-200, 200);
+                float y = rand.Next(-200, 200);
                 float h = landscape.HeightAt(x, y);
                 newActors.Add(new Tree(new Vector3(x, h, y)));
             }
