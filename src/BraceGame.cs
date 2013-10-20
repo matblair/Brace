@@ -1,4 +1,4 @@
-﻿using Brace.GameLogic;
+using Brace.GameLogic;
 using Brace.Utils;
 using SharpDX;
 using SharpDX.Toolkit;
@@ -26,6 +26,8 @@ namespace Brace
         public Camera Camera { get; private set; }
         private List<Actor> actors;
         private static BraceGame game;
+
+        private Player player;
 
         public Physics.PhysicsEngine physicsWorld;
 
@@ -74,6 +76,7 @@ namespace Brace
             // Load camera and models
             LoadAssets();
             actors = InitializeActors();
+            player = (Player)actors[0];
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.TopDown);
@@ -81,6 +84,9 @@ namespace Brace
             //Load shaders
             unitShader = Content.Load<Effect>("CubeCelShader");
             landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
+
+            input.Camera = Camera;
+
             base.LoadContent();
         }
 
@@ -94,17 +100,16 @@ namespace Brace
 
         private List<Actor> InitializeActors()
         {
-            List<Actor> newActors = new List<Actor>();
-            newActors.Add(new Cube(Vector3.Zero));
-         
+            List<Actor> newActors = new List<Actor>();         
             Random rand = new Random();
 
-            for (int i = -3; i < 3; ++i)
+            newActors.Add(new Player(Vector3.Zero, Vector3.Zero));
+            double angle=0;
+            int NUMBEROFENEMIES = 15;
+            for (int i = 0; i < NUMBEROFENEMIES; ++i)
             {
-                for (int j = -3; j < 3; ++j)
-                {
-                    newActors.Add(new Cube(new Vector3(i,10,j)));
-                }
+                angle += 360 / NUMBEROFENEMIES;
+                newActors.Add(new Enemy(new Vector3((float)(NUMBEROFENEMIES * Math.Cos(angle)), 0, (float)(NUMBEROFENEMIES * Math.Sin(angle))), Vector3.Zero));
             }
 
             landscape = new GameLogic.Landscape(this);
@@ -135,18 +140,20 @@ namespace Brace
 
             if (!paused)
             {
-                foreach (Actor actor in actors)
+            for(int i=0;i<actors.Count();++i)
+            {
+                if (actors[i].doomed)
                 {
-                    if (actor.doomed)
-                    {
-                        actors.Remove(actor);
-                    }
-                    else
-                    {
-                        actor.Update(gameTime);
-                    }
-
+                    actors.Remove(actors[i]);
+                    --i;
+                    continue;
+               }
+                else
+                {
+                    actors[i].Update(gameTime);
                 }
+                
+            }
 
                 StepPhysicsModel(gameTime);
 
@@ -198,6 +205,20 @@ namespace Brace
 
             // Handle base.Draw
             base.Draw(gameTime);
+        }
+
+        internal void AddActor(Actor actor)
+        {
+            actors.Add(actor);
+        }
+
+        internal void RemoveActor(Actor actor)
+        {
+            actors.Remove(actor);
+        }
+        internal Player getPlayer()
+        {
+            return player;
         }
     }
 }

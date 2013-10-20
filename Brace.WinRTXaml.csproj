@@ -44,6 +44,7 @@
     <Compile Include="src\BraceGame.cs" />
     <Compile Include="src\GameLogic\Tree.cs" />
     <Compile Include="src\GameLogic\Enemy.cs" />
+    <Compile Include="src\GameLogic\EnemyBehaviour.cs" />
     <Compile Include="src\GameLogic\EnemyController.cs" />
     <Compile Include="src\GameLogic\EnemySpawner.cs" />
     <Compile Include="src\GameLogic\Player.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="src\GameLogic\Unit.cs" />
     <Compile Include="src\ITrackable.cs" />
     <Compile Include="src\OriginTrackable.cs" />
-    <Compile Include="src\Physics\AABB.cs" />
     <Compile Include="src\Physics\Contact.cs" />
     <Compile Include="src\Physics\PhysicsBody.cs" />
     <Compile Include="src\Physics\PhysicsEngine.cs" />

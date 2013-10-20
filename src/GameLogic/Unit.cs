@@ -22,8 +22,9 @@ namespace Brace.GameLogic
             : base(position, rotation)
         {
             this.model = model;
-            this.texture = text;
             InitializePhysicsObject();
+            this.texture = text;
+            pObject.extraData = this;
         }
 
         public abstract override void Update(GameTime gametime);

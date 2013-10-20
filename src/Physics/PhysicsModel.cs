@@ -21,7 +21,7 @@ namespace Brace.Physics
         public float friction;
         public object extraData;
 
-        public void Initialize(float mass, float restitution, float linearDamp, float friction, Vector3 iPosition, Vector3 iVelocity, PhysicsBody bodyDefinition, Object extraData)
+        public void Initialize(float mass, float restitution, float linearDamp, float friction, Vector3 iPosition, Vector3 iVelocity, PhysicsBody bodyDefinition)
         {
             this.mass = mass;
             this.restitution = restitution;
@@ -39,36 +39,33 @@ namespace Brace.Physics
             this.linearDamp = linearDamp;
             this.friction = friction;
             contacts = new List<Contact>();
-            this.extraData = extraData;
         }
 
         public void ApplyForce(Vector3 force)
         {
 
-            if (bodyDefinition.bodyType == BodyType.dynamic)
+            if (bodyDefinition.bodyType == BodyType.stationary || bodyDefinition.bodyType == BodyType.terrain)
             {
-                forces += (force);
+                return;
             }
-            return;
-            
+            forces += (force);            
         }
         public void ApplyImpulse(Vector3 impulse)
         {
-            if (bodyDefinition.bodyType == BodyType.dynamic)
+            if (bodyDefinition.bodyType == BodyType.stationary || bodyDefinition.bodyType == BodyType.terrain)
             {
-                velocity += (impulse);
+                return;
             }
-            return;
+            velocity += (impulse);
         }
             
         public void Move(Vector3 amount)
         {
-            if (bodyDefinition.bodyType == BodyType.dynamic)
+            if (bodyDefinition.bodyType == BodyType.stationary||bodyDefinition.bodyType==BodyType.terrain)
             {
-                position += (amount);
+                return;
             }
-            return;
-         
+            position += (amount);
         }
 
     }

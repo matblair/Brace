@@ -22,7 +22,7 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(1, 0.1f, 0.2f, 0.2f, position, Vector3.Zero, bodyDef, this);
+            pObject.Initialize(1, 0.1f, 0.2f, 0.2f, position, Vector3.Zero, bodyDef);
             pObject.bodyDefinition.bodyType = BodyType.stationary;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }

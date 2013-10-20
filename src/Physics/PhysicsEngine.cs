@@ -20,7 +20,7 @@ namespace Brace.Physics
         }
         List<Contact> contacts;
         List<PhysicsModel> bodies;
-        private const int numberOfResolutionIterations = 10;
+        private const int numberOfResolutionIterations = 8;
         private const float gravity= -9.8f;
 
         public PhysicsEngine()
@@ -41,8 +41,15 @@ namespace Brace.Physics
         {
             for (int i = 0; i < numberOfResolutionIterations; ++i)
             {
-                ImpulseResolution();
-                PositionalCorrection();
+                foreach (Contact contact in contacts)
+                {
+                    if (contact.x.bodyType == BodyType.passive || contact.y.bodyType == BodyType.passive)
+                    {
+                        continue;
+                    }
+                    ImpulseResolution(contact);
+                    PositionalCorrection(contact);
+                }
             }
             ApplyFriction();
         }
@@ -55,36 +62,32 @@ namespace Brace.Physics
                 if (contact.x.bodyType == BodyType.terrain)
                 {
                     PhysicsModel body = contact.y.parent;
-                    float friction = Math.Min(contact.x.parent.friction,contact.y.parent.friction);
+                    float friction = Math.Min(contact.x.parent.friction, contact.y.parent.friction);
                     Vector3 normal = contact.normal;
                     Vector3 projection = Vector3.Dot(body.velocity, normal) * normal;
                     Vector3 direction = body.velocity - projection;
-                    body.ApplyImpulse(-direction*friction);
+                    body.ApplyImpulse(-direction * friction);
                 }
             }
         }
 
-        private void PositionalCorrection()
+        private void PositionalCorrection(Contact contact)
         {
-            foreach (Contact contact in contacts)
-            {
-                const float percentageOfIntersection = 0.2f;
+                const float percentageOfIntersection = 0.1f;
                 float movedist = contact.distance*percentageOfIntersection;
                 PhysicsModel body1 = contact.x.parent;
                 PhysicsModel body2 = contact.y.parent;
                 body1.Move(contact.normal*movedist);
                 body2.Move(contact.normal*-movedist);
-            }
         }
 
-        private void ImpulseResolution()
+        private void ImpulseResolution(Contact contact)
         {
-            foreach (Contact contact in contacts)
-            {
+           
                 PhysicsModel body1 = contact.x.parent;
                 PhysicsModel body2 = contact.y.parent;
                 Vector3 relativeVelBefore = body2.velocity - body1.velocity;
-                float contactVelocity = Vector3.Dot(relativeVelBefore, contact.normal);
+                float contactVelocity = Vector3.Dot(contact.normal, relativeVelBefore);
 
                 //nothing to solve
                 if (contactVelocity < 0)
@@ -101,13 +104,12 @@ namespace Brace.Physics
 
                 body1.ApplyImpulse(-contact.normal*impulseScalar);
                 body2.ApplyImpulse(contact.normal*impulseScalar);
-            }
         }
 
         private void MoveObjects(float dt)
         {
             foreach (PhysicsModel body in bodies)
-            {
+            {  
                 UpdateForces(body, dt);
                 UpdateVelocity(body, dt);
                 MoveBody(body, dt);
@@ -123,7 +125,7 @@ namespace Brace.Physics
 
         private void ApplyLinearDamp(PhysicsModel body, float dt)
         {
-            body.ApplyImpulse(-body.velocity*(body.linearDamp)*dt);
+            body.ApplyImpulse(-body.velocity*(body.linearDamp));
         }
 
         private void ApplyGravity(PhysicsModel body, float dt)
@@ -249,7 +251,7 @@ namespace Brace.Physics
             List<Sphere> spheres = body.spheres;
             for (int i = 0; i < spheres.Count; ++i)
             {
-                if (lowest.position.Y > spheres[i].position.Y)
+                if (lowest.position.Y-lowest.radius > spheres[i].position.Y-spheres[i].radius)
                 {
                     lowest = spheres[i];
                 }
@@ -294,5 +296,6 @@ namespace Brace.Physics
         {
             bodies.Remove(obj);
         }
+        
     }
 }

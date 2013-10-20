@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +24,8 @@ namespace Brace
 
         // Vectors related to View
         private Vector3 targetPosition, targetLookingAt, targetUp;
-        private Vector3 lookingAt, up;
+        public Vector3 lookingAt { get; private set; }
+        private Vector3 up;
         public Vector3 position { get; private set; }
 
         // View and proj matricies
@@ -39,7 +40,7 @@ namespace Brace
             // View setup
             Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 500.0f);
             SetTarget(track);
-            SetViewType(ViewType.Follow);
+            SetViewType(ViewType.TopDown);
 
             this.position = 50 * Vector3.UnitY;
             this.up = Vector3.UnitX;
@@ -62,8 +63,8 @@ namespace Brace
 
                 case (ViewType.TopDown):
                     targetLookingAt = tracking.EyeLocation();
-                    targetPosition = targetLookingAt + 150 * Vector3.UnitY;
-                    targetUp = Vector3.UnitX;
+                    targetPosition = targetLookingAt + 50 * Vector3.UnitY;
+                    targetUp = Vector3.UnitZ;
                     break;
 
                 case (ViewType.Follow):
@@ -121,6 +122,11 @@ namespace Brace
         public void SetViewType(ViewType type)
         {
             this.CurrentViewType = type;
+        }
+
+        public ITrackable GetCameraTarget()
+        {
+            return tracking;
         }
     }
 }

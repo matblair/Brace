@@ -25,13 +25,13 @@ namespace Brace.GameLogic
             : base(Vector3.Zero, Vector3.Zero)
         {
             // Generate the terrain and verticies
-            segments = GenerateTerrain(10, 10f);
+            segments = GenerateTerrain(9, 10f);
 
             //build physics object
             pObject = new PhysicsModel();
             TerrainBody bodyDef = new TerrainBody(pObject,segments,xzScale);
-            pObject.Initialize(20, 1,1, 1, Vector3.Zero, Vector3.Zero, bodyDef,null);
-
+            pObject.Initialize(5000, 1,1, 0, Vector3.Zero, Vector3.Zero, bodyDef);
+            pObject.extraData = this;
             //add to physics sim
             BraceGame.get().physicsWorld.AddBody(pObject);
 
