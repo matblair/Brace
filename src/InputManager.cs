@@ -99,7 +99,7 @@ namespace Brace
             AccelerometerReading reading = args.Reading;
             //Debug.WriteLine("Acceleration X = " + reading.AccelerationX.ToString());
             //Debug.WriteLine("Acceleration Y = " + reading.AccelerationY.ToString());
-            Debug.WriteLine("Acceleration Z = " + reading.AccelerationZ.ToString());
+            //Debug.WriteLine("Acceleration Z = " + reading.AccelerationZ.ToString());
             System.DateTimeOffset time = args.Reading.Timestamp;
             System.DateTimeOffset t2 = time.AddMilliseconds(-800);
             if (reading.AccelerationZ < -0.85)
@@ -120,7 +120,6 @@ namespace Brace
                     ViewTypeSetTime = time;
                 }
             }
-
         }
 
         // interface
