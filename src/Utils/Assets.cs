@@ -13,9 +13,8 @@ namespace Brace.Utils
     {
         public static Model spaceship;
         public static Model cube;
-        public static Texture cubeTexture;
-        public static Texture plantTexture;
-        public static Model plant;
+        public static Texture2D cubeTexture;
+        public static Model tree;
 
     }
 }

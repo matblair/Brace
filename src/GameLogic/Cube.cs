@@ -24,6 +24,7 @@ namespace Brace.GameLogic
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
+
         public Cube(Vector3 position, bool passive)
             : base(position, Vector3.Zero, Assets.cube, Assets.cubeTexture)
         {

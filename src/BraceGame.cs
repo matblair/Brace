@@ -79,6 +79,7 @@ namespace Brace
             player = (Player)actors[0];
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
+            Camera.SetViewType(Brace.Camera.ViewType.TopDown);
             playerLamp = new TrackingLight((Unit)actors[0]);
             //Load shaders
             unitShader = Content.Load<Effect>("CubeCelShader");
@@ -92,12 +93,16 @@ namespace Brace
         private void LoadAssets()
         {
             Assets.spaceship = Content.Load<Model>("Cube");
-            Assets.cube = Content.Load<Model>("Cube");
+            Assets.cube = Content.Load<Model>("cube");
+            Assets.cubeTexture = Content.Load<Texture2D>("Archer");
+            Assets.tree = Content.Load<Model>("treeeeee");
         }
 
         private List<Actor> InitializeActors()
         {
-            List<Actor> newActors = new List<Actor>();
+            List<Actor> newActors = new List<Actor>();         
+            Random rand = new Random();
+
             newActors.Add(new Player(Vector3.Zero, Vector3.Zero));
             double angle=0;
             int NUMBEROFENEMIES = 15;
@@ -107,8 +112,17 @@ namespace Brace
                 newActors.Add(new Enemy(new Vector3((float)(NUMBEROFENEMIES * Math.Cos(angle)), 0, (float)(NUMBEROFENEMIES * Math.Sin(angle))), Vector3.Zero));
             }
 
-
             landscape = new GameLogic.Landscape(this);
+
+
+            for (int t = 0; t < 100; t++)
+            {
+                float x = rand.Next(-200, 200);
+                float y = rand.Next(-200, 200);
+                float h = landscape.HeightAt(x, y);
+                newActors.Add(new Tree(new Vector3(x, h, y)));
+            }
+
 
             return newActors;
         }

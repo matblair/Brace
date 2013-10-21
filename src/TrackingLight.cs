@@ -17,7 +17,8 @@ namespace Brace
         private ITrackable tracking;
 
         // Vectors related to View
-        public Vector3 position { get; private set; }
+        private Vector3 targetPosition;
+        private readonly float SPEED = 10;
 
         // Our world lighting setups Will obviously need to be changed at a later 
         // date in order to properly having moving light sources etc.
@@ -29,6 +30,7 @@ namespace Brace
         {
             //Set our item to track.
             SetTarget(track);
+
             //Our initial position
             lightPntPos = tracking.EyeLocation();
         }
@@ -36,7 +38,18 @@ namespace Brace
         // Update the camera and associated things
         public void Update(GameTime gameTime)
         {
-            lightPntPos = tracking.EyeLocation() + 1.5f * Vector3.UnitY + 4.5f * tracking.ViewDirection();
+            int delta = gameTime.ElapsedGameTime.Milliseconds;
+            targetPosition = tracking.EyeLocation() + 1.5f * Vector3.UnitY + 4.5f * tracking.ViewDirection();
+            Vector3 dir = Vector3.Subtract(targetPosition, lightPntPos);
+
+            if (dir.Length() * dir.Length() < SPEED * delta / 1000f)
+            {
+                lightPntPos = targetPosition;
+            }
+            else
+            {
+                lightPntPos = Vector3.Add(lightPntPos, dir * SPEED * delta / 1000f);
+            }
         }
 
         // Set a new target object to track

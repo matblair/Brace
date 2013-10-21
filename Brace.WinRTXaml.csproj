@@ -42,6 +42,7 @@
     </Compile>
     <Compile Include="src\Camera.cs" />
     <Compile Include="src\BraceGame.cs" />
+    <Compile Include="src\GameLogic\Tree.cs" />
     <Compile Include="src\GameLogic\Enemy.cs" />
     <Compile Include="src\GameLogic\EnemyBehaviour.cs" />
     <Compile Include="src\GameLogic\EnemyController.cs" />
@@ -79,6 +80,12 @@
     <AppxManifest Include="PackageXaml.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <ToolkitModel Include="Content\archer_version_3.dae">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitModel>
+    <ToolkitModel Include="Content\treeeeee.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitModel>
     <None Include="packages.config" />
     <ToolkitModel Include="Content\cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -90,6 +97,9 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <ToolkitTexture Include="Content\Archer.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitTexture>
     <ToolkitFxc Include="Content\CubeCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>

@@ -17,6 +17,7 @@ namespace Brace.GameLogic
         public PlayerController(Player player) : base(player)
         { 
         }
+
         public override void Update(GameTime gameTime)
         {
             if (BraceGame.get().input.isShooting())
