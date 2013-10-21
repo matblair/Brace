@@ -14,22 +14,29 @@ namespace Brace.GameLogic
     class Projectile : Unit
     {
         Vector3 direction;
+        Vector3 finalDest;
         private readonly int DEATHCOUNT = 600;
         private int deathCounter = 0;
         int damage;
         public Projectile(Vector3 position, Vector3 direction, int damage)
-            : base(position, direction, Assets.cube, Assets.cubeTexture)
+            : base(position, direction, Assets.bullet, null)
         {
             
             this.direction = direction;
+            this.finalDest = direction * 1000;
             this.direction.Normalize();
             this.damage = damage;
+
             pObject.velocity = direction * damage;
 
         }
         public override void Update(SharpDX.Toolkit.GameTime gametime)
         {
             position = pObject.position;
+            Move(new Vector2(finalDest[0],finalDest[2]));
+            this.rot.Y += gametime.ElapsedGameTime.Milliseconds;
+            this.rot.Z -= gametime.ElapsedGameTime.Milliseconds;
+
             if (dying())
             {
                 deathCounter += gametime.ElapsedGameTime.Milliseconds;
@@ -51,14 +58,16 @@ namespace Brace.GameLogic
             Vector2 speed = new Vector2(pObject.velocity.X, pObject.velocity.Z);
             return (speed.Length()<3);
         }
+
         private void die()
         {
             DestroyPhysicsObject();
+            BraceGame.get().StopTrackingProjectile(this);
             doomed = true;
         }
+
         private void CheckCollision()
         {
-           
 
             foreach (Contact contact in pObject.contacts)
             {

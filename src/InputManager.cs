@@ -92,6 +92,23 @@ namespace Brace
         {
             keyboardState = keys.GetState();
             mouseState = mouse.GetState();
+
+            if (keyboardState.IsKeyDown(toggleCameraKey))
+            {
+                if (ViewType == Camera.ViewType.Follow)
+                {
+                    ViewType = Camera.ViewType.FirstPerson;
+                }
+                else if (ViewType == Camera.ViewType.FirstPerson)
+                {
+                    ViewType = Camera.ViewType.TopDown;
+                }
+                else if (ViewType == Camera.ViewType.TopDown)
+                {
+                    ViewType = Camera.ViewType.Follow;
+                } 
+             
+            }
         }
 
         private void AccelerometerReadingChanged(object sender, AccelerometerReadingChangedEventArgs args)
@@ -121,6 +138,7 @@ namespace Brace
                 }
             }
         }
+
 
         // interface
 

@@ -28,7 +28,7 @@ namespace Brace.GameLogic
         PlayerController controller;
 
         public Player(Vector3 position, Vector3 rotation)
-            : base(position, rotation, Assets.cube, Assets.cubeTexture)
+            : base(position, rotation, Assets.player, null)
         {
             controller = new PlayerController(this);
             chargeTime = 0;
@@ -57,13 +57,18 @@ namespace Brace.GameLogic
             if (chargeTime > MAXIMUMCHARGETIME)
             {
                 Vector3 arrowIPosition = position + new Vector3(direction.X, 0, direction.Y) * 3;
-                BraceGame.get().AddActor(new Projectile(arrowIPosition, new Vector3(direction.X, 0, direction.Y), MAXARROWDAMAGE));
+                Projectile proj = new Projectile(arrowIPosition, new Vector3(direction.X, 0, direction.Y), MAXARROWDAMAGE);
+                BraceGame.get().AddActor(proj);
+                BraceGame.get().TrackProjectile(proj);
+
             }
             else if (chargeTime > MINIMUMCHARGETIME)
             {
                 int actualDamage = (MAXARROWDAMAGE - MINARROWDAMAGE) * (chargeTime - MINIMUMCHARGETIME) / (MAXIMUMCHARGETIME - MINIMUMCHARGETIME) + MINARROWDAMAGE;
                 Vector3 arrowIPosition = position + new Vector3(direction.X, 0, direction.Y)*3;
-                BraceGame.get().AddActor(new Projectile(arrowIPosition, new Vector3(direction.X, 0, direction.Y), actualDamage));
+                Projectile proj = new Projectile(arrowIPosition, new Vector3(direction.X, 0, direction.Y), actualDamage);
+                BraceGame.get().AddActor(proj);
+                BraceGame.get().TrackProjectile(proj);
             }
 
             chargeTime = 0;

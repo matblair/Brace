@@ -26,6 +26,7 @@ namespace Brace
         public Camera Camera { get; private set; }
         private List<Actor> actors;
         private static BraceGame game;
+        private static TrackingLight projectileLamp;
 
         private Player player;
 
@@ -79,12 +80,12 @@ namespace Brace
             player = (Player)actors[0];
 
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
-            Camera.SetViewType(Brace.Camera.ViewType.TopDown);
-            playerLamp = new TrackingLight((Unit)actors[0]);
+            Camera.SetViewType(Brace.Camera.ViewType.Follow);
+            playerLamp = new TrackingLight((Unit)actors[0], new Vector3(0,2.5f,4.5f));
             //Load shaders
             unitShader = Content.Load<Effect>("CubeCelShader");
             landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
-
+            projectileLamp = new TrackingLight(null, new Vector4(0.5f,0.5f,1,1), new Vector3(0,0,0));
             input.Camera = Camera;
 
             base.LoadContent();
@@ -94,8 +95,9 @@ namespace Brace
         {
             Assets.spaceship = Content.Load<Model>("Cube");
             Assets.cube = Content.Load<Model>("cube");
-            Assets.cubeTexture = Content.Load<Texture2D>("Archer");
-            Assets.tree = Content.Load<Model>("treeeeee");
+            Assets.tree = Content.Load<Model>("tree");
+            Assets.player = Content.Load<Model>("player");
+            Assets.bullet = Content.Load<Model>("bullet");
         }
 
         private List<Actor> InitializeActors()
@@ -160,6 +162,7 @@ namespace Brace
 
                 //Update tracking lights
                 playerLamp.Update(gameTime);
+                projectileLamp.Update(gameTime);
 
                 // Update the camera 
                 Camera.Update(gameTime);
@@ -169,11 +172,15 @@ namespace Brace
                 //First the unit shader
                 unitShader.Parameters["View"].SetValue(Camera.View);
                 unitShader.Parameters["Projection"].SetValue(Camera.Projection);
+                unitShader.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
+                unitShader.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
                 unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
 
                 //Then the landscape shader
                 landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+                landscapeEffect.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
+                landscapeEffect.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
                 landscapeEffect.Parameters["View"].SetValue(Camera.View);
                 landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
                 landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
@@ -210,6 +217,21 @@ namespace Brace
         internal void AddActor(Actor actor)
         {
             actors.Add(actor);
+        }
+
+        internal void TrackProjectile(Projectile proj)
+        {
+            projectileLamp.SnapToTarget(proj);
+            projectileLamp.TurnOn();
+        }
+
+        internal void StopTrackingProjectile(Projectile proj)
+        {
+            if (projectileLamp.IsTracking(proj))
+            {
+                projectileLamp.TurnOff();
+                projectileLamp.SetTarget(null);
+            }
         }
 
         internal void RemoveActor(Actor actor)

@@ -15,6 +15,8 @@ namespace Brace.Utils
         public static Model cube;
         public static Texture2D cubeTexture;
         public static Model tree;
+        public static Model player;
+        public static Model bullet;
 
     }
 }

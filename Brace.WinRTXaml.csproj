@@ -80,10 +80,16 @@
     <AppxManifest Include="PackageXaml.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <ToolkitModel Include="Content\archer_version_3.dae">
+    <ToolkitModel Include="Content\treeeeee.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
-    <ToolkitModel Include="Content\treeeeee.obj">
+    <ToolkitModel Include="Content\player.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitModel>
+    <ToolkitModel Include="Content\bullet.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitModel>
+    <ToolkitModel Include="Content\tree.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
     <None Include="packages.config" />
@@ -97,9 +103,6 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
-    <ToolkitTexture Include="Content\Archer.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </ToolkitTexture>
     <ToolkitFxc Include="Content\CubeCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
