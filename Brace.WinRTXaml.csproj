@@ -86,9 +86,6 @@
     <ToolkitModel Include="Content\treeeeee.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
-    <ToolkitModel Include="Content\trees.dae">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </ToolkitModel>
     <None Include="packages.config" />
     <ToolkitModel Include="Content\cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -181,17 +181,27 @@ namespace Brace.Physics
             Contact result = null;
             bool isTargetTerrain = false;
 
+            // Skip collision detection if both objects are stationary
+            if ((target.bodyDefinition.bodyType == BodyType.stationary || target.bodyDefinition.bodyType == BodyType.terrain)
+                && (body.bodyDefinition.bodyType == BodyType.stationary || body.bodyDefinition.bodyType == BodyType.terrain))
+            {
+                return null;
+            }
+
             //ASSUMPTION TERRAIN WON'T COLLIDE WITH OTHER TERRAIN!!!
             if (target.bodyDefinition.bodyType == BodyType.terrain)
             {
                 isTargetTerrain=true;
                 collisionType = CollisionType.Terrain;
-            } else if (body.bodyDefinition.bodyType == BodyType.terrain) {
+            }
+            else if (body.bodyDefinition.bodyType == BodyType.terrain) {
                 isTargetTerrain=false;
                 collisionType = CollisionType.Terrain;
-            } else {
+            }
+            else {
                 collisionType = CollisionType.Sphere;
             }
+
             switch(collisionType) 
             {
                 case CollisionType.Terrain:
@@ -208,10 +218,14 @@ namespace Brace.Physics
                     }
                     result = CheckTerrainCollision(a, b);
                     break;
+
                 case CollisionType.Sphere:
                     SpheresBody x = (SpheresBody)target.bodyDefinition;
                     SpheresBody y = (SpheresBody)body.bodyDefinition;
                     result = CheckSphereCollision(x, y);               
+                    break;
+
+                default:
                     break;
             }
             return result;            

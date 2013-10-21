@@ -23,7 +23,8 @@ namespace Brace.Physics
             spheres = new List<Sphere>();
             spheres.Add(new Sphere(Vector3.Zero,1));
         }
-        public SpheresBody(PhysicsModel model, bool passive,float radius, Vector3 position)
+
+        public SpheresBody(PhysicsModel model, bool passive, float radius, Vector3 position)
             : base(BodyType.stationary, model)
         {
             if (!passive)
@@ -32,8 +33,8 @@ namespace Brace.Physics
             }
             spheres = new List<Sphere>();
             spheres.Add(new Sphere(position, radius));
-        
         }
+
         public SpheresBody(PhysicsModel model, bool passive, List<Sphere> spheres)
             : base(BodyType.stationary, model)
         {
@@ -41,7 +42,7 @@ namespace Brace.Physics
             {
                 this.bodyType = BodyType.dynamic;
             }
-            spheres = spheres;
+            this.spheres = spheres;
         }
 
 

@@ -43,7 +43,7 @@ namespace Brace
             SetViewType(ViewType.TopDown);
 
             this.position = 50 * Vector3.UnitY;
-            this.up = Vector3.UnitX;
+            this.up = Vector3.UnitZ;
             this.lookingAt = Vector3.Zero;
         }
 
