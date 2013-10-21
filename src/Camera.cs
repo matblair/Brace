@@ -32,6 +32,9 @@ namespace Brace
         public Matrix View { get; private set; }
         public Matrix Projection { get; private set; }
 
+        // Input manager
+        private InputManager input;
+
         public Camera(BraceGame game, ITrackable track)
         {
             // General
@@ -45,12 +48,16 @@ namespace Brace
             this.position = 50 * Vector3.UnitY;
             this.up = Vector3.UnitZ;
             this.lookingAt = Vector3.Zero;
+
+            input = game.input;
         }
 
         // Update the camera and associated things
         public void Update(GameTime gameTime)
         {
             long delta = gameTime.ElapsedGameTime.Milliseconds;
+
+            CurrentViewType = input.ViewType;
 
             // Calculate the view. This will eventually be changed to be elastic
             switch (CurrentViewType)
