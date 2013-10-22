@@ -13,26 +13,27 @@ namespace Brace.Physics
         private Rectangle bounds;
         private List<PhysicsModel> objects;
         private Quadtree[] nodes;
-        private readonly int MAX_OBJECTS = 10;  
-        Quadtree(int level,Rectangle bounds)
+        private readonly int MAX_OBJECTS = 50;  
+        public Quadtree(int level,Rectangle bounds)
         {
             this.level = level;
             this.bounds = bounds;
             objects = new List<PhysicsModel>();
             nodes = new Quadtree[4];
         }
-        public void clear()
+        public void Clear()
         {
+            objects.Clear();
             for (int i = 0; i < 4; ++i)
             {
                 if (nodes[i] != null)
                 {
-                    nodes[i].clear();
+                    nodes[i].Clear();
                     nodes[i] = null;
                 }
             }
         }
-        private void split()
+        private void Split()
         {
             int subWidth = (bounds.Width/2);
             int subHeight = (bounds.Height/2);
@@ -48,37 +49,38 @@ namespace Brace.Physics
          * object cannot completely fit within a child node and is part
          * of the parent node
          */
-        private int getIndex(PhysicsModel pRect)
+        private int GetIndex(PhysicsModel pRect)
         {
             int index = -1;
-            double verticalMidpoint = bounds.X + (bounds.Width / 2);
-            double horizontalMidpoint = bounds.Y + (bounds.Height / 2);
+            double verticalMidpoint = bounds.Y;
+            double horizontalMidpoint = bounds.X;
 
             // Object can completely fit within the top quadrants
-            bool topQuadrant = (pRect.position.Z < horizontalMidpoint && pRect.position.Z + pRect.Height < horizontalMidpoint);
+            bool topQuadrant = (pRect.position.Z - pRect.Height/2 < verticalMidpoint && pRect.position.Z + pRect.Height/2 < verticalMidpoint);
             // Object can completely fit within the bottom quadrants
-            bool bottomQuadrant = (pRect.position.Z > horizontalMidpoint);
-
+            bool bottomQuadrant = (pRect.position.Z + pRect.Height / 2 > verticalMidpoint && pRect.position.Z - pRect.Height / 2 > verticalMidpoint);
             // Object can completely fit within the left quadrants
-            if (pRect.position.X < verticalMidpoint && pRect.position.X + pRect.Width < verticalMidpoint)
-            {
-                if (topQuadrant)
-                {
-                    index = 1;
-                }
-                else if (bottomQuadrant)
-                {
-                    index = 2;
-                }
-            }
+            bool leftQuadrant = (pRect.position.X - pRect.Width / 2 < horizontalMidpoint && pRect.position.X + pRect.Width < horizontalMidpoint);
             // Object can completely fit within the right quadrants
-            else if (pRect.position.X > verticalMidpoint)
+            bool rightQuadrant = (pRect.position.X - pRect.Width / 2 > horizontalMidpoint && pRect.position.X + pRect.Width > horizontalMidpoint);
+            if (topQuadrant)
             {
-                if (topQuadrant)
+                if (leftQuadrant)
                 {
                     index = 0;
                 }
-                else if (bottomQuadrant)
+                else if (rightQuadrant)
+                {
+                    index = 1;
+                }
+            }
+            else if (bottomQuadrant)
+            {
+                if (leftQuadrant)
+                {
+                    index = 2;
+                }
+                else if (rightQuadrant)
                 {
                     index = 3;
                 }
@@ -95,7 +97,7 @@ namespace Brace.Physics
         {
             if (nodes[0] != null)
             {
-                int index = getIndex(pRect);
+                int index = GetIndex(pRect);
 
                 if (index != -1)
                 {
@@ -111,13 +113,13 @@ namespace Brace.Physics
             {
                 if (nodes[0] == null)
                 {
-                    split();
+                    Split();
                 }
 
                 int i = 0;
                 while (i < objects.Count)
                 {
-                    int index = getIndex(objects[i]);
+                    int index = GetIndex(objects[i]);
                     if (index != -1)
                     {
                         nodes[index].Insert(objects[i]);
@@ -133,12 +135,12 @@ namespace Brace.Physics
         /*
          * Return all objects that could collide with the given object
          */
-        public List<PhysicsModel> retrieve(List<PhysicsModel> returnObjects,PhysicsModel pRect)
+        public List<PhysicsModel> Retrieve(List<PhysicsModel> returnObjects,PhysicsModel pRect)
         {
-            int index = getIndex(pRect);            
+            int index = GetIndex(pRect);            
             if (index != -1 && nodes[0] != null)
             {
-                nodes[index].retrieve(returnObjects, pRect);
+                nodes[index].Retrieve(returnObjects, pRect);
             }
             foreach(PhysicsModel obj in objects) {
                 returnObjects.Add(obj);

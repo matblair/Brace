@@ -22,11 +22,13 @@ namespace Brace.Physics
         List<PhysicsModel> bodies;
         private const int numberOfResolutionIterations = 8;
         private const float gravity= -9.8f;
+        private Quadtree collisionTree;
 
         public PhysicsEngine()
         {
             bodies = new List<PhysicsModel>();
             contacts = new List<Contact>();
+            collisionTree = new Quadtree(0,BraceGame.get().bounds);
         }
         
         public void step(float dt){
@@ -150,28 +152,31 @@ namespace Brace.Physics
         private void CheckForCollisions()
         {
             contacts.Clear();
+            collisionTree.Clear();
             foreach(PhysicsModel body in bodies)
             {
+                collisionTree.Insert(body);
                 body.contacts.Clear();
             }
-          
-            for (int i=0; i<bodies.Count-1;++i) {
-                PhysicsModel target = bodies[i];
-                for (int j = i+1; j < bodies.Count; ++j)
+            List<PhysicsModel> targets = new List<PhysicsModel>();
+            foreach (PhysicsModel body in bodies)
+            {
+                targets.Clear();
+                collisionTree.Retrieve(targets,body);
+                targets.Remove(body);
+                foreach (PhysicsModel target in targets)
                 {
-                    PhysicsModel body = bodies[j];
                     Contact newContact = CheckCollision(target, body);
-                    if (newContact!=null)
-                   {
+                    if (newContact != null)
+                    {
                         contacts.Add(newContact);
                         target.contacts.Add(newContact);
                         body.contacts.Add(newContact);
                     }
                 }
-            }
-         
-                        
+            }                        
         }
+
 
 
         private Contact CheckCollision(PhysicsModel target, PhysicsModel body)

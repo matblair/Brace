@@ -39,6 +39,9 @@ namespace Brace
         private Effect landscapeEffect;
         private TrackingLight playerLamp;
 
+        //
+        public Rectangle bounds = Landscape.getBounds();
+
         public static BraceGame get() 
         {
             if (game == null)
