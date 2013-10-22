@@ -13,7 +13,7 @@ namespace Brace.Physics
         private Rectangle bounds;
         private List<PhysicsModel> objects;
         private Quadtree[] nodes;
-        private readonly int MAX_OBJECTS = 50;  
+        private readonly int MAX_OBJECTS = 1000;  
         public Quadtree(int level,Rectangle bounds)
         {
             this.level = level;
