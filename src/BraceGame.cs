@@ -123,7 +123,7 @@ namespace Brace
             landscape = new GameLogic.Landscape(this);
 
 
-            for (int t = 0; t < 100; t++)
+            for (int t = 0; t < 300; t++)
             {
                 float x = rand.Next(-200, 200);
                 float y = rand.Next(-200, 200);
