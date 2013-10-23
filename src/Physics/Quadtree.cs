@@ -13,7 +13,7 @@ namespace Brace.Physics
         private Rectangle bounds;
         private List<PhysicsModel> objects;
         private Quadtree[] nodes;
-        private readonly int MAX_OBJECTS = 20;
+        private readonly int MAX_OBJECTS = 10;
         private readonly int MAX_LEVELS = 10;  
 
         public Quadtree(int level,Rectangle bounds)
@@ -37,8 +37,8 @@ namespace Brace.Physics
         }
         private void Split()
         {
-            int subWidth = (bounds.Width/2);
-            int subHeight = (bounds.Height/2);
+            int subWidth = (bounds.Width/4);
+            int subHeight = (bounds.Height/4);
             int x = bounds.X;
             int y = bounds.Y;
             //Top Left
