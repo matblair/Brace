@@ -159,13 +159,13 @@ namespace Brace.Physics
                 body.contacts.Clear();
             }
             //Debug.WriteLine(collisionTree.ToString());
-            List<PhysicsModel> targets = new List<PhysicsModel>();
+            List<PhysicsModel> possibleCollisions = new List<PhysicsModel>();
             foreach (PhysicsModel body in bodies)
             {
-                targets.Clear();
-                collisionTree.Retrieve(targets,body);
-                targets.Remove(body);
-                foreach (PhysicsModel target in targets)
+                possibleCollisions.Clear();
+                possibleCollisions = BroadPhaseCollision(possibleCollisions,body);
+                
+                foreach (PhysicsModel target in possibleCollisions)
                 {
                     Contact newContact = CheckCollision(target, body);
                     if (newContact != null)
@@ -176,6 +176,18 @@ namespace Brace.Physics
                     }
                 }
             }                        
+        }
+
+        private List<PhysicsModel> BroadPhaseCollision(List<PhysicsModel> possibleCollisions, PhysicsModel body)
+        {
+            if (body.bodyDefinition.bodyType == BodyType.passive || body.bodyDefinition.bodyType == BodyType.terrain || body.bodyDefinition.bodyType == BodyType.stationary)
+            {
+                return possibleCollisions;
+            }
+                
+            collisionTree.Retrieve(possibleCollisions, body);
+            possibleCollisions.Remove(body);
+            return possibleCollisions;
         }
 
 
