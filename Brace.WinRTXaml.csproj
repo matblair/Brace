@@ -40,6 +40,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Common\BooleanNegationConverter.cs" />
+    <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Common\LayoutAwarePage.cs" />
+    <Compile Include="Common\RichTextColumns.cs" />
+    <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="Highscores.xaml.cs">
+      <DependentUpon>Highscores.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="src\Camera.cs" />
     <Compile Include="src\BraceGame.cs" />
     <Compile Include="src\GameLogic\Tree.cs" />
@@ -73,7 +85,9 @@
     <Compile Include="src\Physics\TerrainBody.cs" />
     <Compile Include="src\InputManager.cs" />
     <Compile Include="src\Utils\Assets.cs" />
+    <Compile Include="src\Utils\HighScoreManager.cs" />
     <Compile Include="src\Utils\PhysicsUtils.cs" />
+    <Compile Include="src\Utils\SerializableDictionary.cs" />
     <Compile Include="src\Utils\VectorUtils.cs" />
     <Compile Include="src\VertexPositionNormalColor.cs" />
   </ItemGroup>
@@ -104,6 +118,7 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Common\ReadMe.txt" />
     <ToolkitFxc Include="Content\CubeCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
@@ -123,6 +138,14 @@
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Highscores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
