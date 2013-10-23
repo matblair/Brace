@@ -44,15 +44,12 @@ namespace Brace
             game = BraceGame.get();
             game.Run(this);
 
-            this.gamePauseButton.Visibility = Visibility.Collapsed;
+            this.Children.Add(new MainMenu());
         }
 
-        private void StartGame()
+        public void StartGame()
         {
             game.Start();
-            this.menuPlayButton.Visibility = Visibility.Collapsed;
-            this.menuTitle.Visibility = Visibility.Collapsed;
-            this.gamePauseButton.Visibility = Visibility.Visible;
         }
 
         private void PauseGame()
