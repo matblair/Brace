@@ -50,6 +50,7 @@
     <Compile Include="src\GameLogic\Player.cs" />
     <Compile Include="src\GameLogic\PlayerController.cs" />
     <Compile Include="src\GameLogic\Projectile.cs" />
+    <Compile Include="src\Physics\Quadtree.cs" />
     <Compile Include="src\TrackingLight.cs" />
     <Compile Include="src\FPSRenderer.cs" />
     <Compile Include="src\Actor.cs" />
