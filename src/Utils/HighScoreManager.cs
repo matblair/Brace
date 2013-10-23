@@ -84,5 +84,10 @@ namespace Brace.Utils
 
             return true;
         }
+
+        public static int HighestScore()
+        {
+            return Scores.Keys.Max();
+        }
     }
 }
