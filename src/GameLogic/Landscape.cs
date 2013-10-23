@@ -15,22 +15,27 @@ namespace Brace.GameLogic
         public PhysicsModel pObject;
 
         private Random random = new Random();
-        private float xzScale = 200;
-
+        private static float xzScale = 200;
+        private static int numDivision = 9;
         // Verticies
         private float[,] segments;
         public VertexInputLayout inputLayout;
         public Buffer<VertexPositionNormalColor> vertices;
+
+        public static Rectangle getBounds()
+        {
+            return new Rectangle(0, 0, (int)xzScale*2, (int)xzScale*2);
+        }
         public Landscape(BraceGame game)
             : base(Vector3.Zero, Vector3.Zero)
         {
             // Generate the terrain and verticies
-            segments = GenerateTerrain(9, 10f);
+            segments = GenerateTerrain(numDivision, 10f);
 
             //build physics object
             pObject = new PhysicsModel();
             TerrainBody bodyDef = new TerrainBody(pObject,segments,xzScale);
-            pObject.Initialize(5000, 1,1, 0, Vector3.Zero, Vector3.Zero, bodyDef);
+            pObject.Initialize(5000, 1,1, 0,Vector3.Zero, Vector3.Zero, bodyDef);
             pObject.extraData = this;
             //add to physics sim
             BraceGame.get().physicsWorld.AddBody(pObject);
