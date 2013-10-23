@@ -158,6 +158,7 @@ namespace Brace.Physics
                 collisionTree.Insert(body);
                 body.contacts.Clear();
             }
+            //Debug.WriteLine(collisionTree.ToString());
             List<PhysicsModel> targets = new List<PhysicsModel>();
             foreach (PhysicsModel body in bodies)
             {

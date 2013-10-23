@@ -13,7 +13,9 @@ namespace Brace.Physics
         private Rectangle bounds;
         private List<PhysicsModel> objects;
         private Quadtree[] nodes;
-        private readonly int MAX_OBJECTS = 1000;  
+        private readonly int MAX_OBJECTS = 20;
+        private readonly int MAX_LEVELS = 10;  
+
         public Quadtree(int level,Rectangle bounds)
         {
             this.level = level;
@@ -39,30 +41,36 @@ namespace Brace.Physics
             int subHeight = (bounds.Height/2);
             int x = bounds.X;
             int y = bounds.Y;
-            nodes[0] = new Quadtree(level + 1, new Rectangle(x + subWidth, y, subWidth, subHeight));
-            nodes[1] = new Quadtree(level + 1, new Rectangle(x, y, subWidth, subHeight));
-            nodes[2] = new Quadtree(level + 1, new Rectangle(x, y + subHeight, subWidth, subHeight));
-            nodes[3] = new Quadtree(level + 1, new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight));
+            //Top Left
+            nodes[0] = new Quadtree(level + 1, new Rectangle(x - subWidth, y + subHeight, subWidth, subHeight));
+            //Top Right
+            nodes[1] = new Quadtree(level + 1, new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight));
+            //Bottom Left
+            nodes[2] = new Quadtree(level + 1, new Rectangle(x - subWidth, y - subHeight, subWidth, subHeight));
+            //Bottom Right
+            nodes[3] = new Quadtree(level + 1, new Rectangle(x + subWidth, y - subHeight, subWidth, subHeight));
         }
         /*
          * Determine which node the object belongs to. -1 means
          * object cannot completely fit within a child node and is part
          * of the parent node
          */
-        private int GetIndex(PhysicsModel pRect)
+        private int GetIndex(PhysicsModel obj)
         {
             int index = -1;
             double verticalMidpoint = bounds.Y;
             double horizontalMidpoint = bounds.X;
+            int subWidth = (obj.Width / 2);
+            int subHeight = (obj.Height / 2);
 
             // Object can completely fit within the top quadrants
-            bool topQuadrant = (pRect.position.Z - pRect.Height/2 < verticalMidpoint && pRect.position.Z + pRect.Height/2 < verticalMidpoint);
+            bool topQuadrant = (obj.position.Z - subHeight > verticalMidpoint) && (obj.position.Z + subHeight > verticalMidpoint);
             // Object can completely fit within the bottom quadrants
-            bool bottomQuadrant = (pRect.position.Z + pRect.Height / 2 > verticalMidpoint && pRect.position.Z - pRect.Height / 2 > verticalMidpoint);
+            bool bottomQuadrant = (obj.position.Z + subHeight < verticalMidpoint) && (obj.position.Z - subHeight < verticalMidpoint);
             // Object can completely fit within the left quadrants
-            bool leftQuadrant = (pRect.position.X - pRect.Width / 2 < horizontalMidpoint && pRect.position.X + pRect.Width < horizontalMidpoint);
+            bool leftQuadrant = (obj.position.X - subWidth < horizontalMidpoint) && (obj.position.X + subWidth < horizontalMidpoint);
             // Object can completely fit within the right quadrants
-            bool rightQuadrant = (pRect.position.X - pRect.Width / 2 > horizontalMidpoint && pRect.position.X + pRect.Width > horizontalMidpoint);
+            bool rightQuadrant = (obj.position.X - subWidth > horizontalMidpoint) && (obj.position.X + subWidth > horizontalMidpoint);
             if (topQuadrant)
             {
                 if (leftQuadrant)
@@ -93,23 +101,23 @@ namespace Brace.Physics
          * exceeds the capacity, it will split and add all
          * objects to their corresponding nodes.
          */
-        public void Insert(PhysicsModel pRect)
+        public void Insert(PhysicsModel obj)
         {
             if (nodes[0] != null)
             {
-                int index = GetIndex(pRect);
+                int index = GetIndex(obj);
 
                 if (index != -1)
                 {
-                    nodes[index].Insert(pRect);
+                    nodes[index].Insert(obj);
 
                     return;
                 }
             }
 
-            objects.Add(pRect);
+            objects.Add(obj);
 
-            if (objects.Count > MAX_OBJECTS)
+            if (objects.Count > MAX_OBJECTS && level<MAX_LEVELS)
             {
                 if (nodes[0] == null)
                 {
@@ -135,19 +143,49 @@ namespace Brace.Physics
         /*
          * Return all objects that could collide with the given object
          */
-        public List<PhysicsModel> Retrieve(List<PhysicsModel> returnObjects,PhysicsModel pRect)
+        public List<PhysicsModel> Retrieve(List<PhysicsModel> returnObjects,PhysicsModel obj)
         {
-            int index = GetIndex(pRect);            
+            int index = GetIndex(obj);            
             if (index != -1 && nodes[0] != null)
             {
-                nodes[index].Retrieve(returnObjects, pRect);
+                nodes[index].Retrieve(returnObjects, obj);
             }
-            foreach(PhysicsModel obj in objects) {
-                returnObjects.Add(obj);
+            foreach(PhysicsModel o in objects) {
+                returnObjects.Add(o);
             }
             
             return returnObjects;
         }
+        public override string ToString()
+        {
+            String result = "\n";
+            for (int i = 0; i < level; ++i)
+            {
+                result += "\t";
+            }
+            result += "level: " + level;
+            result += " x: " + bounds.X + " y: " + bounds.Y;
+            foreach(PhysicsModel obj in objects) 
+            {
+                result += "\n";
+                for (int i = 0; i < level; ++i)
+                {
+                    result += "\t";
+                }
+                result += obj.ToString();
+            }
+            if (nodes[0] != null)
+            {
+                for (int i = 0; i < 4; ++i)
+                {
+                    result+=nodes[i].ToString();
+                }
+            }
+            return result;
+            
+        }
+
+        
     }
 
 }

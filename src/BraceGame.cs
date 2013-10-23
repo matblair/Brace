@@ -110,11 +110,14 @@ namespace Brace
 
             newActors.Add(new Player(Vector3.Zero, Vector3.Zero));
             double angle=0;
-            int NUMBEROFENEMIES = 150;
-            for (int i = 0; i < NUMBEROFENEMIES; ++i)
+            int NUMBEROFENEMIES = 25;
+            for (int i = 1; i < NUMBEROFENEMIES-1; ++i)
             {
-                angle += 360 / NUMBEROFENEMIES;
-                newActors.Add(new Enemy(new Vector3((float)(NUMBEROFENEMIES * Math.Cos(angle)), 0, (float)(NUMBEROFENEMIES * Math.Sin(angle))), Vector3.Zero));
+                for (int j = 1; j < NUMBEROFENEMIES-1; ++j)
+                {
+                    newActors.Add(new Enemy(new Vector3((float)(400 * i/NUMBEROFENEMIES)-200, 0, (float)(400 * j/NUMBEROFENEMIES)-200), Vector3.Zero));
+
+                }
             }
 
             landscape = new GameLogic.Landscape(this);

@@ -24,9 +24,7 @@ namespace Brace.GameLogic
 
         public static Rectangle getBounds()
         {
-            int width = (int)((Math.Pow(2, numDivision) + 1) * xzScale);
-            int height = (int)((Math.Pow(2, numDivision) + 1) * xzScale);
-            return new Rectangle(0, 0, width, height);
+            return new Rectangle(0, 0, (int)xzScale*2, (int)xzScale*2);
         }
         public Landscape(BraceGame game)
             : base(Vector3.Zero, Vector3.Zero)
@@ -37,8 +35,6 @@ namespace Brace.GameLogic
             //build physics object
             pObject = new PhysicsModel();
             TerrainBody bodyDef = new TerrainBody(pObject,segments,xzScale);
-            int width = (int)((Math.Pow(2, numDivision) + 1) * xzScale);
-            int height = (int)((Math.Pow(2, numDivision) + 1) * xzScale);
             pObject.Initialize(5000, 1,1, 0,Vector3.Zero, Vector3.Zero, bodyDef);
             pObject.extraData = this;
             //add to physics sim

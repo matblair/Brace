@@ -69,8 +69,8 @@ namespace Brace.Physics
             else
             {
                 TerrainBody target= (TerrainBody)bodyDefinition;
-                Width = (int)(target.points.GetLength(0) * target.xzScale);
-                Height = (int)(target.points.GetLength(1) * target.xzScale);
+                Width = (int)(target.xzScale*2);
+                Height = (int)(target.xzScale*2);
             }
             if (mass == 0)
             {
