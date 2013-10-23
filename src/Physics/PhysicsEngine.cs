@@ -158,7 +158,6 @@ namespace Brace.Physics
                 collisionTree.Insert(body);
                 body.contacts.Clear();
             }
-            //Debug.WriteLine(collisionTree.ToString());
             List<PhysicsModel> possibleCollisions = new List<PhysicsModel>();
             foreach (PhysicsModel body in bodies)
             {
@@ -198,13 +197,6 @@ namespace Brace.Physics
             CollisionType collisionType;
             Contact result = null;
             bool isTargetTerrain = false;
-
-            // Skip collision detection if both objects are stationary
-            if ((target.bodyDefinition.bodyType == BodyType.stationary || target.bodyDefinition.bodyType == BodyType.terrain)
-                && (body.bodyDefinition.bodyType == BodyType.stationary || body.bodyDefinition.bodyType == BodyType.terrain))
-            {
-                return null;
-            }
 
             //ASSUMPTION TERRAIN WON'T COLLIDE WITH OTHER TERRAIN!!!
             if (target.bodyDefinition.bodyType == BodyType.terrain)
@@ -312,7 +304,7 @@ namespace Brace.Physics
                         {
                             direction = Vector3.UnitY;
                         }
-                        return new Contact(x,y,direction,temp/2);
+                        return new Contact(x,y,direction,temp);
                     }
                 }
             }
