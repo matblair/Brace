@@ -23,7 +23,7 @@ namespace Brace
     public sealed partial class Highscores : Brace.Common.LayoutAwarePage
     {
         ApplicationDataContainer localSettings;
-        SerializableDictionary<int, DateTime> scores;
+        SerializableDictionary<DateTime, int> scores;
 
         public Highscores()
         {
@@ -54,7 +54,7 @@ namespace Brace
                 int i = 1;
                 foreach (var key in keys)
                 {
-                    var str = string.Format("{0}:\t{1}\t{2}", i, key, scores[key]);
+                    var str = string.Format("{0}:\t{1}\t{2}", i, scores[key], key);
                     this.scoreList.Items.Add(str);
                     i++;
                 }

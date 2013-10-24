@@ -11,8 +11,9 @@ namespace Brace.Utils
     {
         private static bool initialised = false;
         private static readonly int MAX_SCORES = 10;
+        private static ApplicationDataContainer localSettings;
 
-        public static SerializableDictionary<int, DateTime> Scores { get; private set; }
+        public static SerializableDictionary<DateTime, int> Scores { get; private set; }
 
         public static void Init()
         {
@@ -23,7 +24,7 @@ namespace Brace.Utils
 
             // Load data
             var applicationData = ApplicationData.Current;
-            var localSettings = applicationData.LocalSettings;
+            localSettings = applicationData.LocalSettings;
             localSettings.CreateContainer("highScores",
                 Windows.Storage.ApplicationDataCreateDisposition.Always);
 
@@ -34,12 +35,12 @@ namespace Brace.Utils
 
             if (!localSettings.Containers["highScores"].Values.ContainsKey("scores"))
             {
-                Scores = new SerializableDictionary<int, DateTime>();
+                Scores = new SerializableDictionary<DateTime, int>();
                 localSettings.Containers["highScores"].Values["scores"] = App.SerializeToString(Scores);
             }
 
             var data = (string)localSettings.Containers["highScores"].Values["scores"];
-            Scores = App.DeserializeFromString<SerializableDictionary<int, DateTime>>(data);
+            Scores = App.DeserializeFromString<SerializableDictionary<DateTime, int>>(data);
 
             initialised = true;
         }
@@ -68,20 +69,29 @@ namespace Brace.Utils
             }
 
             // Insert the new score
-            Scores.Add(score, dateTime);
+            Scores.Add(dateTime, score);
 
             // Drop keys while there's too many
             while (Scores.Count > MAX_SCORES)
             {
-                Scores.Remove(Scores.Keys.Min());
+                var min = Scores.Values.Min();
+                var item = Scores.First(kvp => kvp.Value == min);
+                Scores.Remove(item.Key);
             }
+
+            SaveScores();
 
             return true;
         }
 
         public static int HighestScore()
         {
-            return Scores.Keys.Max();
+            return Scores.Values.Max();
+        }
+
+        private static void SaveScores()
+        {
+            localSettings.Containers["highScores"].Values["scores"] = App.SerializeToString(Scores);
         }
     }
 }
