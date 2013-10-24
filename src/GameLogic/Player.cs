@@ -16,14 +16,14 @@ namespace Brace.GameLogic
         private int chargeTime;
         
         private readonly int MINIMUMCHARGETIME = 300;
-        private readonly int MAXIMUMCHARGETIME = 1600;
+        private readonly int MAXIMUMCHARGETIME = 900;
         public readonly int MAXARROWDAMAGE = 60;
         public readonly int MINARROWDAMAGE = 40;
 
         private readonly float MAXSPEED = 5;
 
         public bool isDead = false;
-        public float decreasePerMs = 0.005f;
+        public float decreasePerMs = 0.0023f;
         private float health;
 
         private readonly int MAXHEALTH = 100;
@@ -121,8 +121,6 @@ namespace Brace.GameLogic
         private void die(GameTime gameTime)
         {
             isDead = true;
-            Utils.HighScoreManager.AddScore((int)gameTime.TotalGameTime.Milliseconds);
-            MainPage.GetMainPage().ResetGame();
         }
 
         public Vector4 getIntensityVector(){
