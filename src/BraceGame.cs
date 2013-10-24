@@ -231,7 +231,7 @@ namespace Brace
             }
 
             // Show FPS
-            //fpsRenderer.Draw();
+            fpsRenderer.Draw();
 
             // Handle base.Draw
             base.Draw(gameTime);
