@@ -61,8 +61,8 @@ namespace Brace
         private void gameOverMenu_Click(object sender, RoutedEventArgs e)
         {
             MainPage parent = this.Parent as MainPage;
-            parent.Children.Remove(this);
             parent.Children.Add(new MainMenu());
+            parent.Children.Remove(this);
         }
     }
 }

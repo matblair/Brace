@@ -78,8 +78,8 @@ namespace Brace
             t.Margin = new Thickness(4);
             t.FontSize = 14;
 
-            Button bExit = new Button() { Content = "Quit" };
-            bExit.Click += bExit_OnClick;
+            Button bExit = new Button() { Content = "Concede" };
+            bExit.Click += TerminateGame;
 
             s.Children.Add(t);
             s.Children.Add(bExit);
@@ -94,6 +94,12 @@ namespace Brace
                 s);
             f.OnClosing += f_OnClosing;
             f.ShowAsync();
+        }
+
+        private void TerminateGame(object sender, RoutedEventArgs e)
+        {
+            game.getPlayer().addHealth(-10000);
+            game.paused = false;
         }
 
         private void ResumeGame()
@@ -118,44 +124,9 @@ namespace Brace
             }
         }
 
-        async void bExit_OnClick(object sender, RoutedEventArgs e)
-        {
-            // Create the message dialog and set its content
-            var messageDialog = new MessageDialog("Are you sure you want to quit?");
-
-            // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
-            messageDialog.Commands.Add(new UICommand(
-                "Quit",
-                new UICommandInvokedHandler(this.CommandInvokedHandler)));
-            messageDialog.Commands.Add(new UICommand(
-                "Cancel",
-                new UICommandInvokedHandler(this.CommandInvokedHandler)));
-
-            // Set the command that will be invoked by default
-            messageDialog.DefaultCommandIndex = 0;
-
-            // Set the command to be invoked when escape is pressed
-            messageDialog.CancelCommandIndex = 1;
-
-            // Show the message dialog
-            await messageDialog.ShowAsync();
-        }
-
         void f_OnClosing(object sender, CloseReason reason, System.ComponentModel.CancelEventArgs cancelEventArgs)
         {
             this.ResumeGame();
-        }
-
-        private void CommandInvokedHandler(IUICommand command)
-        {
-            if (command.Label.Equals("Quit"))
-            {
-                game.Exit();
-            }
-            else
-            {
-                this.PauseGame();
-            }
         }
     }
 }
