@@ -19,7 +19,6 @@ namespace Brace
         private MouseManager mouse;
 
         private Accelerometer accelerometer;
-        private System.DateTimeOffset ViewTypeSetTime;
         
         private GestureRecognizer gestureRecogniser;
 
@@ -37,20 +36,29 @@ namespace Brace
         private Keys toggleCameraKey = Keys.Tab;
         private Keys shiftKey = Keys.Shift;
 
-        public bool screenTurnLeftButtonDown;
-        public bool screenTurnRightButtonDown;
-        public bool screenWalkForwardButtonDown;
-        public bool screenShootButtonDown;
-        
         public KeyboardState keyboardState { get; private set; }
         public MouseState mouseState { get; private set; }
 
         private readonly int playerBoundBox = 100;
-
+        private readonly int orientationChangeDelayInMilliseconds = -500;
         private bool isAiming;
         private Vector2 aimDirection;
         public Vector2 moveCoordinate;
         public Camera.ViewType ViewType { get; private set; }
+        private Camera.ViewType ViewTypeToLoad;
+        private System.DateTimeOffset ViewTypeSetTime;
+        private System.DateTimeOffset ChangeViewTime;
+
+        private int turnLeftScreenBoundary;
+        private int turnRightScreenBoundary;
+        private int walkForwardScreenBoundary;
+        private int shootScreenBoundary;
+
+        private bool screenTurnLeftButtonDown;
+        private bool screenTurnRightButtonDown;
+        private bool screenWalkForwardButtonDown;
+        private bool screenShootButtonDown;
+        private bool didTapped;
 
         public InputManager(BraceGame game)
         {
@@ -74,8 +82,8 @@ namespace Brace
             this.gestureRecogniser.ShowGestureFeedback = false;
 
             gestureRecogniser.GestureSettings = GestureSettings.Tap;
-
             gestureRecogniser.Tapped += OnTapped;
+            didTapped = false;
 
             window.PointerPressed += OnPointerPressed;
             window.PointerMoved += OnPointerMoved;
@@ -86,12 +94,27 @@ namespace Brace
             screenTurnLeftButtonDown = false;
             screenTurnRightButtonDown = false;
             ViewType = Camera.ViewType.TopDown;
+            ViewTypeToLoad = ViewType;
+
+            screenTurnLeftButtonDown = false;
+            screenTurnRightButtonDown = false;
+            screenWalkForwardButtonDown = false;
+            screenShootButtonDown = false;
+
+            int turnBoundary = (int)Math.Floor(window.Bounds.Width / 5);
+            Debug.WriteLine(turnBoundary);
+            turnLeftScreenBoundary = turnBoundary;
+            turnRightScreenBoundary = (int) window.Bounds.Width - turnBoundary;
+            walkForwardScreenBoundary = (int) Math.Floor(window.Bounds.Height / 2);
+            shootScreenBoundary = walkForwardScreenBoundary;    // Same but checks the opposite
         }
 
         public void Update()
         {
             keyboardState = keys.GetState();
             mouseState = mouse.GetState();
+
+            didTapped = false;
 
             if (keyboardState.IsKeyDown(toggleCameraKey))
             {
@@ -107,38 +130,38 @@ namespace Brace
                 {
                     ViewType = Camera.ViewType.Follow;
                 } 
-             
             }
         }
 
         private void AccelerometerReadingChanged(object sender, AccelerometerReadingChangedEventArgs args)
         {
             AccelerometerReading reading = args.Reading;
-            //Debug.WriteLine("Acceleration X = " + reading.AccelerationX.ToString());
-            //Debug.WriteLine("Acceleration Y = " + reading.AccelerationY.ToString());
-            //Debug.WriteLine("Acceleration Z = " + reading.AccelerationZ.ToString());
+
             System.DateTimeOffset time = args.Reading.Timestamp;
-            System.DateTimeOffset t2 = time.AddMilliseconds(-10200);
-            
-            // if vertical && viewToLoad is horizontal, set timer and fps view to load, else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+            System.DateTimeOffset t2 = time.AddMilliseconds(orientationChangeDelayInMilliseconds);
             
             if (reading.AccelerationZ < -0.85)
-            {
-                // Top down
-                if (ViewTypeSetTime < t2)
+            {   
+                if (ViewTypeToLoad != Camera.ViewType.TopDown)
                 {
-                    ViewType = Camera.ViewType.TopDown;
-                    ViewTypeSetTime = time;
+                    // Acceleration reading is suggest different view type than the current view
+                    ViewTypeToLoad = Camera.ViewType.TopDown;   // Set the view to load
+                    ChangeViewTime = time;                      // Set the time the view was set
                 }
             }
-             else
+            else
             {
-                // First person
-                if (ViewTypeSetTime < t2)
+                if (ViewTypeToLoad != Camera.ViewType.FirstPerson)
                 {
-                    ViewType = Camera.ViewType.FirstPerson;
-                    ViewTypeSetTime = time;
+                    // Acceleration reading is suggest different view type than the current view
+                    ViewTypeToLoad = Camera.ViewType.FirstPerson;      // Set the view to load
+                    ChangeViewTime = time;                             // Set the time the view was set
                 }
+            }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+            if (ViewType != ViewTypeToLoad && t2 > ChangeViewTime)
+            {
+                ViewType = ViewTypeToLoad;
             }
         }
 
@@ -147,7 +170,7 @@ namespace Brace
 
         public bool isShooting()
         {
-            return isAiming;
+            return isAiming || screenShootButtonDown;
         }
 
         public Vector2 shotDirection()
@@ -163,9 +186,9 @@ namespace Brace
         // Gesture events
         void OnTapped(object sender, TappedEventArgs e)
         {
-            if (!isAiming)
+            didTapped = true;
+            if (ViewType == Camera.ViewType.TopDown)
             {
-                // Not aiming, then this is point to move
                 Vector2 p = getVectorToPointer(e.Position);         // coordinate of tap from center of screen.
                 Vector3 target = Camera.lookingAt;
                 p.X = -p.X;                                         // Negate make x the same direction as in the world
@@ -188,10 +211,7 @@ namespace Brace
         // Raw touch input events
         void OnPointerPressed(CoreWindow sender, PointerEventArgs args)
         {
-            Debug.WriteLine("Pointer pressed");
-
-
-            if (ViewType == Camera.ViewType.TopDown)
+            if (ViewType == Camera.ViewType.TopDown && !didTapped)
             {
                 Vector2 p = getVectorToPointer(args.CurrentPoint.Position);
                 double halfOfBoundingBox = playerBoundBox / 2;
@@ -203,6 +223,30 @@ namespace Brace
                     // Initialise aim direction to the view direction of the camera target
                     Vector3 vd = Camera.GetCameraTarget().ViewDirection();
                     aimDirection = new Vector2(vd.X, vd.Z);
+                }
+            }
+            else if (ViewType == Camera.ViewType.FirstPerson)
+            {
+                Windows.Foundation.Point p = args.CurrentPoint.Position;
+
+                if (p.X < turnLeftScreenBoundary)
+                {
+                    screenTurnLeftButtonDown = true;
+                }
+                else if (p.X >= turnRightScreenBoundary)
+                {
+                    screenTurnRightButtonDown = true;
+                }
+                else if (p.Y <= walkForwardScreenBoundary)
+                {
+                    screenWalkForwardButtonDown = true;
+                }
+                else if (p.Y > shootScreenBoundary)
+                {
+                    screenShootButtonDown = true;
+                    // Set aim depending on the camera target view direction
+                    Vector3 player = Camera.GetCameraTarget().ViewDirection();
+                    aimDirection = new Vector2(player.X, player.Z);
                 }
             }
             gestureRecogniser.ProcessDownEvent(args.CurrentPoint);
@@ -222,6 +266,13 @@ namespace Brace
         void OnPointerReleased(CoreWindow sender, PointerEventArgs args)
         {
             isAiming = false;
+            if (ViewType == Camera.ViewType.FirstPerson)
+            {
+                screenTurnLeftButtonDown = false;
+                screenTurnRightButtonDown = false;
+                screenWalkForwardButtonDown = false;
+                screenShootButtonDown = false;
+            }
             try
             {
                 gestureRecogniser.ProcessUpEvent(args.CurrentPoint);
@@ -246,7 +297,7 @@ namespace Brace
                 Vector3 target = Camera.lookingAt;
                 
                 Vector2 pointer = getVectorToPointer(p);
-                pointer.X = -pointer.X;                                         // Negate make x the same direction as in the world
+                pointer.X = -pointer.X;                               // Negate make x the same direction as in the world
 
                 pointer = Vector2.Negate(pointer);
                 aimDirection = pointer;
@@ -257,7 +308,7 @@ namespace Brace
         // Walking methods
         public bool WalkingForward()
         {
-            return keyboardState.IsKeyDown(walkForwardKey) && !keyboardState.IsKeyDown(walkBackKey);
+            return screenWalkForwardButtonDown || keyboardState.IsKeyDown(walkForwardKey) && !keyboardState.IsKeyDown(walkBackKey);
         }
 
         public bool WalkingBack()
@@ -288,14 +339,14 @@ namespace Brace
 
         public bool TurningLeft()
         {
-            return keyboardState.IsKeyDown(lookLeftKey) && !keyboardState.IsKeyDown(lookRightKey)
-                || screenTurnLeftButtonDown             && !screenTurnRightButtonDown;
+            return screenTurnLeftButtonDown             && !screenTurnRightButtonDown
+                || keyboardState.IsKeyDown(lookLeftKey) && !keyboardState.IsKeyDown(lookRightKey);
         }
 
         public bool TurningRight()
         {
-            return keyboardState.IsKeyDown(lookRightKey) && !keyboardState.IsKeyDown(lookLeftKey)
-                || screenTurnRightButtonDown             && !screenTurnLeftButtonDown;
+            return screenTurnRightButtonDown && !screenTurnLeftButtonDown
+                || keyboardState.IsKeyDown(lookRightKey) && !keyboardState.IsKeyDown(lookLeftKey);
         }
 
         public bool toggleCamera()

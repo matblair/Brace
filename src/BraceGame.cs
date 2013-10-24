@@ -198,6 +198,7 @@ namespace Brace
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
                 unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
                 unitShader.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol * player.getIntensityVector());
+                //Debug.WriteLine(playerLamp.lightPntCol);
                 //Then the landscape shader
                 landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
                 landscapeEffect.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol * player.getIntensityVector());
@@ -227,7 +228,7 @@ namespace Brace
             //Then teh actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader);
+                //actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader);
             }
 
             // Show FPS

@@ -32,9 +32,24 @@ namespace Brace.GameLogic
                 ((Player)target).ShootArrow(shootingDirection);
                 shooting = false;
             }
-
+            float turnAmmount = gameTime.ElapsedGameTime.Milliseconds / (50 * (float)Math.PI * 2);
+            if (BraceGame.get().input.TurningRight())
+            {
+                ((Player)target).rot.X += turnAmmount;
+            }
+            if (BraceGame.get().input.TurningLeft())
+            {
+                ((Player)target).rot.X -= turnAmmount;
+            }
+            
+            if (BraceGame.get().input.WalkingForward())
+            {
+                ((Player)target).WalkForward();
+            }
             else
             {
+
+                
                 moveLocation = BraceGame.get().input.moveTo();
                 ((Player)target).Move(moveLocation);
             }

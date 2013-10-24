@@ -111,6 +111,11 @@ namespace Brace.GameLogic
             
 
         }
+        public void WalkForward() 
+        {
+            pObject.ApplyImpulse(ViewDirection() * MAXSPEED - pObject.velocity);
+
+        }
 
         internal void lowerHealth(float damage)
         {
