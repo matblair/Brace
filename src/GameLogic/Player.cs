@@ -19,10 +19,12 @@ namespace Brace.GameLogic
         private readonly int MAXIMUMCHARGETIME = 1600;
         public readonly int MAXARROWDAMAGE = 60;
         public readonly int MINARROWDAMAGE = 40;
-
         private readonly int MAXSPEED = 1;
 
-        private int health;
+        public bool isDead = false;
+        public float decreasePerMs = 0.01f;
+        private float health;
+
         private readonly int MAXHEALTH = 100;
 
         PlayerController controller;
@@ -48,6 +50,14 @@ namespace Brace.GameLogic
         {
             position = pObject.position;
             controller.Update(gameTime);
+
+            //Reduce lighting intensity as health goes down. 
+            float intensityLost = gameTime.ElapsedGameTime.Milliseconds * decreasePerMs;
+            lowerHealth(intensityLost);
+            if (health < 0)
+            {
+                die(gameTime);
+            }
         }
 
         public void ShootArrow(Vector2 direction)
@@ -90,20 +100,30 @@ namespace Brace.GameLogic
             pObject.ApplyImpulse(force);
         }
 
-        internal void lowerHealth(int damage)
+        internal void lowerHealth(float damage)
         {
             health -= damage;
-            if (health < 0)
-            {
-                die();
-            }
+
         }
 
-        private void die()
+        private void die(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            isDead = true;
+            Utils.HighScoreManager.AddScore((int)gameTime.TotalGameTime.Milliseconds);
+            MainPage.GetMainPage().ResetGame();
+        }
+
+        public Vector4 getIntensityVector(){
+            float factor = health/MAXHEALTH;
+            Vector4 intensity = new Vector4(factor, factor, factor, 1);
+            Debug.WriteLine(factor);
+            return intensity;
         }
 
 
+        internal void reinitialiseHealth(int p)
+        {
+            this.health = p;
+        }
     }
 }

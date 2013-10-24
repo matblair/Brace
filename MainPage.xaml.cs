@@ -36,14 +36,28 @@ namespace Brace
     /// </summary>
     public sealed partial class MainPage
     {
-        private readonly BraceGame game;
+        private BraceGame game;
+        private static MainPage mainPage;
 
         public MainPage()
         {
+            mainPage = this;
+
             InitializeComponent();
             game = BraceGame.get();
             game.Run(this);
 
+            this.Children.Add(new MainMenu());
+        }
+
+        public static MainPage GetMainPage()
+        {
+            return mainPage;
+        }
+        
+        public void ResetGame()
+        {
+            game.paused = true;
             this.Children.Add(new MainMenu());
         }
 

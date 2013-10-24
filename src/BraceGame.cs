@@ -39,7 +39,7 @@ namespace Brace
         private Effect landscapeEffect;
         private TrackingLight playerLamp;
 
-        //
+        //Our rectangle stuff
         public Rectangle bounds = Landscape.getBounds();
 
         public static BraceGame get() 
@@ -48,9 +48,18 @@ namespace Brace
             {
                 game = new BraceGame();
             }
+            else
+            {
+                if (game.player!= null && game.player.isDead)
+                {
+                    game.RestartGame();
+                }
+
+            }
             return game;
 
         }
+
 
         private BraceGame()
         {
@@ -81,7 +90,6 @@ namespace Brace
             LoadAssets();
             actors = InitializeActors();
             player = (Player)actors[0];
-
             Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.Follow);
             playerLamp = new TrackingLight((Unit)actors[0], new Vector3(0,2.5f,4.5f));
@@ -101,6 +109,10 @@ namespace Brace
             Assets.tree = Content.Load<Model>("tree");
             Assets.player = Content.Load<Model>("player");
             Assets.bullet = Content.Load<Model>("bullet");
+        }
+
+        public void RestartGame(){
+            player.reinitialiseHealth(100);
         }
 
         private List<Actor> InitializeActors()
@@ -182,14 +194,16 @@ namespace Brace
                 unitShader.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
                 unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-
+                unitShader.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol * player.getIntensityVector());
                 //Then the landscape shader
                 landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+                landscapeEffect.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol * player.getIntensityVector());
                 landscapeEffect.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
                 landscapeEffect.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
                 landscapeEffect.Parameters["View"].SetValue(Camera.View);
                 landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
                 landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
+
             }
         }
 
@@ -248,5 +262,7 @@ namespace Brace
         {
             return player;
         }
+
+       
     }
 }

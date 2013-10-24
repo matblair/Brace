@@ -8,7 +8,7 @@ float4x4 worldInvTrp;
 // Our world lighting setups Will obviously need to be changed at a later 
 // date in order to properly having moving light sources etc.
 float3 lightPntPos;
-float4 lightPntCol = float4(1.0f, 0.5f, 0.1f, 1.0f);
+float4 lightPntCol;
 float4 sunPntCol = float4(0.55, 0.1, 0.9, 1);
 //float4 sunPntCol = float4(1, 1, 1, 1);
 

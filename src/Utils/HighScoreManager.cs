@@ -40,6 +40,8 @@ namespace Brace.Utils
 
             var data = (string)localSettings.Containers["highScores"].Values["scores"];
             Scores = App.DeserializeFromString<SerializableDictionary<int, DateTime>>(data);
+
+            initialised = true;
         }
 
         private static void CheckInit()
@@ -65,21 +67,13 @@ namespace Brace.Utils
                 return false;
             }
 
-            List<int> keys = Scores.Keys.ToList();
-
             // Insert the new score
-            if (score > keys.Min())
-            {
-                Scores.Remove(keys.Min());
-                Scores.Add(score, dateTime);
-            }
+            Scores.Add(score, dateTime);
 
             // Drop keys while there's too many
-            while (keys.Count > MAX_SCORES)
+            while (Scores.Count > MAX_SCORES)
             {
-                int k = keys.Min();
-                keys.Remove(k);
-                Scores.Remove(k);
+                Scores.Remove(Scores.Keys.Min());
             }
 
             return true;
