@@ -12,30 +12,51 @@ namespace Brace.GameLogic
     class EnemySpawner : Actor
     {
         Player target;
-        readonly int COOLDOWN = 3000;
+        readonly int COOLDOWN = 1000;
         int spawnerCooldown;
-
-        EnemySpawner(Player target)
+        Random rand;
+        public EnemySpawner(Player target)
             : base(Vector3.Zero, Vector3.Zero) 
         {
             spawnerCooldown = 0;
             this.target = target;
-
+            rand = new Random();
         }
         public override void Update(GameTime gametime)
         {
             spawnerCooldown+=gametime.ElapsedGameTime.Milliseconds;
             if(spawnerCooldown>COOLDOWN) {
-                spawnEnemyOffscreen();
-                spawnerCooldown=0;
+                int enemyCount = EnemyCount();
+                for (int i = enemyCount; i < 20; ++i)
+                {
+                    spawnEnemyOffscreen();
+                }
+                spawnerCooldown = 0;
+
             }
             
+        }
+
+        private int EnemyCount()
+        {
+            int count=0;
+            foreach (Actor a in BraceGame.get().actors)
+            {
+                if (a.GetType() == typeof(Enemy))
+                {
+                    ++count;
+                }
+            }
+            return count;
+
         }
 
         private void spawnEnemyOffscreen()
         {
             Vector3 center = BraceGame.get().getPlayer().position;
-            float radius = Math.Max(BraceGame.get().GraphicsDevice.Viewport.Width, BraceGame.get().GraphicsDevice.Viewport.Height);
+            float radius =40;
+            float angle = rand.NextFloat(0, (float)Math.PI*2);
+            spawnEnemy(center + radius * new Vector3((float)Math.Cos(angle), 0, (float)Math.Sin(angle)));
 
         }
 

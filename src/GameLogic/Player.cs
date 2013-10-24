@@ -20,7 +20,7 @@ namespace Brace.GameLogic
         public readonly int MAXARROWDAMAGE = 60;
         public readonly int MINARROWDAMAGE = 40;
 
-        private readonly int MAXSPEED = 1;
+        private readonly float MAXSPEED = 5;
 
         private int health;
         private readonly int MAXHEALTH = 100;
@@ -39,7 +39,7 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(30, 0.7f, 0.1f, 0.7f, position, Vector3.Zero, bodyDef);
+            pObject.Initialize(30, 0.3f, 0.01f, 0.7f, position, Vector3.Zero, bodyDef);
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
@@ -82,12 +82,23 @@ namespace Brace.GameLogic
         public override void Move(Vector2 destination)
         {
             base.Move(destination);
+            Vector2 currentLoc = new Vector2(position.X, position.Z);
+            Vector2 toTarget = (destination - currentLoc);
+            float dist = toTarget.Length();
+            if (dist > 0)
+            {
+                float decel = 0.3f;
+                float speed = dist / decel;
+                speed = Math.Min(speed, MAXSPEED);
+                Vector2 desiredVel = toTarget * speed / dist;
+                pObject.ApplyImpulse(new Vector3(desiredVel.X - pObject.velocity.X, 0, desiredVel.Y - pObject.velocity.Z));
+            }
+            else
+            {
+                return;
+            }
+            
 
-            Vector2 direction = destination - new Vector2(position.X,position.Z);
-            direction.Normalize();
-            Vector2 targetSpeed = new Vector2(direction.X * MAXSPEED, direction.Y * MAXSPEED);
-            Vector3 force = new Vector3(targetSpeed.X, 0, targetSpeed.Y);
-            pObject.ApplyImpulse(force);
         }
 
         internal void lowerHealth(int damage)

@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="src\Camera.cs" />
     <Compile Include="src\BraceGame.cs" />
+    <Compile Include="src\GameLogic\HealthOrb.cs" />
     <Compile Include="src\GameLogic\Tree.cs" />
     <Compile Include="src\GameLogic\Enemy.cs" />
     <Compile Include="src\GameLogic\EnemyBehaviour.cs" />

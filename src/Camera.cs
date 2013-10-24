@@ -41,7 +41,7 @@ namespace Brace
             this.game = game;
 
             // View setup
-            Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 500.0f);
+            Projection = Matrix.PerspectiveFovLH((float)Math.PI / 4.0f, (float)game.GraphicsDevice.BackBuffer.Width / game.GraphicsDevice.BackBuffer.Height, 0.1f, 150.0f);
             SetTarget(track);
             SetViewType(ViewType.TopDown);
 

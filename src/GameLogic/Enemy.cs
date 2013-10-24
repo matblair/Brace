@@ -18,7 +18,7 @@ namespace Brace.GameLogic
         private readonly int ATTACKCOOLDOWN = 1000;
         private int attackCounter;
 
-        private readonly int MAXSPEED = 1;
+        private readonly int MAXSPEED = 5;
         private readonly int MAXHEALTH = 1;
         private int health;
 
@@ -33,7 +33,7 @@ namespace Brace.GameLogic
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);
-            pObject.Initialize(30, 0.7f, 0.2f, 0.7f, position, Vector3.Zero, bodyDef);
+            pObject.Initialize(30, 0.3f, 0.01f, 0.7f, position, Vector3.Zero, bodyDef);
             pObject.bodyDefinition.bodyType = BodyType.dynamic;
             BraceGame.get().physicsWorld.AddBody(pObject);
         }
@@ -57,12 +57,21 @@ namespace Brace.GameLogic
         public override void Move(Vector2 destination)
         {
             base.Move(destination);
-
-            Vector2 direction = destination - new Vector2(position.X, position.Z);
-            direction.Normalize();
-            Vector2 targetSpeed = new Vector2(direction.X * MAXSPEED, direction.Y * MAXSPEED);
-            Vector3 force =  new Vector3(targetSpeed.X, 0, targetSpeed.Y);
-            pObject.ApplyImpulse(force);
+            Vector2 currentLoc = new Vector2(position.X, position.Z);
+            Vector2 toTarget = (destination - currentLoc);
+            float dist = toTarget.Length();
+            if (dist > 0)
+            {
+                float decel = 0.3f;
+                float speed = dist / decel;
+                speed = Math.Min(speed, MAXSPEED);
+                Vector2 desiredVel = toTarget * speed / dist;
+                pObject.ApplyImpulse(new Vector3(desiredVel.X - pObject.velocity.X, 0, desiredVel.Y - pObject.velocity.Z));
+            }
+            else
+            {
+                return;
+            }
         }
 
         internal void lowerHealth(int damage)
@@ -70,6 +79,7 @@ namespace Brace.GameLogic
             health -= damage;
             if (health < 0)
             {
+                BraceGame.get().AddActor(new HealthOrb(position));
                 die();
             }
         }

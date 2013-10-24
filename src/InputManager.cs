@@ -12,7 +12,7 @@ using Windows.UI.Core;
 using System.Diagnostics;
 
 namespace Brace
-{
+{                                                                                                                          
     public class InputManager
     {
         private KeyboardManager keys;
@@ -118,7 +118,10 @@ namespace Brace
             //Debug.WriteLine("Acceleration Y = " + reading.AccelerationY.ToString());
             //Debug.WriteLine("Acceleration Z = " + reading.AccelerationZ.ToString());
             System.DateTimeOffset time = args.Reading.Timestamp;
-            System.DateTimeOffset t2 = time.AddMilliseconds(-800);
+            System.DateTimeOffset t2 = time.AddMilliseconds(-10200);
+            
+            // if vertical && viewToLoad is horizontal, set timer and fps view to load, else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+            
             if (reading.AccelerationZ < -0.85)
             {
                 // Top down
@@ -128,7 +131,7 @@ namespace Brace
                     ViewTypeSetTime = time;
                 }
             }
-            else
+             else
             {
                 // First person
                 if (ViewTypeSetTime < t2)
@@ -244,8 +247,8 @@ namespace Brace
                 
                 Vector2 pointer = getVectorToPointer(p);
                 pointer.X = -pointer.X;                                         // Negate make x the same direction as in the world
-                
-                pointer = Vector2.Negate(pointer) + new Vector2(target.X,target.Z);
+
+                pointer = Vector2.Negate(pointer);
                 aimDirection = pointer;
             }
         }

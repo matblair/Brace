@@ -19,20 +19,31 @@ namespace Brace.GameLogic
         {
             behaviour = new EnemyBehaviour();
         }
+        private float DistanceFromPlayerSquared() {
+            Player player = BraceGame.get().getPlayer();
+            Vector2 thisLoc = new Vector2(target.position.X, target.position.Z);
+            Vector2 playerLoc = new Vector2(player.position.X, player.position.Z);
+            return Vector2.DistanceSquared(thisLoc, playerLoc);
+        }
 
         public override void Update(GameTime gameTime)
         {
             Player player = BraceGame.get().getPlayer();
-            Vector2 playerLoc = new Vector2(player.position.X, player.position.Z);
             Vector2 thisLoc = new Vector2(target.position.X, target.position.Z);
+            Vector2 playerLoc = new Vector2(player.position.X, player.position.Z);
 
-            if (Vector2.DistanceSquared(thisLoc, playerLoc) > CHASEDIST * CHASEDIST)
+            if (DistanceFromPlayerSquared() > 100 * CHASEDIST * CHASEDIST)
+            {
+                target.doomed = true;
+                target.DestroyPhysicsObject();
+            }
+            if (DistanceFromPlayerSquared() > CHASEDIST * CHASEDIST)
             {
                 target.Move(Vector2.Add(thisLoc, behaviour.Wander() * 10));
             }
             else
             {
-                target.Move(new Vector2(player.position.X, player.position.Z));
+                target.Move(playerLoc);
             }
 
             foreach (Contact contact in target.pObject.contacts)

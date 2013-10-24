@@ -171,7 +171,6 @@ namespace Brace.Physics
                     {
                         contacts.Add(newContact);
                         target.contacts.Add(newContact);
-                        body.contacts.Add(newContact);
                     }
                 }
             }                        

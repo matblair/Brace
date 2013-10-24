@@ -24,7 +24,7 @@ namespace Brace
         public InputManager input { get; private set; }
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
-        private List<Actor> actors;
+        public List<Actor> actors;
         private static BraceGame game;
         private static TrackingLight projectileLamp;
 
@@ -72,26 +72,28 @@ namespace Brace
 
             // Create FPS renderer
             fpsRenderer = new FPSRenderer(this);
-            
-            // Create PhysicsWorld
-            physicsWorld = new PhysicsEngine();
-
-
+ 
             // Load camera and models
             LoadAssets();
-            actors = InitializeActors();
-            player = (Player)actors[0];
 
-            Camera = new Camera(this, (Unit)actors[0]); // Give this an actor
+            StartNewGame();
+            base.LoadContent();
+        }
+        private void StartNewGame()
+        {
+            // Create PhysicsWorld
+            physicsWorld = new PhysicsEngine(); ;
+
+            //InitializeActors
+            actors = InitializeActors();
+            
+            //Initialize Camera
+            Camera = new Camera(this, player); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.Follow);
-            playerLamp = new TrackingLight((Unit)actors[0], new Vector3(0,2.5f,4.5f));
-            //Load shaders
-            unitShader = Content.Load<Effect>("CubeCelShader");
-            landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
-            projectileLamp = new TrackingLight(null, new Vector4(0.5f,0.5f,1,1), new Vector3(0,0,0));
+            playerLamp = new TrackingLight(player, new Vector3(0, 2.5f, 4.5f));
+            projectileLamp = new TrackingLight(null, new Vector4(0.5f, 0.5f, 1, 1), new Vector3(0, 0, 0));
             input.Camera = Camera;
 
-            base.LoadContent();
         }
 
         private void LoadAssets()
@@ -101,29 +103,23 @@ namespace Brace
             Assets.tree = Content.Load<Model>("tree");
             Assets.player = Content.Load<Model>("player");
             Assets.bullet = Content.Load<Model>("bullet");
+            //Load shaders
+            unitShader = Content.Load<Effect>("CubeCelShader");
+            landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
+
         }
 
         private List<Actor> InitializeActors()
         {
             List<Actor> newActors = new List<Actor>();         
             Random rand = new Random();
-
-            newActors.Add(new Player(Vector3.Zero, Vector3.Zero));
-            double angle=0;
-            int NUMBEROFENEMIES = 25;
-            for (int i = 1; i < NUMBEROFENEMIES-1; ++i)
-            {
-                for (int j = 1; j < NUMBEROFENEMIES-1; ++j)
-                {
-                    newActors.Add(new Enemy(new Vector3((float)(400 * i/NUMBEROFENEMIES)-200, 0, (float)(400 * j/NUMBEROFENEMIES)-200), Vector3.Zero));
-
-                }
-            }
-
+            player = new Player(Vector3.Zero, Vector3.Zero);
+            newActors.Add(player);
+            newActors.Add(new EnemySpawner(player));
             landscape = new GameLogic.Landscape(this);
 
 
-            for (int t = 0; t < 300; t++)
+            for (int t = 0; t < 200; t++)
             {
                 float x = rand.Next(-200, 200);
                 float y = rand.Next(-200, 200);
@@ -139,6 +135,7 @@ namespace Brace
         {
             this.paused = false;
         }
+
 
         protected override void Update(GameTime gameTime)
         {
