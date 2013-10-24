@@ -23,7 +23,7 @@ namespace Brace.GameLogic
         private readonly float MAXSPEED = 5;
 
         public bool isDead = false;
-        public float decreasePerMs = 0.01f;
+        public float decreasePerMs = 0.005f;
         private float health;
 
         private readonly int MAXHEALTH = 100;
@@ -128,7 +128,6 @@ namespace Brace.GameLogic
         public Vector4 getIntensityVector(){
             float factor = health/MAXHEALTH;
             Vector4 intensity = new Vector4(factor, factor, factor, 1);
-            Debug.WriteLine(factor);
             return intensity;
         }
 
@@ -136,6 +135,12 @@ namespace Brace.GameLogic
         internal void reinitialiseHealth(int p)
         {
             this.health = p;
+        }
+
+        internal void addHealth(int p)
+        {
+            health += p;
+            return;
         }
     }
 }

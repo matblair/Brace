@@ -19,6 +19,16 @@ namespace Brace.GameLogic
         public override void Update(SharpDX.Toolkit.GameTime gametime)
         {
             position = pObject.position;
+            foreach(Contact contact in pObject.contacts) 
+            {
+                if (contact.y.parent.extraData.GetType() == typeof(Player))
+                {
+                    Player target = (Player)contact.y.parent.extraData;
+                    target.addHealth(10);
+                    DestroyPhysicsObject();
+                    doomed = true;
+                }
+            }
         }
 
         protected override void InitializePhysicsObject()
