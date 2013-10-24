@@ -58,7 +58,7 @@ namespace Brace
         public void ResetGame()
         {
             game.paused = true;
-            this.Children.Add(new MainMenu());
+            this.Children.Add(new EndGame());
         }
 
         public void StartGame()

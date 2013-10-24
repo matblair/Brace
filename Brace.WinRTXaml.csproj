@@ -46,6 +46,10 @@
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="EndGame.xaml.cs">
+      <DependentUpon>EndGame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="src\Utils\HighScoreManager.cs" />
     <Compile Include="Highscores.xaml.cs">
       <DependentUpon>Highscores.xaml</DependentUpon>
     </Compile>
@@ -86,7 +90,6 @@
     <Compile Include="src\Physics\TerrainBody.cs" />
     <Compile Include="src\InputManager.cs" />
     <Compile Include="src\Utils\Assets.cs" />
-    <Compile Include="src\Utils\HighScoreManager.cs" />
     <Compile Include="src\Utils\PhysicsUtils.cs" />
     <Compile Include="src\Utils\SerializableDictionary.cs" />
     <Compile Include="src\Utils\VectorUtils.cs" />
@@ -140,6 +143,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Common\StandardStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EndGame.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

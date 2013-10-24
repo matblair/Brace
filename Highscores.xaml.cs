@@ -47,14 +47,18 @@ namespace Brace
             {
                 this.scoreList.Items.Clear();
 
-                var keys = scores.Keys.ToList();
-                keys.Sort();
-                keys.Reverse();
+                List<KeyValuePair<DateTime, int>> list = scores.ToList();
+
+                list.Sort((firstPair, nextPair) =>
+                {
+                    return -firstPair.Value.CompareTo(nextPair.Value);
+                }
+                );
 
                 int i = 1;
-                foreach (var key in keys)
+                foreach (var item in list)
                 {
-                    var str = string.Format("{0}:\t{1}\t{2}", i, scores[key], key);
+                    var str = string.Format("{0}:\t{1}\t{2}", i, item.Value, item.Key);
                     this.scoreList.Items.Add(str);
                     i++;
                 }

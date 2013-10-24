@@ -36,7 +36,7 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="High Scores" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
-        <ListView x:Name="scoreList" Height="511" Margin="166,40,20,0" Grid.Row="1" VerticalAlignment="Top" SelectionMode="None">
+        <ListView x:Name="scoreList" Margin="166,41,20,38" Grid.Row="1" SelectionMode="None">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="Padding" Value="0"/>

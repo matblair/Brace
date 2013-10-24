@@ -14,6 +14,7 @@ namespace Brace.Utils
         private static ApplicationDataContainer localSettings;
 
         public static SerializableDictionary<DateTime, int> Scores { get; private set; }
+        public static KeyValuePair<DateTime, int> LastScore { get; private set; }
 
         public static void Init()
         {
@@ -69,6 +70,7 @@ namespace Brace.Utils
             }
 
             // Insert the new score
+            LastScore = new KeyValuePair<DateTime, int>(dateTime, score);
             Scores.Add(dateTime, score);
 
             // Drop keys while there's too many
