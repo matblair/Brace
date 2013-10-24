@@ -68,26 +68,13 @@ namespace Brace.GameLogic
 
         private void CheckCollision()
         {
-
             foreach (Contact contact in pObject.contacts)
             {
-                if (contact.x.parent.extraData.Equals(this))
-                {
 
-                    if (contact.y.parent.extraData.GetType() == typeof(Enemy))
-                    {
-                        ((Enemy)contact.y.parent.extraData).lowerHealth(damage);
-                        die();
-                    }
-                }
-                else
+                if (contact.y.parent.extraData.GetType() == typeof(Enemy))
                 {
-                    if (contact.x.parent.extraData.GetType() == typeof(Enemy))
-                    {
-                        ((Enemy)contact.x.parent.extraData).lowerHealth(damage);
-                        die();
-                    }
-
+                    ((Enemy)contact.y.parent.extraData).lowerHealth(damage);
+                    die();
                 }
             }
         }

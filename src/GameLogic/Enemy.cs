@@ -14,8 +14,7 @@ namespace Brace.GameLogic
     {
         EnemyController controller;
 
-        private readonly int DAMAGE = 1;
-        private readonly int ATTACKCOOLDOWN = 1000;
+        private readonly int DAMAGE = 10;
         private int attackCounter;
 
         private readonly int MAXSPEED = 5;
@@ -46,11 +45,7 @@ namespace Brace.GameLogic
 
         public void Attack(Player target)
         {
-            if (attackCounter > ATTACKCOOLDOWN)
-            {
-                target.lowerHealth(DAMAGE);
-                attackCounter = 0;
-            }
+            target.lowerHealth(DAMAGE);
             return;
         }
 
