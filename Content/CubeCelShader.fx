@@ -19,7 +19,7 @@ sampler textureSampler {
 // date in order to properly having moving light sources etc.
 float3 lightPntPos;
 //float4 lightPntCol = float4(1.0f, 0.5f, 0.1f, 1.0f);
-float4 lightPntCol = float4(1.0f, 0.5f, 0.1f, 1.0f);
+float4 lightPntCol;
 
 float4 sunPntCol = float4(0.55, 0.1, 0.9, 1);
 // The direction of the diffuse light (I.E. our sun, this is static)

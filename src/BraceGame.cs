@@ -52,6 +52,7 @@ namespace Brace
 
         }
 
+
         private BraceGame()
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
@@ -109,6 +110,10 @@ namespace Brace
 
         }
 
+        public void RestartGame(){
+            StartNewGame();
+        }
+
         private List<Actor> InitializeActors()
         {
             List<Actor> newActors = new List<Actor>();         
@@ -143,6 +148,10 @@ namespace Brace
             base.Update(gameTime);
             input.Update();
 
+            if (player.isDead)
+            {
+                RestartGame();
+            }
             if (!paused)
             {
             for(int i=0;i<actors.Count();++i)
@@ -179,14 +188,16 @@ namespace Brace
                 unitShader.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
                 unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-
+                unitShader.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol * player.getIntensityVector());
                 //Then the landscape shader
                 landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+                landscapeEffect.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol * player.getIntensityVector());
                 landscapeEffect.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
                 landscapeEffect.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
                 landscapeEffect.Parameters["View"].SetValue(Camera.View);
                 landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
                 landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
+
             }
         }
 
@@ -245,5 +256,7 @@ namespace Brace
         {
             return player;
         }
+
+       
     }
 }
