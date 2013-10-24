@@ -15,15 +15,15 @@ namespace Brace.GameLogic
     {
         private int chargeTime;
         
-        private readonly int MINIMUMCHARGETIME = 300;
+        private readonly int MINIMUMCHARGETIME = 100;
         private readonly int MAXIMUMCHARGETIME = 1600;
         public readonly int MAXARROWDAMAGE = 60;
         public readonly int MINARROWDAMAGE = 40;
 
-        private readonly float MAXSPEED = 5;
+        private readonly float MAXSPEED = 7;
 
         public bool isDead = false;
-        public float decreasePerMs = 0.005f;
+        public float decreasePerMs = 0.003f;
         private float health;
 
         private readonly int MAXHEALTH = 100;
