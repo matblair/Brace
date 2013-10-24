@@ -49,6 +49,7 @@
     <Compile Include="EndGame.xaml.cs">
       <DependentUpon>EndGame.xaml</DependentUpon>
     </Compile>
+    <Compile Include="src\Light.cs" />
     <Compile Include="src\Utils\HighScoreManager.cs" />
     <Compile Include="Highscores.xaml.cs">
       <DependentUpon>Highscores.xaml</DependentUpon>
@@ -126,7 +127,10 @@
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Common\ReadMe.txt" />
-    <ToolkitFxc Include="Content\MultiLightCubeShader.fx">
+    <ToolkitFxc Include="Content\MPLandscapeCelShader.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPUnitCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
     <ToolkitFxc Include="Content\CubeCelShader.fx">
