@@ -23,7 +23,7 @@ namespace Brace.GameLogic
         private readonly float MAXSPEED = 7;
 
         public bool isDead = false;
-        public float decreasePerMs = 0.003f;
+        public float decreasePerMs = 0.0023f;
         private float health;
 
         private readonly int MAXHEALTH = 100;
@@ -121,8 +121,6 @@ namespace Brace.GameLogic
         private void die(GameTime gameTime)
         {
             isDead = true;
-            Utils.HighScoreManager.AddScore((int)gameTime.TotalGameTime.Milliseconds);
-            MainPage.GetMainPage().ResetGame();
         }
 
         public Vector4 getIntensityVector(){

@@ -29,11 +29,13 @@ namespace Brace
         private static TrackingLight projectileLamp;
 
         private Player player;
+        private int score;
 
         public Physics.PhysicsEngine physicsWorld;
 
         //Our actors
         private GameLogic.Landscape landscape;
+
         //Rendering stuff
         private Effect unitShader;
         private Effect landscapeEffect;
@@ -82,6 +84,8 @@ namespace Brace
         }
         private void StartNewGame()
         {
+            score = 0;
+
             // Create PhysicsWorld
             physicsWorld = new PhysicsEngine(); ;
 
@@ -150,24 +154,29 @@ namespace Brace
 
             if (player.isDead)
             {
+                Utils.HighScoreManager.AddScore(score/100*100);
+                MainPage.GetMainPage().ResetGame();
                 RestartGame();
             }
+
             if (!paused)
             {
-            for(int i=0;i<actors.Count();++i)
-            {
-                if (actors[i].doomed)
+                score += gameTime.ElapsedGameTime.Milliseconds;
+
+                for (int i = 0; i < actors.Count(); ++i)
                 {
-                    actors.Remove(actors[i]);
-                    --i;
-                    continue;
-               }
-                else
-                {
-                    actors[i].Update(gameTime);
+                    if (actors[i].doomed)
+                    {
+                        actors.Remove(actors[i]);
+                        --i;
+                        continue;
+                    }
+                    else
+                    {
+                        actors[i].Update(gameTime);
+                    }
+
                 }
-                
-            }
 
                 StepPhysicsModel(gameTime);
 
@@ -178,7 +187,7 @@ namespace Brace
 
                 // Update the camera 
                 Camera.Update(gameTime);
-               
+
 
                 // Now update the shaders
                 //First the unit shader
