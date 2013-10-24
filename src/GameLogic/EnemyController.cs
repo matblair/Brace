@@ -50,6 +50,7 @@ namespace Brace.GameLogic
             {
                 if (typeof(Player) == contact.x.parent.extraData.GetType() || typeof(Player) == contact.y.parent.extraData.GetType())
                 {
+
                     ((Enemy)target).Attack(BraceGame.get().getPlayer());
                     ((Enemy)target).die();
                     break;
