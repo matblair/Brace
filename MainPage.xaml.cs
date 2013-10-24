@@ -64,7 +64,6 @@ namespace Brace
         public void StartGame()
         {
             game.Start();
-            this.gamePauseButton.Visibility = Visibility.Collapsed;
         }
 
         private void PauseGame()
