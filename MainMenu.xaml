@@ -7,7 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Assets/Background.png"/>
+        </Grid.Background>
         <TextBlock x:Name="menuTitle" Margin="400,300,400,0" TextWrapping="Wrap" Text="Brace" VerticalAlignment="Top" FontFamily="Global User Interface" FontSize="80" TextAlignment="Center"/>
         <Button x:Name="menuPlayButton" Content="Start" HorizontalAlignment="Stretch" Margin="400,444,400,0" VerticalAlignment="Top" Click="menuPlayButton_Click" MaxWidth="80" MinWidth="80"/>
         <Button x:Name="menuHighScoreButton" Content="High Scores" HorizontalAlignment="Stretch" Margin="400,519,400,0" VerticalAlignment="Top" MaxWidth="120" MinWidth="120" Click="menuHighScoreButton_Click"/>
