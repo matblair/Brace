@@ -41,7 +41,7 @@ namespace Brace.Utils
                 PlayLength = 0,
                 LoopBegin = 0,
                 LoopLength = 0,
-                LoopCount = loop ? XAudio2.MaximumLoopCount : 1
+                LoopCount = loop ? XAudio2.MaximumLoopCount : 0
             };
         }
 

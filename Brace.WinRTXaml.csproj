@@ -153,6 +153,9 @@
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Common\ReadMe.txt" />
+    <Content Include="Assets\pauseButton.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <ToolkitFxc Include="Content\MPLandscapeCelShader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ToolkitFxc>
@@ -208,6 +211,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Parse">
+      <HintPath>packages\parse.1.2.9\lib\netcore45\Parse.dll</HintPath>
+    </Reference>
+    <Reference Include="Parse.WinRT">
+      <HintPath>packages\parse.1.2.9\lib\netcore45\Parse.WinRT.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>

@@ -11,9 +11,6 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-
-        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
-        <x:String x:Key="AppName">My Application</x:String>
     </Page.Resources>
 
     <!--
@@ -39,9 +36,11 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Options" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
-        <TextBox x:Name="playerNameTextBox" HorizontalAlignment="Left" Margin="362,51,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" FontSize="30" Height="53" Width="333" TextChanged="playerNameTextBox_TextChanged"/>
+        <TextBox x:Name="playerNameTextBox" HorizontalAlignment="Left" Margin="140,111,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" FontSize="30" Height="53" Width="333" TextChanged="playerNameTextBox_TextChanged" Background="#FF544957" Foreground="White"/>
         <TextBlock HorizontalAlignment="Left" Margin="140,60,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Player Name:" VerticalAlignment="Top" FontSize="30"/>
-        <ToggleSwitch x:Name="challengeModeToggle" Header="Challenge Mode:" HorizontalAlignment="Left" Margin="134,153,0,0" Grid.Row="1" VerticalAlignment="Top" FontSize="30" Toggled="challengeModeToggle_Toggled"/>
+        <ToggleSwitch x:Name="challengeModeToggle" Header="Challenge Mode:" HorizontalAlignment="Left" Margin="134,213,0,0" Grid.Row="1" VerticalAlignment="Top" FontSize="30" Toggled="challengeModeToggle_Toggled"/>
+        <TextBlock HorizontalAlignment="Left" Margin="140,369,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Volume:" VerticalAlignment="Top" FontSize="30"/>
+        <Slider x:Name="volumeSlider" HorizontalAlignment="Left" Margin="140,419,0,0" Grid.Row="1" VerticalAlignment="Top" Width="252" ValueChanged="volumeSlider_ValueChanged"/>
 
         <VisualStateManager.VisualStateGroups>
 

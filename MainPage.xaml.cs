@@ -38,6 +38,7 @@ namespace Brace
     {
         private BraceGame game;
         private static MainPage mainPage;
+        private Flyout f;
 
         public MainPage()
         {
@@ -67,7 +68,7 @@ namespace Brace
         {
             game.Start();
             Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Thunder2);
-            this.gamePauseButton.Visibility = Visibility.Collapsed;
+            this.gamePauseButton.Visibility = Utils.OptionsManager.ChallengeModeEnabled() ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void PauseGame()
@@ -89,7 +90,7 @@ namespace Brace
             s.Children.Add(bExit);
 
             //now create the flyout
-            Flyout f = new Flyout(
+            f = new Flyout(
                 new SolidColorBrush(Colors.White),//the foreground color of all flyouts
                 (Brush)App.Current.Resources["ApplicationPageBackgroundThemeBrush"],//the background color of all flyouts
                 new SolidColorBrush(Color.FromArgb(255, 150, 0, 0)),//the theme brush of the app
@@ -102,8 +103,15 @@ namespace Brace
 
         private void TerminateGame(object sender, RoutedEventArgs e)
         {
+            if (f != null)
+            {
+                f.Hide(CloseReason.Other);
+                f = null;
+            }
+
             game.getPlayer().addHealth(-10000);
             game.paused = false;
+
         }
 
         private void ResumeGame()

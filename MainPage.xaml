@@ -8,6 +8,19 @@
     mc:Ignorable="d"    
     d:DesignWidth="2880"
     d:DesignHeight="1800">
-    <Button x:Name="gamePauseButton" Content="| |" HorizontalAlignment="Right" Margin="0,30,30,0" VerticalAlignment="Top" Width="53" Height="45" Click="gamePauseButton_Click"/>
+    <Button x:Name="gamePauseButton"    
+            BorderBrush="Transparent"
+            BorderThickness="0" 
+            Padding="-4"
+            HorizontalAlignment="Right" 
+            Margin="0,30,30,0"
+            VerticalAlignment="Top"
+            Width="40"
+            Height="40"
+            Click="gamePauseButton_Click">
+        <Button.Background>
+            <ImageBrush ImageSource="Assets/pauseButton.png"/>
+        </Button.Background>
+    </Button>
     <MediaElement x:Name="rainAudio" AudioCategory="SoundEffects" Source="Assets/Audio/rain.wav" AutoPlay="False" Visibility="Collapsed"/>
 </SwapChainBackgroundPanel>

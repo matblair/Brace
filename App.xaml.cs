@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parse;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -35,6 +36,8 @@ namespace Brace
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            ParseClient.Initialize("a4XkvOZVAmoXXP0G82Df3EGanbfXSg5zKI9CMm0P", "tPQMVdWXJZiIFX3nblZKm1ggBADMOunyDM1niEdE");
         }
 
         /// <summary>

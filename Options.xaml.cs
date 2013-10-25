@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -9,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -25,8 +27,9 @@ namespace Brace
         {
             this.InitializeComponent();
 
-            this.playerNameTextBox.Text = Utils.OptionsManager.GetPlayerName();
-            this.challengeModeToggle.IsOn = Utils.OptionsManager.ChallengeModeEnabled();
+            playerNameTextBox.Text = Utils.OptionsManager.GetPlayerName();
+            challengeModeToggle.IsOn = Utils.OptionsManager.ChallengeModeEnabled();
+            volumeSlider.Value = Utils.OptionsManager.Volume();
         }
 
         /// <summary>
@@ -66,6 +69,11 @@ namespace Brace
         private void playerNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             Utils.OptionsManager.SetPlayerName(this.playerNameTextBox.Text);
+        }
+
+        private void volumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            Utils.OptionsManager.SetVolume((int)e.NewValue);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ using Windows.Storage;
 
 namespace Brace.Utils
 {
+    using Parse;
+
     public class HighScoreManager
     {
         private static bool initialised = false;
@@ -14,6 +17,8 @@ namespace Brace.Utils
         private static ApplicationDataContainer localSettings;
 
         public static SerializableDictionary<DateTime, int> Scores { get; private set; }
+        public static KeyValuePair<int, string>[] OnlineScores { get; private set; }
+
         public static KeyValuePair<DateTime, int> LastScore { get; private set; }
 
         public static void Init()
@@ -43,7 +48,42 @@ namespace Brace.Utils
             var data = (string)localSettings.Containers["highScores"].Values["scores"];
             Scores = App.DeserializeFromString<SerializableDictionary<DateTime, int>>(data);
 
+            var onlinedata = (KeyValuePair<int, string>[])localSettings.Containers["highScores"].Values["onlineScores"];
+            OnlineScores = onlinedata;
+
+            UpdateOnlineScores();
+
             initialised = true;
+        }
+
+        async public static void UpdateOnlineScores()
+        {
+            var query = from onlineScore in ParseObject.GetQuery("HighScore")
+                        orderby onlineScore.Get<int>("Score") descending, onlineScore.Get<DateTime>("createdAt")
+                        select onlineScore;
+            query.Limit(10);
+
+            try
+            {
+                IEnumerable<ParseObject> results = await query.FindAsync();
+
+                var elements = results.ToArray();
+                int countElements = elements.Length;
+                OnlineScores = new KeyValuePair<int, string>[countElements];
+
+                for (int i = 0; i < countElements; i++)
+                {
+                    int score = elements[i].Get<int>("Score");
+                    string name = elements[i].Get<string>("Name");
+                    OnlineScores[i] = new KeyValuePair<int, string>(score, name);
+                }
+
+                localSettings.Containers["highScores"].Values["onlineScores"] = OnlineScores;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         private static void CheckInit()
@@ -54,19 +94,19 @@ namespace Brace.Utils
             }
         }
 
-        public static bool AddScore(int score)
+        public static void AddScore(int score)
         {
-            return AddScore(score, DateTime.Now);
+            AddScore(score, DateTime.Now);
         }
 
-        public static bool AddScore(int score, DateTime dateTime)
+        async public static void AddScore(int score, DateTime dateTime)
         {
             CheckInit();
 
             // There's no score list, so error
             if (Scores == null)
             {
-                return false;
+                return;
             }
 
             // Insert the new score
@@ -83,7 +123,18 @@ namespace Brace.Utils
 
             SaveScores();
 
-            return true;
+            // Online score
+            try
+            {
+                ParseObject newScore = new ParseObject("HighScore");
+                newScore["Name"] = OptionsManager.GetPlayerName();
+                newScore["Score"] = score;
+                await newScore.SaveAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         public static int HighestScore()
