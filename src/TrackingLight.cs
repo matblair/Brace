@@ -8,9 +8,12 @@ using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.Toolkit.Input;
 
+
+
 namespace Brace
 {
-    class TrackingLight
+
+    public class TrackingLight : Light
     {
 
         // Object to track
@@ -20,14 +23,6 @@ namespace Brace
         private Vector3 targetPosition;
         private readonly float SPEED = 10;
 
-        // Our world lighting setups Will obviously need to be changed at a later 
-        // date in order to properly having moving light sources etc.
-        public Vector4 lightPntCol = new Vector4(1.0f, 0.8f, 0.1f, 1.0f);
-        public Vector4 lightAmbCol = new Vector4(0.5f, 0.5f, 0.5f, 1.0f);
-        public Vector3 lightPntPos { get; private set; }
-        
-        //Whether or not the light is on or off
-        private bool isVisible;
         // Our lights offset from eye location
         Vector3 trackOffset;
 
@@ -41,19 +36,19 @@ namespace Brace
                 //Our initial position
                 lightPntPos = tracking.EyeLocation();
                 isVisible = true;
-
             }
 
             //Set our tracking offset.
             trackOffset = offset;
         }
 
-        public TrackingLight(ITrackable track, Vector4 pntColour, Vector3 offset)
+        public TrackingLight(ITrackable track, Vector4 pntColour, Vector3 offset, float Ka, float Kd, float Ks, float specN, float fallOffTop)
+            : base(pntColour, Ka, Kd, Ks, specN, fallOffTop)
         {
+
             //Set our item to track.
             SetTarget(track);
-            this.lightPntCol = pntColour;
-           
+
             if (track != null)
             {
                 //Our initial position
@@ -63,7 +58,6 @@ namespace Brace
 
             //Set our tracking offset.
             trackOffset = offset;
-
         }
 
         // Update the camera and associated things
@@ -71,7 +65,7 @@ namespace Brace
         {
             if (tracking != null)
             {
-                
+
                 int delta = gameTime.ElapsedGameTime.Milliseconds;
                 targetPosition = tracking.EyeLocation() + trackOffset.Y * Vector3.UnitY + trackOffset.Z * tracking.ViewDirection();
                 Vector3 dir = Vector3.Subtract(targetPosition, lightPntPos);
@@ -88,6 +82,14 @@ namespace Brace
                 lightPntPos = tracking.EyeLocation() + trackOffset.Y * Vector3.UnitY + trackOffset.Z * tracking.ViewDirection();
 
             }
+
+            Vector4 col = GetColour() * intensityVector;
+            shadingLight.x = lightPntPos.X;
+            shadingLight.y = lightPntPos.Y;
+            shadingLight.z = lightPntPos.Z;
+            shadingLight.r = col.X;
+            shadingLight.g = col.Y;
+            shadingLight.b = col.Z;
         }
 
         // Set a new target object to track
@@ -108,26 +110,7 @@ namespace Brace
             }
         }
 
-        public void TurnOff()
-        {
-            isVisible = false;
-        }
 
-        public void TurnOn()
-        {
-            isVisible = true;
-        }
-        public Vector4 GetColour()
-        {
-            if (isVisible)
-            {
-                return lightPntCol;
-            }
-            else
-            {
-                return new Vector4(0, 0, 0, 1);
-            }
-        }
 
         public bool IsTracking(ITrackable unit)
         {

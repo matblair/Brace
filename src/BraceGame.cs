@@ -25,6 +25,7 @@ namespace Brace
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
         public List<Actor> actors;
+        private List<Light> lights;
         private static BraceGame game;
         private static TrackingLight projectileLamp;
 
@@ -40,8 +41,9 @@ namespace Brace
         private Effect unitShader;
         private Effect landscapeEffect;
         private TrackingLight playerLamp;
+        private Light sun;
 
-        //
+        //Comment this???
         public Rectangle bounds = Landscape.getBounds();
 
         public static BraceGame get() 
@@ -95,8 +97,17 @@ namespace Brace
             //Initialize Camera
             Camera = new Camera(this, player); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.FirstPerson);
-            playerLamp = new TrackingLight(player, new Vector3(0, 2.5f, 4.5f));
-            projectileLamp = new TrackingLight(null, new Vector4(0.5f, 0.5f, 1, 1), new Vector3(0, 0, 0));
+
+            playerLamp = new TrackingLight((Unit)actors[0], new Vector4(1.0f, 0.8f, 0.1f, 1.0f), new Vector3(0, 2.5f, 4.5f), 0.03f, 1f, 1f, 1f, 6f);
+            sun = new Light(new Vector3(-1000, 20, 100), new Vector4(0.55f, 0.1f, 0.9f, 1), 0.05f, 0.5f, 0.90f, 10.0f, 500f);
+            projectileLamp = new TrackingLight(null, new Vector4(0.5f, 0.5f, 1, 1), new Vector3(0, 0, 0), 0.05f, 1f, 2f, 2f, 2f);
+            projectileLamp.TurnOff();
+
+            lights = new List<Light>();
+            lights.Add(sun);
+            lights.Add(playerLamp);
+            lights.Add(projectileLamp);
+
             input.Camera = Camera;
 
         }
@@ -110,8 +121,8 @@ namespace Brace
             Assets.bullet = Content.Load<Model>("bullet");
             Assets.healthPickup = Content.Load<Model>("health");
             //Load shaders
-            unitShader = Content.Load<Effect>("CubeCelShader");
-            landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
+            unitShader = Content.Load<Effect>("MPUnitCelShader");
+            landscapeEffect = game.Content.Load<Effect>("MPLandscapeCelShader");
 
         }
 
@@ -183,27 +194,46 @@ namespace Brace
 
 
                 //Update tracking lights
+                playerLamp.intensityVector = player.getIntensityVector();
                 playerLamp.Update(gameTime);
                 projectileLamp.Update(gameTime);
 
                 // Update the camera 
                 Camera.Update(gameTime);
 
+                //Then the landscape shader
+                int maxlights = 8;
+                if (maxlights > lights.Count())
+                {
+                    maxlights = lights.Count();
+                }
+
+                PointLight[] shaderLights = new PointLight[maxlights];
+                for (int i = 0; i < maxlights; i++)
+                {
+                    shaderLights[i] = lights[i].shadingLight;
+                }
 
                 // Now update the shaders
                 //First the unit shader
                 unitShader.Parameters["View"].SetValue(Camera.View);
                 unitShader.Parameters["Projection"].SetValue(Camera.Projection);
-                unitShader.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
-                unitShader.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
+              //  unitShader.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
+               // unitShader.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
-                unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-                unitShader.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol * player.getIntensityVector());
+               // unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
+                //unitShader.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol*playerLamp.intensityVector);
+               // Debug.WriteLine(playerLamp.intensityVector);
                 //Then the landscape shader
-                landscapeEffect.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-                landscapeEffect.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol * player.getIntensityVector());
-                landscapeEffect.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
-                landscapeEffect.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
+                //landscapeEffect.Parameters["lightPntPos"].SetValue(new Vector3(shaderLights[1].x, shaderLights[1].y, shaderLights[1].z));
+                //landscapeEffect.Parameters["lightPntCol"].SetValue(new Vector4(shaderLights[1].r, shaderLights[1].g, shaderLights[1].b, 1));
+                //landscapeEffect.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
+                //landscapeEffect.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
+                //landscapeEffect.Parameters["LightSources"].SetValue<PointLight>(shaderLights);
+                //landscapeEffect.Parameters["sun"].SetValue(shaderLights[0]);
+                //landscapeEffect.Parameters["player"].SetValue(shaderLights[1]);
+                //landscapeEffect.Parameters["missile"].SetValue(shaderLights[2]);
+                //landscapeEffect.Parameters["NumLights"].SetValue(shaderLights.Count());
                 landscapeEffect.Parameters["View"].SetValue(Camera.View);
                 landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
                 landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
@@ -223,12 +253,12 @@ namespace Brace
             GraphicsDevice.Clear(Color.Black);
 
             //First draw the landscape
-            landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
+            landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect, lights);
 
             //Then teh actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader, lights);
             }
 
             // Show FPS
