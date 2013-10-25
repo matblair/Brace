@@ -108,6 +108,7 @@ namespace Brace
             Assets.tree = Content.Load<Model>("tree");
             Assets.player = Content.Load<Model>("player");
             Assets.bullet = Content.Load<Model>("bullet");
+            Assets.healthPickup = Content.Load<Model>("health");
             //Load shaders
             unitShader = Content.Load<Effect>("CubeCelShader");
             landscapeEffect = game.Content.Load<Effect>("LandscapeCelShader");
@@ -231,7 +232,7 @@ namespace Brace
             }
 
             // Show FPS
-            fpsRenderer.Draw();
+            //fpsRenderer.Draw();
 
             // Handle base.Draw
             base.Draw(gameTime);

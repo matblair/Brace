@@ -12,7 +12,7 @@ namespace Brace.GameLogic
     class HealthOrb : Unit
     {
         private int doomedTimer;
-        public HealthOrb(Vector3 position) : base(position, Vector3.Zero, Assets.cube, null)
+        public HealthOrb(Vector3 position) : base(position, Vector3.Zero, Assets.healthPickup, null)
         {
 
         }

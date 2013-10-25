@@ -50,5 +50,17 @@ namespace Brace
             MainPage parent = this.Parent as MainPage;
             parent.Children.Add(new Highscores());
         }
+
+        private void menuHowToButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage parent = this.Parent as MainPage;
+            parent.Children.Add(new HowTo());
+        }
+
+        private void menuOptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage parent = this.Parent as MainPage;
+            parent.Children.Add(new Options());
+        }
     }
 }
