@@ -20,6 +20,8 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Brace
 {
+    using Brace.Utils;
+
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
@@ -54,8 +56,9 @@ namespace Brace
             Window.Current.Activate();
 
             // Initialse other bits and pieces
-            Utils.HighScoreManager.Init();
-            Utils.OptionsManager.Init();
+            HighScoreManager.Init();
+            OptionsManager.Init();
+            SoundManager.Initialise();
         }
 
         /// <summary>

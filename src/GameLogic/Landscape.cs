@@ -78,9 +78,9 @@ namespace Brace.GameLogic
             context.Draw(PrimitiveType.TriangleList, vertices.ElementCount);
 
             //Draw the rest as additive
+            context.SetBlendState(context.BlendStates.Additive);
             for (int i = 1; i < lights.Count(); i++)
             {
-                context.SetBlendState(context.BlendStates.Additive);
                 effect.Parameters["light"].SetValue(lights[i].shadingLight);
                 effect.CurrentTechnique.Passes[0].Apply();
                 context.Draw(PrimitiveType.TriangleList, vertices.ElementCount);
@@ -89,9 +89,6 @@ namespace Brace.GameLogic
             //Rest our system
             context.SetDepthStencilState(context.DepthStencilStates.Default);
             context.SetBlendState(context.BlendStates.Opaque);
-
-
-
         }
 
         public float HeightAt(float x, float z)

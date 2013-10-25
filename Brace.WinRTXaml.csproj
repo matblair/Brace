@@ -55,6 +55,7 @@
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
+    <Compile Include="src\Light.cs" />
     <Compile Include="src\Utils\HighScoreManager.cs" />
     <Compile Include="Highscores.xaml.cs">
       <DependentUpon>Highscores.xaml</DependentUpon>
@@ -99,6 +100,8 @@
     <Compile Include="src\Utils\OptionsManager.cs" />
     <Compile Include="src\Utils\PhysicsUtils.cs" />
     <Compile Include="src\Utils\SerializableDictionary.cs" />
+    <Compile Include="src\Utils\SoundEffect.cs" />
+    <Compile Include="src\Utils\SoundManager.cs" />
     <Compile Include="src\Utils\VectorUtils.cs" />
     <Compile Include="src\VertexPositionNormalColor.cs" />
   </ItemGroup>
@@ -128,6 +131,18 @@
     <None Include="MiniCube.WinRTXaml_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Audio\rain.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Audio\thunder1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Audio\thunder2.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Audio\thunder3.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\EndGameBG.png" />
     <Content Include="Assets\Background.png" />
     <Content Include="Assets\HighScoreBG.png" />
@@ -138,8 +153,14 @@
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Common\ReadMe.txt" />
-    <ToolkitFxc Include="Content\MultiLightCubeShader.fx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <ToolkitFxc Include="Content\MPLandscapeCelShader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPUnitCelShader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\RTLandscapeCelShader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ToolkitFxc>
     <ToolkitFxc Include="Content\CubeCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -190,6 +211,9 @@
     <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="SharpDX.XAudio2">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\SharpDX\Bin\DirectX11_1-winrt\SharpDX.XAudio2.dll</HintPath>
     </Reference>
     <Reference Include="TCD.Controls">
       <HintPath>packages\TCD.Controls.2.1.0\lib\netcore45\TCD.Controls.dll</HintPath>

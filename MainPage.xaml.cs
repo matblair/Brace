@@ -47,6 +47,7 @@ namespace Brace
             game = BraceGame.get();
             game.Run(this);
 
+            Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Rain);
             this.Children.Add(new MainMenu());
         }
 
@@ -58,12 +59,14 @@ namespace Brace
         public void ResetGame()
         {
             game.paused = true;
+            this.rainAudio.Play();
             this.Children.Add(new EndGame());
         }
 
         public void StartGame()
         {
             game.Start();
+            Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Thunder2);
             this.gamePauseButton.Visibility = Visibility.Collapsed;
         }
 

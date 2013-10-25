@@ -51,33 +51,33 @@ namespace Brace.GameLogic
             Matrix worldInvTranspose = Matrix.Transpose(Matrix.Invert(world));
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["worldInvTrp"].SetValue(worldInvTranspose);
-            context.SetDepthStencilState(context.DepthStencilStates.None);
+            //context.SetDepthStencilState(context.DepthStencilStates.None);
 
 //           Draw the models
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (ModelMeshPart part in mesh.MeshParts)
                 {
-                    //Draw the rest as additive
-                    for (int i = 0; i < lights.Count(); i++)
-                    {
-                        if(i==0){
-                             context.SetBlendState(context.BlendStates.Opaque);
-                        } else {
-                             context.SetBlendState(context.BlendStates.Additive);
-                        }
-                        effect.Parameters["light"].SetValue(lights[i].shadingLight);
-                        effect.CurrentTechnique.Passes[0].Apply();
-                        part.Draw(context);
+                    ////Draw the rest as additive
+                    //for (int i = 0; i < lights.Count(); i++)
+                    //{
+                    //    if(i==0){
+                    //        context.SetBlendState(context.BlendStates.Opaque);
+                    //    } else {
+                    //        context.SetBlendState(context.BlendStates.Additive);
+                    //    }
 
-                    }
-                
+                      //  effect.Parameters["light"].SetValue(lights[i].shadingLight);
+                        effect.CurrentTechnique.Passes[0].Apply();
+
+                        part.Draw(context);
+                    //}
                 }
             }
           
             //Rest our system
-            context.SetDepthStencilState(context.DepthStencilStates.Default);
-            context.SetBlendState(context.BlendStates.Opaque);
+            //context.SetDepthStencilState(context.DepthStencilStates.Default);
+            //context.SetBlendState(context.BlendStates.Opaque);
         }
 
         public Vector3 ViewDirection()
