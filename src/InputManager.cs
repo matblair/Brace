@@ -136,9 +136,10 @@ namespace Brace
         private void AccelerometerReadingChanged(object sender, AccelerometerReadingChangedEventArgs args)
         {
             AccelerometerReading reading = args.Reading;
-
+           
             System.DateTimeOffset time = args.Reading.Timestamp;
             System.DateTimeOffset t2 = time.AddMilliseconds(orientationChangeDelayInMilliseconds);
+      
             
             if (reading.AccelerationZ < -0.85)
             {   

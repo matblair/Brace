@@ -64,7 +64,7 @@ namespace Brace.GameLogic
         {
             BraceGame.get().AddActor(new Enemy(position, Vector3.Zero));
         }
-        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect, List<Light> lights)
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
         {
             return;
         }

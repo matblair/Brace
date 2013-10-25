@@ -25,7 +25,7 @@ namespace Brace
         }
     
         public abstract void Update(GameTime gametime);
-        public abstract void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect, List<Light> lights);
+        public abstract void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect);
 
         // Assumes a frame rate of 60 FPS
         public void SetRotPitch(float angle)

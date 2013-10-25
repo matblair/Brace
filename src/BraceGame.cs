@@ -11,6 +11,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
+
 namespace Brace
 {
     using Physics;
@@ -18,6 +21,7 @@ namespace Brace
     public class BraceGame : Game
     {
         public bool paused = true;
+        private int MAX_LIGHTS = 8;
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteFont DefaultFont { get; private set; }
 
@@ -25,7 +29,7 @@ namespace Brace
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
         public List<Actor> actors;
-        private List<Light> lights;
+        public Queue<Light> lights;
         private static BraceGame game;
         private static TrackingLight projectileLamp;
 
@@ -40,6 +44,7 @@ namespace Brace
         //Rendering stuff
         private Effect unitShader;
         private Effect landscapeEffect;
+        private Effect drawShader;
         private TrackingLight playerLamp;
         private Light sun;
 
@@ -103,10 +108,8 @@ namespace Brace
             projectileLamp = new TrackingLight(null, new Vector4(0.5f, 0.5f, 1, 1), new Vector3(0, 0, 0), 0.05f, 1f, 2f, 2f, 2f);
             projectileLamp.TurnOff();
 
-            lights = new List<Light>();
-            lights.Add(sun);
-            lights.Add(playerLamp);
-            lights.Add(projectileLamp);
+            lights = new Queue<Light>();
+            lights.Enqueue(projectileLamp);
 
             input.Camera = Camera;
 
@@ -123,6 +126,7 @@ namespace Brace
             //Load shaders
             unitShader = Content.Load<Effect>("MPUnitCelShader");
             landscapeEffect = game.Content.Load<Effect>("MPLandscapeCelShader");
+            drawShader = game.Content.Load<Effect>("DrawShader");
 
         }
 
@@ -198,45 +202,65 @@ namespace Brace
                 playerLamp.Update(gameTime);
                 projectileLamp.Update(gameTime);
 
+                foreach (Light light in lights)
+                {
+                    light.Update(gameTime);
+                }
+
                 // Update the camera 
                 Camera.Update(gameTime);
 
-                //Then the landscape shader
-                int maxlights = 8;
-                if (maxlights > lights.Count())
+                // Make the extra light array to assign things from 
+                PointLight[] extraLights = new PointLight[8];
+                for (int i = 0; i < MAX_LIGHTS; i++)
                 {
-                    maxlights = lights.Count();
+                    Light elem = lights.ElementAt(i);
+                    if (elem != null)
+                    {
+                        extraLights[i] = elem.shadingLight;
+                    }
+                    else
+                    {
+                        extraLights[i] = Light.getNullLight();
+                    }
                 }
 
-                PointLight[] shaderLights = new PointLight[maxlights];
-                for (int i = 0; i < maxlights; i++)
-                {
-                    shaderLights[i] = lights[i].shadingLight;
-                }
 
                 // Now update the shaders
                 //First the unit shader
                 unitShader.Parameters["View"].SetValue(Camera.View);
                 unitShader.Parameters["Projection"].SetValue(Camera.Projection);
-              //  unitShader.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
-               // unitShader.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
-               // unitShader.Parameters["lightPntPos"].SetValue(playerLamp.lightPntPos);
-                //unitShader.Parameters["lightPntCol"].SetValue(playerLamp.lightPntCol*playerLamp.intensityVector);
-               // Debug.WriteLine(playerLamp.intensityVector);
-                //Then the landscape shader
-                //landscapeEffect.Parameters["lightPntPos"].SetValue(new Vector3(shaderLights[1].x, shaderLights[1].y, shaderLights[1].z));
-                //landscapeEffect.Parameters["lightPntCol"].SetValue(new Vector4(shaderLights[1].r, shaderLights[1].g, shaderLights[1].b, 1));
-                //landscapeEffect.Parameters["missilePntPos"].SetValue(projectileLamp.lightPntPos);
-                //landscapeEffect.Parameters["missilePntCol"].SetValue(projectileLamp.GetColour());
-                //landscapeEffect.Parameters["LightSources"].SetValue<PointLight>(shaderLights);
-                //landscapeEffect.Parameters["sun"].SetValue(shaderLights[0]);
-                //landscapeEffect.Parameters["player"].SetValue(shaderLights[1]);
-                //landscapeEffect.Parameters["missile"].SetValue(shaderLights[2]);
-                //landscapeEffect.Parameters["NumLights"].SetValue(shaderLights.Count());
+                unitShader.Parameters["player"].SetValue(playerLamp.shadingLight);
+                unitShader.Parameters["sun"].SetValue(sun.shadingLight);
+              
                 landscapeEffect.Parameters["View"].SetValue(Camera.View);
                 landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
                 landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
+                landscapeEffect.Parameters["player"].SetValue(playerLamp.shadingLight);
+                landscapeEffect.Parameters["sun"].SetValue(sun.shadingLight);
+
+                //Now put the extra lights in unit shader
+                unitShader.Parameters["extra1"].SetValue(extraLights[0]);
+                unitShader.Parameters["extra2"].SetValue(extraLights[1]);
+                unitShader.Parameters["extra3"].SetValue(extraLights[2]);
+                unitShader.Parameters["extra4"].SetValue(extraLights[3]);
+                unitShader.Parameters["extra5"].SetValue(extraLights[4]);
+                unitShader.Parameters["extra6"].SetValue(extraLights[5]);
+                unitShader.Parameters["extra7"].SetValue(extraLights[6]);
+                unitShader.Parameters["extra8"].SetValue(extraLights[7]);
+
+                //Now put the extra lights in landscape shader
+                landscapeEffect.Parameters["extra1"].SetValue(extraLights[0]);
+                landscapeEffect.Parameters["extra2"].SetValue(extraLights[1]);
+                landscapeEffect.Parameters["extra3"].SetValue(extraLights[2]);
+                landscapeEffect.Parameters["extra4"].SetValue(extraLights[3]);
+                landscapeEffect.Parameters["extra5"].SetValue(extraLights[4]);
+                landscapeEffect.Parameters["extra6"].SetValue(extraLights[5]);
+                landscapeEffect.Parameters["extra7"].SetValue(extraLights[6]);
+                landscapeEffect.Parameters["extra8"].SetValue(extraLights[7]);
+            
+            
 
             }
         }
@@ -253,16 +277,16 @@ namespace Brace
             GraphicsDevice.Clear(Color.Black);
 
             //First draw the landscape
-            landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect, lights);
+            landscape.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, landscapeEffect);
 
             //Then teh actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader, lights);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader);
             }
 
             // Show FPS
-            //fpsRenderer.Draw();
+            fpsRenderer.Draw();
 
             // Handle base.Draw
             base.Draw(gameTime);
@@ -297,6 +321,14 @@ namespace Brace
             return player;
         }
 
+        public void AddLight(Light light){
+            if(lights.Count>7){
+                lights.Dequeue();
+                lights.Enqueue(light);
+            } else {
+                lights.Enqueue(light);
+            }
+        }
        
     }
 }

@@ -104,5 +104,27 @@ namespace Brace
             }
         }
 
+          // Update the camera and associated things
+        public virtual void Update(GameTime gameTime)
+        {
+        }
+
+        public static PointLight getNullLight()
+        {
+            PointLight nullLight;
+            nullLight.x = 0;
+            nullLight.y = 0;
+            nullLight.z = 0;
+
+            nullLight.r = 0;
+            nullLight.g = 0;
+            nullLight.b = 0;
+            nullLight.Ka = 0;
+            nullLight.Kd = 0;
+            nullLight.Ks = 0;
+            nullLight.specN = 0;
+            nullLight.fallOffTop = 0;
+            return nullLight;
+        }
     }
 }

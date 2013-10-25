@@ -153,10 +153,13 @@
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Common\ReadMe.txt" />
-    <ToolkitFxc Include="Content\MPLandscapeCelShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ToolkitFxc>
     <ToolkitFxc Include="Content\MPUnitCelShader.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\DrawShader.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPLandscapeCelShader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ToolkitFxc>
     <ToolkitFxc Include="Content\RTLandscapeCelShader.fx">
