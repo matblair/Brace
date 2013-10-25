@@ -24,7 +24,7 @@ namespace Brace
 
         private CoreWindow window;
         public Camera Camera;
-
+        private Gyrometer gyro;
         private Keys lookLeftKey = Keys.Left;
         private Keys lookDownKey = Keys.Down;
         private Keys lookRightKey = Keys.Right;
@@ -70,9 +70,14 @@ namespace Brace
             accelerometer = Accelerometer.GetDefault();
             if (accelerometer != null)
             {
-                Debug.WriteLine("Accelerometer enabled");
+       
                 accelerometer.ReadingChanged += AccelerometerReadingChanged;
                 ViewTypeSetTime = System.DateTimeOffset.Now;
+            }
+
+            gyro = Gyrometer.GetDefault();
+            if( gyro!=null){
+                gyro.ReadingChanged += GyrometerReadingChanged;
             }
 
             // Set up gesture recogniser
@@ -102,7 +107,7 @@ namespace Brace
             screenShootButtonDown = false;
 
             int turnBoundary = (int)Math.Floor(window.Bounds.Width / 5);
-            Debug.WriteLine(turnBoundary);
+         
             turnLeftScreenBoundary = turnBoundary;
             turnRightScreenBoundary = (int) window.Bounds.Width - turnBoundary;
             walkForwardScreenBoundary = (int) Math.Floor(window.Bounds.Height / 2);
@@ -164,6 +169,28 @@ namespace Brace
             {
                 ViewType = ViewTypeToLoad;
             }
+        }
+
+        private void GyrometerReadingChanged(object sener, GyrometerReadingChangedEventArgs args)
+        {
+            if (ViewType == Camera.ViewType.FirstPerson)
+            {
+
+
+                if (args.Reading.AngularVelocityX < 0)
+                {
+                    screenTurnLeftButtonDown = true;
+                }
+                else if (args.Reading.AngularVelocityX>  0)
+                {
+                    screenTurnRightButtonDown = true;
+                }
+              
+            }
+            Debug.WriteLine(args.ToString());
+      
+
+
         }
 
 

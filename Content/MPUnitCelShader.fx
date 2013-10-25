@@ -5,7 +5,7 @@ float4x4 Projection;
 float4 cameraPos;
 float4x4 worldInvTrp;
 
-#define MAX_LIGHTS 10
+#define MAX_LIGHTS 14
 // Our world lighting setups Will obviously need to be changed at a later 
 // date in order to properly having moving light sources etc.
 
@@ -36,6 +36,11 @@ PointLight extra5;
 PointLight extra6;
 PointLight extra7;
 PointLight extra8;
+PointLight extra9;
+PointLight extra10;
+PointLight extra11;
+PointLight extra12;
+
 
 
 //The output colour
@@ -91,6 +96,10 @@ float4 PS( PS_IN input ) : SV_Target
 	lights[7] = extra6;
 	lights[8] = extra7;
 	lights[9] = extra8;
+	lights[10] = extra9;
+	lights[11] = extra10;
+	lights[12] = extra11;
+	lights[13] = extra12;
 
 	float4 colours[MAX_LIGHTS];
 

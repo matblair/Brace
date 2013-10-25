@@ -44,7 +44,7 @@ namespace Brace.GameLogic
         }
 
 
-        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect, List<Light> lights)
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
         {
             //Set up the render operation
             Matrix world = Matrix.RotationYawPitchRoll(rot.X, rot.Y, rot.Z) * Matrix.Translation(position);

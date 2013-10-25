@@ -17,7 +17,7 @@ namespace Brace
     {
 
         // Object to track
-        private ITrackable tracking;
+        public ITrackable tracking;
 
         // Vectors related to View
         private Vector3 targetPosition;
@@ -82,7 +82,8 @@ namespace Brace
                 lightPntPos = tracking.EyeLocation() + trackOffset.Y * Vector3.UnitY + trackOffset.Z * tracking.ViewDirection();
 
             }
-
+            
+            
             Vector4 col = GetColour() * intensityVector;
             shadingLight.x = lightPntPos.X;
             shadingLight.y = lightPntPos.Y;

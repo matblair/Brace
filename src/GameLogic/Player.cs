@@ -70,7 +70,7 @@ namespace Brace.GameLogic
                 Vector3 arrowIPosition = position + new Vector3(direction.X, 0, direction.Y) * 3;
                 Projectile proj = new Projectile(arrowIPosition, new Vector3(direction.X, 0, direction.Y), MAXARROWDAMAGE);
                 BraceGame.get().AddActor(proj);
-                BraceGame.get().TrackProjectile(proj);
+                BraceGame.get().TrackProjectile(proj, new Vector4(0.5f,0.5f,1.0f,1.0f));
 
             }
             else if (chargeTime > MINIMUMCHARGETIME)
@@ -79,7 +79,7 @@ namespace Brace.GameLogic
                 Vector3 arrowIPosition = position + new Vector3(direction.X, 0, direction.Y)*3;
                 Projectile proj = new Projectile(arrowIPosition, new Vector3(direction.X, 0, direction.Y), actualDamage);
                 BraceGame.get().AddActor(proj);
-                BraceGame.get().TrackProjectile(proj);
+                BraceGame.get().TrackProjectile(proj, new Vector4(0.5f, 0.5f, 1.0f, 1.0f));
             }
 
             chargeTime = 0;

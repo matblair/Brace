@@ -5,7 +5,7 @@ float4x4 Projection;
 float4 cameraPos;
 float4x4 worldInvTrp;
 
-#define MAX_LIGHTS 10
+#define MAX_LIGHTS 14
 // Our world lighting setups Will obviously need to be changed at a later 
 // date in order to properly having moving light sources etc.
 
@@ -36,6 +36,10 @@ PointLight extra5;
 PointLight extra6;
 PointLight extra7;
 PointLight extra8;
+PointLight extra9;
+PointLight extra10;
+PointLight extra11;
+PointLight extra12;
 
 
 //The output colour
@@ -45,7 +49,6 @@ struct VS_IN
 {
 	float4 pos : POSITION;
 	float4 nrm : NORMAL;
-	float4 col : COLOR;
 };
 
 struct PS_IN
@@ -71,7 +74,7 @@ PS_IN VS( VS_IN input )
 	float4 viewPos = mul(output.wpos, View);
     output.pos = mul(viewPos, Projection);
 	// Just pass along the colour at the vertex
-	output.col = input.col;
+	output.col = float4(1,1,1,1);
 	return output;
 }
 
@@ -92,13 +95,18 @@ float4 PS( PS_IN input ) : SV_Target
 	lights[7] = extra6;
 	lights[8] = extra7;
 	lights[9] = extra8;
+	lights[10] = extra9;
+	lights[11] = extra10;
+	lights[12] = extra11;
+	lights[13] = extra12;
+
 
 	float4 colours[MAX_LIGHTS];
 
 	for(int i=0; i<MAX_LIGHTS; i++){
 		//Get the light
 		PointLight light = lights[i];
-	
+
 		// Calculate our distance lightwise.
 		float3 lightPntPos = float3(light.x,light.y,light.z);
 		float4 lightPntCol = float4(light.r, light.g, light.b, 1.0);
@@ -127,13 +135,12 @@ float4 PS( PS_IN input ) : SV_Target
 		float4 col = float4(0,0,0,1);
 		col.rgb = amb.rgb+dif.rgb+spe.rgb;
 		colours[i].rgb = col;
-	
 	}
 
 	//Now combine both light sources
 	float4 returnCol = float4(0.0f,0.0f,0.0f,0.0f);
 
-	for(int j=0; j<4; j++){
+	for(int j=0; j<MAX_LIGHTS; j++){
 		returnCol.rgb += colours[j].rgb;
 	//returnCol.rgb = colours[0].rgb+ colours[1].rgb +colours[2].rgb;
 	}

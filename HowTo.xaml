@@ -39,11 +39,9 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="How To" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
-        <TextBlock Margin="160,40,20,40" Grid.Row="1" TextWrapping="Wrap" FontSize="30">
+        <TextBlock Margin="150,39,30,41" Grid.Row="1" TextWrapping="Wrap" FontSize="30">
         	<Run Text="It is perfectly reasonable to be afraid of the dark... To be afraid of the unknown."/>
-        	<LineBreak/>
-        	<Run/>
-        	<LineBreak/>
+        	<Run Text=" "/>
         	<Run Text="Scary things live in the dark. Scary things that have no qualms with creeping up from behind to steal your light. It's your job to stop them."/>
         	<LineBreak/>
         	<Run/>
@@ -52,7 +50,16 @@
         	<LineBreak/>
         	<Run/>
         	<LineBreak/>
-        	<Run Text="There is a way however to regain some of that spark. Thankfully, those pesky cubes don't really know how to think outside of the box. Sneak up behind them"/>
+        	<Run Text="There is a way however to regain some of that spark. Thankfully, those pesky cubes don't really know how to think outside of the box. "/>
+        	<Run Text="One shot and they'll disappear into the night"/>
+        	<LineBreak/>
+        	<Run Text="leaving behind the light they stole. Grab it to stay the hand of darkness just a little longer."/>
+        	<LineBreak/>
+        	<Run/>
+        	<LineBreak/>
+        	<Run Text="Try bringing your device up to get a better view of the landscape, scoping out what's around, and come back down to let loose a fury vengeance on the thieves in the night. You'll need all your wits about you if you're to take your place among heroes at the top of the leader board."/>
+        	<LineBreak/>
+        	<Run Text=""/>
         	<LineBreak/>
         	<Run/>
         	<LineBreak/>

@@ -109,20 +109,20 @@
     <AppxManifest Include="PackageXaml.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <ToolkitModel Include="Content\treeeeee.obj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </ToolkitModel>
     <ToolkitModel Include="Content\player.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
     <ToolkitModel Include="Content\bullet.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
+    <ToolkitModel Include="Content\health.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitModel>
     <ToolkitModel Include="Content\tree.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
-    <ToolkitModel Include="Content\health.obj">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <ToolkitModel Include="Content\smalltree.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
     <None Include="packages.config" />
     <ToolkitModel Include="Content\cube.obj">
@@ -149,24 +149,17 @@
     <Content Include="Assets\HowToBG.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\OptionsBG.png" />
+    <Content Include="Assets\pauseButton.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\WideLogo.png" />
     <Content Include="Common\ReadMe.txt" />
     <ToolkitFxc Include="Content\MPUnitCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
-    <ToolkitFxc Include="Content\DrawShader.fx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </ToolkitFxc>
     <ToolkitFxc Include="Content\MPLandscapeCelShader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ToolkitFxc>
-    <ToolkitFxc Include="Content\RTLandscapeCelShader.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </ToolkitFxc>
-    <ToolkitFxc Include="Content\CubeCelShader.fx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
     <ToolkitFxc Include="Content\LandscapeCelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -211,6 +204,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Parse">
+      <HintPath>packages\parse.1.2.9\lib\netcore45\Parse.dll</HintPath>
+    </Reference>
+    <Reference Include="Parse.WinRT">
+      <HintPath>packages\parse.1.2.9\lib\netcore45\Parse.WinRT.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>

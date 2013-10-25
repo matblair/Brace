@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Parse;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.System.UserProfile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,6 +37,8 @@ namespace Brace
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            ParseClient.Initialize("a4XkvOZVAmoXXP0G82Df3EGanbfXSg5zKI9CMm0P", "tPQMVdWXJZiIFX3nblZKm1ggBADMOunyDM1niEdE");
         }
 
         /// <summary>
@@ -59,6 +63,14 @@ namespace Brace
             HighScoreManager.Init();
             OptionsManager.Init();
             SoundManager.Initialise();
+            //Call our method to get main name
+            InitialiseUserName();
+        }
+
+        private async void InitialiseUserName()
+        {
+            string displayName = await UserInformation.GetDisplayNameAsync();
+            OptionsManager.SetPlayerName(displayName);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -40,6 +41,13 @@ namespace Brace.Utils
                 localSettings.Containers["options"].Values["challengemode"] = false;
             }
 
+            if (!localSettings.Containers["options"].Values.ContainsKey("volume"))
+            {
+                localSettings.Containers["options"].Values["volume"] = 100;
+            }
+
+            SetVolume((int)localSettings.Containers["options"].Values["volume"]);
+
             initialised = true;
         }
 
@@ -72,5 +80,34 @@ namespace Brace.Utils
         {
             localSettings.Containers["options"].Values["challengemode"] = enabled;
         }
+
+        public static int Volume()
+        {
+            return (int)localSettings.Containers["options"].Values["volume"];
+        }
+
+        public static void SetVolume(int vol)
+        {
+            localSettings.Containers["options"].Values["volume"] = vol;
+
+            // Calculate the volume that's being set
+            double newVolume = ushort.MaxValue * vol / 100.0;
+
+            uint v = ((uint)newVolume) & 0xffff;
+            uint vAll = v | (v << 16);
+
+            // Set the volume
+            int retVal = NativeMethods.WaveOutSetVolume(IntPtr.Zero, vAll);
+        }
+    }
+
+    static class NativeMethods
+    {
+
+        [DllImport("winmm.dll", EntryPoint = "waveOutSetVolume")]
+        public static extern int WaveOutSetVolume(IntPtr hwo, uint dwVolume);
+
+        [DllImport("winmm.dll", SetLastError = true)]
+        public static extern bool PlaySound(string pszSound, IntPtr hmod, uint fdwSound);
     }
 }

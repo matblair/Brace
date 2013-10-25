@@ -57,7 +57,7 @@ namespace Brace.GameLogic
         {
         }
 
-        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect, List<Light> lights)
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
         {
             // Setup the vertices
             context.SetVertexBuffer(vertices);

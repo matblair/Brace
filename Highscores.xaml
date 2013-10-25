@@ -37,7 +37,13 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="High Scores" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}">
+            	<Run Text="High Scores"/>
+            	<Run Text=": Local"/>
+            </TextBlock>
+            <Button x:Name="onlineButton" BorderBrush="Transparent" BorderThickness="0" Padding="20,0,20,5" Content="Global" Grid.Column="1" HorizontalAlignment="Right" Margin="0,84,22,0" VerticalAlignment="Top" FontSize="25" FontWeight="Normal" Click="onlineButton_Click"/>
+            <Button x:Name="localButton" BorderBrush="Transparent" BorderThickness="0" Padding="20,0,20,5" Content="Local" Grid.Column="1" HorizontalAlignment="Right" Margin="0,84,143,0" VerticalAlignment="Top" FontSize="25" FontWeight="Normal" Click="localButton_Click"/>
+            <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0,78,135,0" TextWrapping="Wrap" Text="|" VerticalAlignment="Top" FontSize="40"/>
         </Grid>
         <ListView x:Name="scoreList" Margin="166,41,20,38" Grid.Row="1" SelectionMode="None">
             <ListView.ItemContainerStyle>

@@ -21,7 +21,7 @@ namespace Brace
     public class BraceGame : Game
     {
         public bool paused = true;
-        private int MAX_LIGHTS = 8;
+        private int MAX_LIGHTS = 12;
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteFont DefaultFont { get; private set; }
 
@@ -29,7 +29,7 @@ namespace Brace
         private FPSRenderer fpsRenderer;
         public Camera Camera { get; private set; }
         public List<Actor> actors;
-        public Queue<Light> lights;
+        public List<TrackingLight> lights;
         private static BraceGame game;
         private static TrackingLight projectileLamp;
 
@@ -51,7 +51,7 @@ namespace Brace
         //Comment this???
         public Rectangle bounds = Landscape.getBounds();
 
-        public static BraceGame get() 
+        public static BraceGame get()
         {
             if (game == null)
             {
@@ -82,7 +82,7 @@ namespace Brace
 
             // Create FPS renderer
             fpsRenderer = new FPSRenderer(this);
- 
+
             // Load camera and models
             LoadAssets();
 
@@ -98,7 +98,7 @@ namespace Brace
 
             //InitializeActors
             actors = InitializeActors();
-            
+
             //Initialize Camera
             Camera = new Camera(this, player); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.FirstPerson);
@@ -108,8 +108,8 @@ namespace Brace
             projectileLamp = new TrackingLight(null, new Vector4(0.5f, 0.5f, 1, 1), new Vector3(0, 0, 0), 0.05f, 1f, 2f, 2f, 2f);
             projectileLamp.TurnOff();
 
-            lights = new Queue<Light>();
-            lights.Enqueue(projectileLamp);
+            lights = new List<TrackingLight>();
+            lights.Add(projectileLamp);
 
             input.Camera = Camera;
 
@@ -120,23 +120,24 @@ namespace Brace
             Assets.spaceship = Content.Load<Model>("Cube");
             Assets.cube = Content.Load<Model>("cube");
             Assets.tree = Content.Load<Model>("tree");
+            Assets.smalltree = Content.Load<Model>("smalltree");
             Assets.player = Content.Load<Model>("player");
             Assets.bullet = Content.Load<Model>("bullet");
             Assets.healthPickup = Content.Load<Model>("health");
             //Load shaders
             unitShader = Content.Load<Effect>("MPUnitCelShader");
             landscapeEffect = game.Content.Load<Effect>("MPLandscapeCelShader");
-            drawShader = game.Content.Load<Effect>("DrawShader");
 
         }
 
-        public void RestartGame(){
+        public void RestartGame()
+        {
             StartNewGame();
         }
 
         private List<Actor> InitializeActors()
         {
-            List<Actor> newActors = new List<Actor>();         
+            List<Actor> newActors = new List<Actor>();
             Random rand = new Random();
             player = new Player(Vector3.Zero, Vector3.Zero);
             newActors.Add(player);
@@ -149,7 +150,13 @@ namespace Brace
                 float x = rand.Next(-200, 200);
                 float y = rand.Next(-200, 200);
                 float h = landscape.HeightAt(x, y);
-                newActors.Add(new Tree(new Vector3(x, h, y)));
+                float rot = rand.Next(0,360);
+                int treeSize = rand.Next(0, 2);
+                if(treeSize==0){
+                     newActors.Add(new Tree(new Vector3(x, h, y), Assets.tree, rot));
+                } else {
+                     newActors.Add(new Tree(new Vector3(x, h, y), Assets.smalltree, rot));
+                }
             }
 
 
@@ -170,7 +177,7 @@ namespace Brace
 
             if (player.isDead)
             {
-                Utils.HighScoreManager.AddScore(score/100*100);
+                Utils.HighScoreManager.AddScore(score / 100 * 100);
                 MainPage.GetMainPage().ResetGame();
                 RestartGame();
             }
@@ -200,29 +207,34 @@ namespace Brace
                 //Update tracking lights
                 playerLamp.intensityVector = player.getIntensityVector();
                 playerLamp.Update(gameTime);
-                projectileLamp.Update(gameTime);
 
-                foreach (Light light in lights)
+                foreach (TrackingLight light in lights)
                 {
-                    light.Update(gameTime);
+                    if (light.isReal)
+                    {
+                        light.Update(gameTime);
+                    }
                 }
 
                 // Update the camera 
                 Camera.Update(gameTime);
 
                 // Make the extra light array to assign things from 
-                PointLight[] extraLights = new PointLight[8];
-                for (int i = 0; i < MAX_LIGHTS; i++)
+                PointLight[] extraLights = new PointLight[MAX_LIGHTS];
+                int realCount = lights.Count();
+                if(realCount>MAX_LIGHTS){
+                    realCount = MAX_LIGHTS;
+                  }
+
+                for (int i = 0; i < realCount; i++)
                 {
                     Light elem = lights.ElementAt(i);
-                    if (elem != null)
-                    {
-                        extraLights[i] = elem.shadingLight;
-                    }
-                    else
-                    {
-                        extraLights[i] = Light.getNullLight();
-                    }
+                    extraLights[i] = elem.shadingLight;
+                }
+
+                for (int i = realCount; i < MAX_LIGHTS; i++)
+                {
+                    extraLights[i] = Light.getNullLight();
                 }
 
 
@@ -231,36 +243,44 @@ namespace Brace
                 unitShader.Parameters["View"].SetValue(Camera.View);
                 unitShader.Parameters["Projection"].SetValue(Camera.Projection);
                 unitShader.Parameters["cameraPos"].SetValue(Camera.position);
-                unitShader.Parameters["player"].SetValue(playerLamp.shadingLight);
-                unitShader.Parameters["sun"].SetValue(sun.shadingLight);
-              
+                unitShader.Parameters["player"].SetValue<PointLight>(playerLamp.shadingLight);
+                unitShader.Parameters["sun"].SetValue<PointLight>(sun.shadingLight);
+
                 landscapeEffect.Parameters["View"].SetValue(Camera.View);
                 landscapeEffect.Parameters["Projection"].SetValue(Camera.Projection);
                 landscapeEffect.Parameters["cameraPos"].SetValue(Camera.position);
-                landscapeEffect.Parameters["player"].SetValue(playerLamp.shadingLight);
-                landscapeEffect.Parameters["sun"].SetValue(sun.shadingLight);
+                landscapeEffect.Parameters["player"].SetValue<PointLight>(playerLamp.shadingLight);
+                landscapeEffect.Parameters["sun"].SetValue<PointLight>(sun.shadingLight);
 
                 //Now put the extra lights in unit shader
-                unitShader.Parameters["extra1"].SetValue(extraLights[0]);
-                unitShader.Parameters["extra2"].SetValue(extraLights[1]);
-                unitShader.Parameters["extra3"].SetValue(extraLights[2]);
-                unitShader.Parameters["extra4"].SetValue(extraLights[3]);
-                unitShader.Parameters["extra5"].SetValue(extraLights[4]);
-                unitShader.Parameters["extra6"].SetValue(extraLights[5]);
-                unitShader.Parameters["extra7"].SetValue(extraLights[6]);
-                unitShader.Parameters["extra8"].SetValue(extraLights[7]);
+                unitShader.Parameters["extra1"].SetValue<PointLight>(extraLights[0]);
+                unitShader.Parameters["extra2"].SetValue<PointLight>(extraLights[1]);
+                unitShader.Parameters["extra3"].SetValue<PointLight>(extraLights[2]);
+                unitShader.Parameters["extra4"].SetValue<PointLight>(extraLights[3]);
+                unitShader.Parameters["extra5"].SetValue<PointLight>(extraLights[4]);
+                unitShader.Parameters["extra6"].SetValue<PointLight>(extraLights[5]);
+                unitShader.Parameters["extra7"].SetValue<PointLight>(extraLights[6]);
+                unitShader.Parameters["extra8"].SetValue<PointLight>(extraLights[7]);
+                unitShader.Parameters["extra9"].SetValue<PointLight>(extraLights[8]);
+                unitShader.Parameters["extra10"].SetValue<PointLight>(extraLights[9]);
+                unitShader.Parameters["extra11"].SetValue<PointLight>(extraLights[10]);
+                unitShader.Parameters["extra12"].SetValue<PointLight>(extraLights[11]);
 
                 //Now put the extra lights in landscape shader
-                landscapeEffect.Parameters["extra1"].SetValue(extraLights[0]);
-                landscapeEffect.Parameters["extra2"].SetValue(extraLights[1]);
-                landscapeEffect.Parameters["extra3"].SetValue(extraLights[2]);
-                landscapeEffect.Parameters["extra4"].SetValue(extraLights[3]);
-                landscapeEffect.Parameters["extra5"].SetValue(extraLights[4]);
-                landscapeEffect.Parameters["extra6"].SetValue(extraLights[5]);
-                landscapeEffect.Parameters["extra7"].SetValue(extraLights[6]);
-                landscapeEffect.Parameters["extra8"].SetValue(extraLights[7]);
-            
-            
+                landscapeEffect.Parameters["extra1"].SetValue<PointLight>(extraLights[0]);
+                landscapeEffect.Parameters["extra2"].SetValue<PointLight>(extraLights[1]);
+                landscapeEffect.Parameters["extra3"].SetValue<PointLight>(extraLights[2]);
+                landscapeEffect.Parameters["extra4"].SetValue<PointLight>(extraLights[3]);
+                landscapeEffect.Parameters["extra5"].SetValue<PointLight>(extraLights[4]);
+                landscapeEffect.Parameters["extra6"].SetValue<PointLight>(extraLights[5]);
+                landscapeEffect.Parameters["extra7"].SetValue<PointLight>(extraLights[6]);
+                landscapeEffect.Parameters["extra8"].SetValue<PointLight>(extraLights[7]);
+                landscapeEffect.Parameters["extra9"].SetValue<PointLight>(extraLights[8]);
+                landscapeEffect.Parameters["extra10"].SetValue<PointLight>(extraLights[9]);
+                landscapeEffect.Parameters["extra11"].SetValue<PointLight>(extraLights[10]);
+                landscapeEffect.Parameters["extra12"].SetValue<PointLight>(extraLights[11]);
+
+
 
             }
         }
@@ -282,11 +302,11 @@ namespace Brace
             //Then teh actors
             foreach (Actor actor in actors)
             {
-                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection,unitShader);
+                actor.Draw(graphicsDeviceManager.GraphicsDevice, Camera.View, Camera.Projection, unitShader);
             }
 
             // Show FPS
-            fpsRenderer.Draw();
+            //fpsRenderer.Draw();
 
             // Handle base.Draw
             base.Draw(gameTime);
@@ -297,18 +317,22 @@ namespace Brace
             actors.Add(actor);
         }
 
-        internal void TrackProjectile(Projectile proj)
+        internal void TrackProjectile(ITrackable proj, Vector4 colour)
         {
-            projectileLamp.SnapToTarget(proj);
-            projectileLamp.TurnOn();
+            this.AddLight(new TrackingLight(proj, colour, new Vector3(0, 0, 0), 0.02f, 0.4f, 2f, 2f, 2f));
         }
 
-        internal void StopTrackingProjectile(Projectile proj)
+        internal void StopTrackingProjectile(ITrackable proj)
         {
-            if (projectileLamp.IsTracking(proj))
+            foreach (TrackingLight light in lights)
             {
-                projectileLamp.TurnOff();
-                projectileLamp.SetTarget(null);
+                if(light!=null && proj!=null){
+                    if (proj.Equals(light.tracking))
+                    {
+                        lights.Remove(light);
+                         return;
+                    }
+                }
             }
         }
 
@@ -321,14 +345,18 @@ namespace Brace
             return player;
         }
 
-        public void AddLight(Light light){
-            if(lights.Count>7){
-                lights.Dequeue();
-                lights.Enqueue(light);
-            } else {
-                lights.Enqueue(light);
+        public void AddLight(TrackingLight light)
+        {
+            if (lights.Count > (MAX_LIGHTS-1))
+            {
+                lights.RemoveAt(0);
+                lights.Add(light);
+            }
+            else
+            {
+                lights.Add(light);
             }
         }
-       
+
     }
 }

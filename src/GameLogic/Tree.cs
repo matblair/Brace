@@ -13,9 +13,10 @@ namespace Brace.GameLogic
 {
     class Tree : Unit
     {
-        public Tree(Vector3 position)
-            : base(position, Vector3.Zero, Assets.tree, null)
+        public Tree(Vector3 position, Model tree, float rotation)
+            : base(position, Vector3.Zero, tree, null)
         {
+            this.rot.X = rotation;
 
         }
         protected override void InitializePhysicsObject()

@@ -36,7 +36,7 @@ namespace Brace
         public Vector4 lightPntCol;
         public Vector3 lightPntPos;
         public Vector4 intensityVector = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-
+        public bool isReal;
         //Whether or not the light is on or off
         protected bool isVisible;
 
@@ -61,7 +61,7 @@ namespace Brace
             shadingLight.Ks = Ks;
             shadingLight.specN = specN;
             shadingLight.fallOffTop = fallOffTop;
-
+            this.isReal = true;
         }
 
         public Light( Vector4 pntColour, float Ka, float Kd, float Ks, float specN, float fallOffTop)
@@ -80,6 +80,7 @@ namespace Brace
             shadingLight.Ks = Ks;
             shadingLight.specN = specN;
             shadingLight.fallOffTop = fallOffTop;
+            this.isReal = true;
         }
       
         public void TurnOff()
@@ -103,11 +104,8 @@ namespace Brace
                 return new Vector4(0, 0, 0, 1);
             }
         }
-
-          // Update the camera and associated things
-        public virtual void Update(GameTime gameTime)
-        {
-        }
+        
+      
 
         public static PointLight getNullLight()
         {
@@ -119,11 +117,11 @@ namespace Brace
             nullLight.r = 0;
             nullLight.g = 0;
             nullLight.b = 0;
-            nullLight.Ka = 0;
-            nullLight.Kd = 0;
-            nullLight.Ks = 0;
-            nullLight.specN = 0;
-            nullLight.fallOffTop = 0;
+            nullLight.Ka = 1;
+            nullLight.Kd = 1;
+            nullLight.Ks = 1;
+            nullLight.specN = 1;
+            nullLight.fallOffTop = 1;
             return nullLight;
         }
     }

@@ -18,5 +18,6 @@ namespace Brace.Utils
         public static Model player;
         public static Model bullet;
         public static Model healthPickup;
+        public static Model smalltree;
     }
 }

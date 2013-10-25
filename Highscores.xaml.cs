@@ -23,7 +23,6 @@ namespace Brace
     public sealed partial class Highscores : Brace.Common.LayoutAwarePage
     {
         ApplicationDataContainer localSettings;
-        SerializableDictionary<DateTime, int> scores;
 
         public Highscores()
         {
@@ -35,18 +34,18 @@ namespace Brace
 
         private void loadScores()
         {
-            scores = Utils.HighScoreManager.Scores;
+            SerializableDictionary<DateTime, int> scores = Utils.HighScoreManager.Scores;
+
+            this.pageTitle.Text = "High Scores: Local";
+            this.scoreList.Items.Clear();
 
             if (scores == null)
             {
-                this.scoreList.Items.Clear();
                 this.scoreList.Items.Add("Error loading scores");
             }
 
             else if (scores.Count > 0)
             {
-                this.scoreList.Items.Clear();
-
                 List<KeyValuePair<DateTime, int>> list = scores.ToList();
 
                 list.Sort((firstPair, nextPair) =>
@@ -62,6 +61,40 @@ namespace Brace
                     this.scoreList.Items.Add(str);
                     i++;
                 }
+            }
+
+            else
+            {
+                this.scoreList.Items.Add("No scores yet!");
+            }
+        }
+
+        private void loadOnlineScores()
+        {
+            KeyValuePair<int, string>[] scores = Utils.HighScoreManager.OnlineScores;
+
+            this.pageTitle.Text = "High Scores: Global";
+            this.scoreList.Items.Clear();
+
+            if (scores == null)
+            {
+                this.scoreList.Items.Add("Error loading scores");
+            }
+
+            else if (scores.Length > 0)
+            {
+                int i = 1;
+                foreach (var item in scores)
+                {
+                    var str = string.Format("{0}:\t{1}\t{2}", i, item.Key, item.Value);
+                    this.scoreList.Items.Add(str);
+                    i++;
+                }
+            }
+
+            else
+            {
+                this.scoreList.Items.Add("No scores yet!");
             }
         }
 
@@ -92,6 +125,16 @@ namespace Brace
         {
             MainPage parent = this.Parent as MainPage;
             parent.Children.Remove(this);
+        }
+
+        private void localButton_Click(object sender, RoutedEventArgs e)
+        {
+            loadScores();
+        }
+
+        private void onlineButton_Click(object sender, RoutedEventArgs e)
+        {
+            loadOnlineScores();
         }
     }
 }
