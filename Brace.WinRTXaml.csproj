@@ -49,6 +49,12 @@
     <Compile Include="EndGame.xaml.cs">
       <DependentUpon>EndGame.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HowTo.xaml.cs">
+      <DependentUpon>HowTo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Options.xaml.cs">
+      <DependentUpon>Options.xaml</DependentUpon>
+    </Compile>
     <Compile Include="src\Utils\HighScoreManager.cs" />
     <Compile Include="Highscores.xaml.cs">
       <DependentUpon>Highscores.xaml</DependentUpon>
@@ -90,6 +96,7 @@
     <Compile Include="src\Physics\TerrainBody.cs" />
     <Compile Include="src\InputManager.cs" />
     <Compile Include="src\Utils\Assets.cs" />
+    <Compile Include="src\Utils\OptionsManager.cs" />
     <Compile Include="src\Utils\PhysicsUtils.cs" />
     <Compile Include="src\Utils\SerializableDictionary.cs" />
     <Compile Include="src\Utils\VectorUtils.cs" />
@@ -111,6 +118,9 @@
     <ToolkitModel Include="Content\tree.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
+    <ToolkitModel Include="Content\health.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitModel>
     <None Include="packages.config" />
     <ToolkitModel Include="Content\cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -121,7 +131,9 @@
     <Content Include="Assets\EndGameBG.png" />
     <Content Include="Assets\Background.png" />
     <Content Include="Assets\HighScoreBG.png" />
+    <Content Include="Assets\HowToBG.png" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\OptionsBG.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
@@ -157,6 +169,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="HowTo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -164,6 +180,10 @@
     <Page Include="MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Options.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

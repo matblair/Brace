@@ -44,23 +44,40 @@ namespace Brace.GameLogic
         }
 
 
-        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect, List<Light> lights)
         {
+            //Set up the render operation
             Matrix world = Matrix.RotationYawPitchRoll(rot.X, rot.Y, rot.Z) * Matrix.Translation(position);
             Matrix worldInvTranspose = Matrix.Transpose(Matrix.Invert(world));
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["worldInvTrp"].SetValue(worldInvTranspose);
+            context.SetDepthStencilState(context.DepthStencilStates.None);
 
-            // Draw the models
+//           Draw the models
             foreach (ModelMesh mesh in model.Meshes)
             {
                 foreach (ModelMeshPart part in mesh.MeshParts)
                 {
-                    //effect.Parameters["Texture"].SetResource(part.Effect.Parameters["Texture"].GetResource<Texture2D>());
-                    effect.CurrentTechnique.Passes[0].Apply();
-                    part.Draw(context);
+                    //Draw the rest as additive
+                    for (int i = 0; i < lights.Count(); i++)
+                    {
+                        if(i==0){
+                             context.SetBlendState(context.BlendStates.Opaque);
+                        } else {
+                             context.SetBlendState(context.BlendStates.Additive);
+                        }
+                        effect.Parameters["light"].SetValue(lights[i].shadingLight);
+                        effect.CurrentTechnique.Passes[0].Apply();
+                        part.Draw(context);
+
+                    }
+                
                 }
             }
+          
+            //Rest our system
+            context.SetDepthStencilState(context.DepthStencilStates.Default);
+            context.SetBlendState(context.BlendStates.Opaque);
         }
 
         public Vector3 ViewDirection()
@@ -79,6 +96,6 @@ namespace Brace.GameLogic
             return position;
         }
 
-        
+
     }
 }

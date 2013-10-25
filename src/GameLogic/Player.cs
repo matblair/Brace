@@ -23,7 +23,7 @@ namespace Brace.GameLogic
         private readonly float MAXSPEED = 7;
 
         public bool isDead = false;
-        public float decreasePerMs = 0.0023f;
+        public float decreasePerMs = 0.003f;
         private float health;
 
         private readonly int MAXHEALTH = 100;

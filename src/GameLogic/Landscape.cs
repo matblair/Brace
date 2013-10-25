@@ -57,18 +57,41 @@ namespace Brace.GameLogic
         {
         }
 
-        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect)
+        public override void Draw(GraphicsDevice context, Matrix view, Matrix projection, Effect effect, List<Light> lights)
         {
             // Setup the vertices
             context.SetVertexBuffer(vertices);
             context.SetVertexInputLayout(inputLayout);
 
+            //Set the Detpth Stencil for multi effect rendering
+            context.SetDepthStencilState(context.DepthStencilStates.None);
+
+            //Set the world matrix
             Matrix world = Matrix.RotationX(rot.X) * Matrix.RotationY(rot.Y) * Matrix.RotationZ(rot.Z) * Matrix.Translation(position);
             effect.Parameters["World"].SetValue(world);
             effect.Parameters["worldInvTrp"].SetValue(Matrix.Transpose(Matrix.Invert(world)));
+           
+            //Draw the first light as opaque;
+            context.SetBlendState(context.BlendStates.Opaque);
+            effect.Parameters["light"].SetValue(lights[0].shadingLight);
             effect.CurrentTechnique.Passes[0].Apply();
-
             context.Draw(PrimitiveType.TriangleList, vertices.ElementCount);
+
+            //Draw the rest as additive
+            for (int i = 1; i < lights.Count(); i++)
+            {
+                context.SetBlendState(context.BlendStates.Additive);
+                effect.Parameters["light"].SetValue(lights[i].shadingLight);
+                effect.CurrentTechnique.Passes[0].Apply();
+                context.Draw(PrimitiveType.TriangleList, vertices.ElementCount);
+            }
+
+            //Rest our system
+            context.SetDepthStencilState(context.DepthStencilStates.Default);
+            context.SetBlendState(context.BlendStates.Opaque);
+
+
+
         }
 
         public float HeightAt(float x, float z)

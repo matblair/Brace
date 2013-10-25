@@ -55,6 +55,7 @@ namespace Brace
 
             // Initialse other bits and pieces
             Utils.HighScoreManager.Init();
+            Utils.OptionsManager.Init();
         }
 
         /// <summary>
