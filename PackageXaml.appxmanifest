@@ -16,7 +16,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Brace.App">
       <VisualElements DisplayName="Brace" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Brace.WinRTXaml" ForegroundText="light" BackgroundColor="#464646">
-        <DefaultTile ShowName="noLogos" ShortName="Brace" />
+        <DefaultTile ShowName="noLogos" ShortName="Brace" WideLogo="Assets\WideLogo.png" />
         <SplashScreen Image="Assets\SplashScreen.png" BackgroundColor="#0C040E" />
         <InitialRotationPreference>
           <Rotation Preference="landscape" />

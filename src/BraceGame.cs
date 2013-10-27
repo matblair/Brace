@@ -1,6 +1,7 @@
 using Brace.GameLogic;
 using Brace.Utils;
 using SharpDX;
+using SharpDX.Direct3D;
 using SharpDX.Toolkit;
 using SharpDX.Toolkit.Graphics;
 using SharpDX.Toolkit.Input;
@@ -11,9 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-
-
 namespace Brace
 {
     using Physics;
@@ -21,7 +19,7 @@ namespace Brace
     public class BraceGame : Game
     {
         public bool paused = true;
-        private int MAX_LIGHTS = 12;
+       
         public GraphicsDeviceManager graphicsDeviceManager;
         public SpriteFont DefaultFont { get; private set; }
 
@@ -48,8 +46,15 @@ namespace Brace
         private TrackingLight playerLamp;
         private Light sun;
 
-        //Comment this???
+        //Our bounds for the quadtree.
         public Rectangle bounds = Landscape.getBounds();
+
+        //Our features we will be supporting for this graphics levell
+        public static int MAX_LIGHTS;
+        public static int LANDSCAPE_GEN;
+        public static int LANDSCAPE_HEIGHT;
+        private string unitshader;
+        private string landscapeshader;
 
         public static BraceGame get()
         {
@@ -58,7 +63,6 @@ namespace Brace
                 game = new BraceGame();
             }
             return game;
-
         }
 
 
@@ -66,7 +70,9 @@ namespace Brace
         {
             graphicsDeviceManager = new GraphicsDeviceManager(this);
             input = new InputManager(this);
-
+            
+       
+            
             // Setup the relative directory to the executable directory
             // for loading contents with the ContentManager
             Content.RootDirectory = "Content";
@@ -82,6 +88,9 @@ namespace Brace
 
             // Create FPS renderer
             fpsRenderer = new FPSRenderer(this);
+
+            //Set up the feature set
+            initialiseFeatureLevel();
 
             // Load camera and models
             LoadAssets();
@@ -103,14 +112,9 @@ namespace Brace
             Camera = new Camera(this, player); // Give this an actor
             Camera.SetViewType(Brace.Camera.ViewType.FirstPerson);
 
-            playerLamp = new TrackingLight((Unit)actors[0], new Vector4(1.0f, 0.8f, 0.1f, 1.0f), new Vector3(0, 2.5f, 4.5f), 0.03f, 1f, 1f, 1f, 6f);
-            sun = new Light(new Vector3(-1000, 20, 100), new Vector4(0.55f, 0.1f, 0.9f, 1), 0.05f, 0.5f, 0.90f, 10.0f, 500f);
-            projectileLamp = new TrackingLight(null, new Vector4(0.5f, 0.5f, 1, 1), new Vector3(0, 0, 0), 0.05f, 1f, 2f, 2f, 2f);
-            projectileLamp.TurnOff();
-
+            playerLamp = new TrackingLight(player, Assets.playerColour, Assets.playerOffset, Assets.playerKa, Assets.playerKd, Assets.playerKs, Assets.playerSpecN, Assets.playerOnTop);
+            sun = new Light(new Vector3(-1000, 20, 100), Assets.sunColour, Assets.sunKa, Assets.sunKd, Assets.sunKs, Assets.sunSpecN, Assets.sunOnTop);
             lights = new List<TrackingLight>();
-            lights.Add(projectileLamp);
-
             input.Camera = Camera;
 
         }
@@ -125,8 +129,8 @@ namespace Brace
             Assets.bullet = Content.Load<Model>("bullet");
             Assets.healthPickup = Content.Load<Model>("health");
             //Load shaders
-            unitShader = Content.Load<Effect>("MPUnitCelShader");
-            landscapeEffect = game.Content.Load<Effect>("MPLandscapeCelShader");
+            unitShader = Content.Load<Effect>(unitshader);
+            landscapeEffect = game.Content.Load<Effect>(landscapeshader);
 
         }
 
@@ -254,34 +258,44 @@ namespace Brace
 
                 //Now put the extra lights in unit shader
                 unitShader.Parameters["extra1"].SetValue<PointLight>(extraLights[0]);
-                unitShader.Parameters["extra2"].SetValue<PointLight>(extraLights[1]);
-                unitShader.Parameters["extra3"].SetValue<PointLight>(extraLights[2]);
-                unitShader.Parameters["extra4"].SetValue<PointLight>(extraLights[3]);
-                unitShader.Parameters["extra5"].SetValue<PointLight>(extraLights[4]);
-                unitShader.Parameters["extra6"].SetValue<PointLight>(extraLights[5]);
-                unitShader.Parameters["extra7"].SetValue<PointLight>(extraLights[6]);
-                unitShader.Parameters["extra8"].SetValue<PointLight>(extraLights[7]);
-                unitShader.Parameters["extra9"].SetValue<PointLight>(extraLights[8]);
-                unitShader.Parameters["extra10"].SetValue<PointLight>(extraLights[9]);
-                unitShader.Parameters["extra11"].SetValue<PointLight>(extraLights[10]);
-                unitShader.Parameters["extra12"].SetValue<PointLight>(extraLights[11]);
-
+            
                 //Now put the extra lights in landscape shader
                 landscapeEffect.Parameters["extra1"].SetValue<PointLight>(extraLights[0]);
-                landscapeEffect.Parameters["extra2"].SetValue<PointLight>(extraLights[1]);
-                landscapeEffect.Parameters["extra3"].SetValue<PointLight>(extraLights[2]);
-                landscapeEffect.Parameters["extra4"].SetValue<PointLight>(extraLights[3]);
-                landscapeEffect.Parameters["extra5"].SetValue<PointLight>(extraLights[4]);
-                landscapeEffect.Parameters["extra6"].SetValue<PointLight>(extraLights[5]);
-                landscapeEffect.Parameters["extra7"].SetValue<PointLight>(extraLights[6]);
-                landscapeEffect.Parameters["extra8"].SetValue<PointLight>(extraLights[7]);
-                landscapeEffect.Parameters["extra9"].SetValue<PointLight>(extraLights[8]);
-                landscapeEffect.Parameters["extra10"].SetValue<PointLight>(extraLights[9]);
-                landscapeEffect.Parameters["extra11"].SetValue<PointLight>(extraLights[10]);
-                landscapeEffect.Parameters["extra12"].SetValue<PointLight>(extraLights[11]);
 
+                //For higherlevel feature sets we can use more lights.
+                if (GraphicsDevice.Features.Level >= FeatureLevel.Level_9_3)
+                {
+                    unitShader.Parameters["extra2"].SetValue<PointLight>(extraLights[1]);
+                    unitShader.Parameters["extra3"].SetValue<PointLight>(extraLights[2]);
+                    unitShader.Parameters["extra4"].SetValue<PointLight>(extraLights[3]);
+                    unitShader.Parameters["extra5"].SetValue<PointLight>(extraLights[4]);
+                    unitShader.Parameters["extra6"].SetValue<PointLight>(extraLights[5]);
+                    unitShader.Parameters["extra7"].SetValue<PointLight>(extraLights[6]);
 
+                    landscapeEffect.Parameters["extra2"].SetValue<PointLight>(extraLights[1]);
+                    landscapeEffect.Parameters["extra3"].SetValue<PointLight>(extraLights[2]);
+                    landscapeEffect.Parameters["extra4"].SetValue<PointLight>(extraLights[3]);
+                    landscapeEffect.Parameters["extra5"].SetValue<PointLight>(extraLights[4]);
+                    landscapeEffect.Parameters["extra6"].SetValue<PointLight>(extraLights[5]);
+                    landscapeEffect.Parameters["extra7"].SetValue<PointLight>(extraLights[6]);
+                }
 
+                //For even higherlevel feature sets we can use even more lights.
+                if (GraphicsDevice.Features.Level >= FeatureLevel.Level_10_0)
+                {
+                    unitShader.Parameters["extra8"].SetValue<PointLight>(extraLights[7]);
+                    unitShader.Parameters["extra9"].SetValue<PointLight>(extraLights[8]);
+                    unitShader.Parameters["extra10"].SetValue<PointLight>(extraLights[9]);
+                    unitShader.Parameters["extra11"].SetValue<PointLight>(extraLights[10]);
+                    unitShader.Parameters["extra12"].SetValue<PointLight>(extraLights[11]);
+                    landscapeEffect.Parameters["extra8"].SetValue<PointLight>(extraLights[7]);
+                    landscapeEffect.Parameters["extra9"].SetValue<PointLight>(extraLights[8]);
+                    landscapeEffect.Parameters["extra10"].SetValue<PointLight>(extraLights[9]);
+                    landscapeEffect.Parameters["extra11"].SetValue<PointLight>(extraLights[10]);
+                    landscapeEffect.Parameters["extra12"].SetValue<PointLight>(extraLights[11]);
+                } 
+
+               
             }
         }
 
@@ -306,7 +320,7 @@ namespace Brace
             }
 
             // Show FPS
-            //fpsRenderer.Draw();
+            fpsRenderer.Draw();
 
             // Handle base.Draw
             base.Draw(gameTime);
@@ -319,7 +333,7 @@ namespace Brace
 
         internal void TrackProjectile(ITrackable proj, Vector4 colour)
         {
-            this.AddLight(new TrackingLight(proj, colour, new Vector3(0, 0, 0), 0.02f, 0.4f, 2f, 2f, 2f));
+            this.AddLight(new TrackingLight(proj, colour, Assets.missileOffset, Assets.missileKa, Assets.missileKd, Assets.missileKs, Assets.missileSpecN, Assets.missileOnTop));
         }
 
         internal void StopTrackingProjectile(ITrackable proj)
@@ -355,6 +369,185 @@ namespace Brace
             else
             {
                 lights.Add(light);
+            }
+        }
+
+        private void initialiseFeatureLevel()
+        {
+            //Get the feature level.
+            FeatureLevel graphicsSupport = graphicsDeviceManager.GraphicsDevice.Features.Level;
+            if (graphicsSupport >= FeatureLevel.Level_11_0)
+            {
+                LANDSCAPE_GEN = 9;
+                MAX_LIGHTS = 12;
+                LANDSCAPE_HEIGHT = 10;
+                unitshader = "MPUnitCelShader_11";
+                landscapeshader = "MPLandscapeCelShader_11";
+
+                //Set up the player information
+                Assets.playerColour = new Vector4(1.0f, 0.8f, 0.1f, 1.0f);
+                Assets.playerOffset = new Vector3(0, 2.5f, 4.5f);
+                Assets.playerKa = 0.03f;
+                Assets.playerKd = 1f;
+                Assets.playerKs = 1f;
+                Assets.playerSpecN = 1f;
+                Assets.playerOnTop = 6f;
+
+                //Set up the sun information 
+                Assets.sunColour = new Vector4(0.55f, 0.1f, 0.9f, 1);
+                Assets.sunKa = 0.05f;
+                Assets.sunKd = 0.5f;
+                Assets.sunKs = 0.90f;
+                Assets.sunSpecN = 10.0f;
+                Assets.sunOnTop = 500f;
+
+                //Set up the missile information
+                Assets.missileColour = new Vector4(0.5f, 0.5f, 1, 1);
+                Assets.missileOffset = new Vector3(0, 0, 0);
+                Assets.missileKa = 0.05f;
+                Assets.missileKd = 1f;
+                Assets.missileKs = 2f;
+                Assets.missileSpecN = 2f;
+                Assets.missileOnTop = 2f;
+
+                //Set up the health information
+                Assets.healthColour = new Vector4(0.4f, 1.0f, 0.8f, 1);
+                Assets.healthOffSet = new Vector3(0, 0, 0);
+                Assets.healthKa = 0.0f;
+                Assets.healthKd = 0f;
+                Assets.healthKs = 2f;
+                Assets.healthSpecN = 2f;
+                Assets.healthOnTop = 2f;
+            }
+            else if (graphicsSupport >= FeatureLevel.Level_10_0)
+            {
+                LANDSCAPE_GEN = 9;
+                MAX_LIGHTS = 12;
+                LANDSCAPE_HEIGHT = 10;
+                unitshader = "MPUnitCelShader_10";
+                landscapeshader = "MPLandscapeCelShader_10";
+
+                //Set up the player information
+                Assets.playerColour = new Vector4(1.0f, 0.8f, 0.1f, 1.0f);
+                Assets.playerOffset = new Vector3(0, 2.5f, 4.5f);
+                Assets.playerKa = 0.03f;
+                Assets.playerKd = 1f;
+                Assets.playerKs = 1f;
+                Assets.playerSpecN = 1f;
+                Assets.playerOnTop = 6f;
+
+                //Set up the sun information 
+                Assets.sunColour = new Vector4(0.55f, 0.1f, 0.9f, 1);
+                Assets.sunKa = 0.05f;
+                Assets.sunKd = 0.5f;
+                Assets.sunKs = 0.90f;
+                Assets.sunSpecN = 10.0f;
+                Assets.sunOnTop = 500f;
+
+                //Set up the missile information
+                Assets.missileColour = new Vector4(0.5f, 0.5f, 1, 1);
+                Assets.missileOffset = new Vector3(0, 0, 0);
+                Assets.missileKa = 0.05f;
+                Assets.missileKd = 1f;
+                Assets.missileKs = 2f;
+                Assets.missileSpecN = 2f;
+                Assets.missileOnTop = 2f;
+
+                //Set up the health information
+                Assets.healthColour = new Vector4(0.4f, 1.0f, 0.8f, 1);
+                Assets.healthOffSet = new Vector3(0, 0, 0);
+                Assets.healthKa = 0.0f;
+                Assets.healthKd = 0f;
+                Assets.healthKs = 2f;
+                Assets.healthSpecN = 2f;
+                Assets.healthOnTop = 2f;
+            }
+            else if (graphicsSupport >= FeatureLevel.Level_9_3)
+            {
+                LANDSCAPE_GEN = 8;
+                MAX_LIGHTS = 7;
+                LANDSCAPE_HEIGHT = 10;
+                unitshader = "MPUnitCelShader_10";
+                landscapeshader = "MPLandscapeCelShader_9_3";
+
+                //Set up the player information
+                Assets.playerColour = new Vector4(1.0f, 0.8f, 0.1f, 1.0f);
+                Assets.playerOffset = new Vector3(0, 2.5f, 4.5f);
+                Assets.playerKa = 0.03f;
+                Assets.playerKd = 1f;
+                Assets.playerKs = 1f;
+                Assets.playerSpecN = 1f;
+                Assets.playerOnTop = 6f;
+
+                //Set up the sun information 
+                Assets.sunColour = new Vector4(0.55f, 0.1f, 0.9f, 1);
+                Assets.sunKa = 0.05f;
+                Assets.sunKd = 0.5f;
+                Assets.sunKs = 0.90f;
+                Assets.sunSpecN = 10.0f;
+                Assets.sunOnTop = 500f;
+
+                //Set up the missile information
+                Assets.missileColour = new Vector4(0.5f, 0.5f, 1, 1);
+                Assets.missileOffset = new Vector3(0, 0, 0);
+                Assets.missileKa = 0.05f;
+                Assets.missileKd = 1f;
+                Assets.missileKs = 2f;
+                Assets.missileSpecN = 2f;
+                Assets.missileOnTop = 2f;
+
+                //Set up the health information
+                Assets.healthColour = new Vector4(0.4f, 1.0f, 0.8f, 1);
+                Assets.healthOffSet = new Vector3(0, 0, 0);
+                Assets.healthKa = 0.0f;
+                Assets.healthKd = 0f;
+                Assets.healthKs = 2f;
+                Assets.healthSpecN = 2f;
+                Assets.healthOnTop = 2f;
+            }
+            else
+            {
+                //  Load minimal support level
+                LANDSCAPE_GEN = 6;
+                MAX_LIGHTS = 2;
+                LANDSCAPE_HEIGHT = 4;
+                unitshader = "MPUnitCelShader_9_1";
+                landscapeshader = "MPLandscapeCelShader_9_1";
+
+                //Set up the player information
+                Assets.playerColour = new Vector4(1.0f, 0.8f, 0.1f, 1.0f);
+                Assets.playerOffset = new Vector3(0, 2.5f, 4.5f);
+                Assets.playerKa = 0.5f;
+                Assets.playerKd = 1.5f;
+                Assets.playerKs = 2f;
+                Assets.playerSpecN = 1f;
+                Assets.playerOnTop = 6f;
+
+                //Set up the sun information 
+                Assets.sunColour = new Vector4(0.55f, 0.1f, 0.9f, 1);
+                Assets.sunKa = 0.05f;
+                Assets.sunKd = 0.5f;
+                Assets.sunKs = 3.0f;
+                Assets.sunSpecN = 10.0f;
+                Assets.sunOnTop = 500f;
+
+                //Set up the missile information
+                Assets.missileColour = new Vector4(0.5f, 0.5f, 1, 1);
+                Assets.missileOffset = new Vector3(0, 0, 0);
+                Assets.missileKa = 0.4f;
+                Assets.missileKd = 1.5f;
+                Assets.missileKs = 5f;
+                Assets.missileSpecN = 2f;
+                Assets.missileOnTop = 2f;
+
+                //Set up the health information
+                Assets.healthColour = new Vector4(0.4f, 1.0f, 0.8f, 1);
+                Assets.healthOffSet = new Vector3(0, 0, 0);
+                Assets.healthKa = 0.5f;
+                Assets.healthKd = 3f;
+                Assets.healthKs = 2f;
+                Assets.healthSpecN = 3f;
+                Assets.healthOnTop = 2f;
             }
         }
 

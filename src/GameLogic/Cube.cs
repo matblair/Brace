@@ -13,7 +13,7 @@ namespace Brace.GameLogic
 {
     class Cube : Unit
     {
-        public Cube(Vector3 position) : base(position, Vector3.Zero, Assets.cube, Assets.cubeTexture)
+        public Cube(Vector3 position) : base(position, Vector3.Zero, Assets.cube, null)
         {
             
         }
@@ -26,7 +26,7 @@ namespace Brace.GameLogic
         }
 
         public Cube(Vector3 position, bool passive)
-            : base(position, Vector3.Zero, Assets.cube, Assets.cubeTexture)
+            : base(position, Vector3.Zero, Assets.cube, null)
         {
             pObject = new PhysicsModel();
             SpheresBody bodyDef = new SpheresBody(pObject, false);

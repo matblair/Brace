@@ -155,14 +155,29 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\WideLogo.png" />
     <Content Include="Common\ReadMe.txt" />
-    <ToolkitFxc Include="Content\MPUnitCelShader.fx">
+    <ToolkitFxc Include="Content\MPUnitCelShader_9_1.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
-    <ToolkitFxc Include="Content\MPLandscapeCelShader.fx">
+    <ToolkitFxc Include="Content\MPLandscapeCelShader_9_1.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ToolkitFxc>
-    <ToolkitFxc Include="Content\LandscapeCelShader.fx">
+    <ToolkitFxc Include="Content\MPLandscapeCelShader_9_3.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPUnitCelShader_9_3.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPLandscapeCelShader_11.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPUnitCelShader_11.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPUnitCelShader_10.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPLandscapeCelShader_10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </ToolkitFxc>
     <ToolkitFxc Include="Content\CelShader.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

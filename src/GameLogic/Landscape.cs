@@ -30,7 +30,7 @@ namespace Brace.GameLogic
             : base(Vector3.Zero, Vector3.Zero)
         {
             // Generate the terrain and verticies
-            segments = GenerateTerrain(numDivision, 10f);
+            segments = GenerateTerrain(BraceGame.LANDSCAPE_GEN, BraceGame.LANDSCAPE_HEIGHT);
 
             //build physics object
             pObject = new PhysicsModel();

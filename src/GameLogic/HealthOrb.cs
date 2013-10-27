@@ -14,7 +14,7 @@ namespace Brace.GameLogic
         private int doomedTimer;
         public HealthOrb(Vector3 position) : base(position, Vector3.Zero, Assets.healthPickup, null)
         {
-            BraceGame.get().AddLight(new TrackingLight(this, new Vector4(0.4f, 1.0f, 0.8f, 1), new Vector3(0, 0, 0), 0.0f, 0f, 2f, 2f, 2f));
+            BraceGame.get().AddLight(new TrackingLight(this, Assets.healthColour, Assets.healthOffSet, Assets.healthKa, Assets.healthKd, Assets.healthKs, Assets.healthSpecN, Assets.healthOnTop));
         }
         public override void Update(SharpDX.Toolkit.GameTime gametime)
         {
