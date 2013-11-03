@@ -15,16 +15,24 @@ namespace Brace
 {                                                                                                                          
     public class InputManager
     {
+        //Our input managers from sharpdx
         private KeyboardManager keys;
         private MouseManager mouse;
-
-        private Accelerometer accelerometer;
-        
         private GestureRecognizer gestureRecogniser;
+        
+        //Our sensors
+        private Accelerometer accelerometer;
+        private OrientationSensor orientationSensor;
+        public bool hasOrientationSupport { get; private set; }
 
+        //Our information about our view and camera
         private CoreWindow window;
         public Camera Camera;
-        private Gyrometer gyro;
+        //Our device rotation
+        public Matrix deviceRotation { get; private set; }
+
+       
+        //The input key bindings
         private Keys lookLeftKey = Keys.Left;
         private Keys lookDownKey = Keys.Down;
         private Keys lookRightKey = Keys.Right;
@@ -36,24 +44,28 @@ namespace Brace
         private Keys toggleCameraKey = Keys.Tab;
         private Keys shiftKey = Keys.Shift;
 
+        //The current state of the keyboard and mouse
         public KeyboardState keyboardState { get; private set; }
         public MouseState mouseState { get; private set; }
 
+        //Information to help caulcate the shooting direction
         private readonly int playerBoundBox = 100;
         private readonly int orientationChangeDelayInMilliseconds = -500;
         private bool isAiming;
         private Vector2 aimDirection;
         public Vector2 moveCoordinate;
+
+        //Information to help with the top down transition
         public Camera.ViewType ViewType { get; private set; }
         private Camera.ViewType ViewTypeToLoad;
         private System.DateTimeOffset ViewTypeSetTime;
         private System.DateTimeOffset ChangeViewTime;
 
+        //Our boundaries for the screen hotzones
         private int turnLeftScreenBoundary;
         private int turnRightScreenBoundary;
         private int walkForwardScreenBoundary;
         private int shootScreenBoundary;
-
         private bool screenTurnLeftButtonDown;
         private bool screenTurnRightButtonDown;
         private bool screenWalkForwardButtonDown;
@@ -75,10 +87,17 @@ namespace Brace
                 ViewTypeSetTime = System.DateTimeOffset.Now;
             }
 
-            gyro = Gyrometer.GetDefault();
-            if( gyro!=null){
-                gyro.ReadingChanged += GyrometerReadingChanged;
+            //Set the orientation sensor
+            orientationSensor = OrientationSensor.GetDefault();
+            if (orientationSensor != null)
+            {
+                orientationSensor.ReadingChanged += OrientationChanged;
+                uint currentValue = orientationSensor.MinimumReportInterval;
+                uint reportTime = currentValue > 16 ? currentValue : 16;
+                orientationSensor.ReportInterval = currentValue;
+                hasOrientationSupport = true;
             }
+
 
             // Set up gesture recogniser
             window = Window.Current.CoreWindow;
@@ -171,30 +190,12 @@ namespace Brace
             }
         }
 
-        private void GyrometerReadingChanged(object sener, GyrometerReadingChangedEventArgs args)
+        public void OrientationChanged(object sender, OrientationSensorReadingChangedEventArgs args)
         {
-            if (ViewType == Camera.ViewType.FirstPerson)
-            {
-
-
-                if (args.Reading.AngularVelocityX < 0)
-                {
-                    screenTurnLeftButtonDown = true;
-                }
-                else if (args.Reading.AngularVelocityX>  0)
-                {
-                    screenTurnRightButtonDown = true;
-                }
-              
-            }
-            Debug.WriteLine(args.ToString());
-      
-
-
+            //Update the device orientation.
+            Quaternion q = new Quaternion(args.Reading.Quaternion.X, args.Reading.Quaternion.Y, args.Reading.Quaternion.Z, args.Reading.Quaternion.W);
+            deviceRotation = Matrix.RotationQuaternion(q);
         }
-
-
-        // interface
 
         public bool isShooting()
         {
@@ -257,14 +258,19 @@ namespace Brace
             {
                 Windows.Foundation.Point p = args.CurrentPoint.Position;
 
-                if (p.X < turnLeftScreenBoundary)
+                //If we don't have orientation support, then we need to use the onscreen hotboxes.
+                if (!hasOrientationSupport)
                 {
-                    screenTurnLeftButtonDown = true;
+                    if (p.X < turnLeftScreenBoundary)
+                    {
+                        screenTurnLeftButtonDown = true;
+                    }
+                    else if (p.X >= turnRightScreenBoundary)
+                    {
+                        screenTurnRightButtonDown = true;
+                    }
                 }
-                else if (p.X >= turnRightScreenBoundary)
-                {
-                    screenTurnRightButtonDown = true;
-                }
+                //We are always able to walk forward or shoot regardless of control scheme left and right
                 else if (p.Y <= walkForwardScreenBoundary)
                 {
                     screenWalkForwardButtonDown = true;

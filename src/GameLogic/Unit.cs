@@ -15,6 +15,7 @@ namespace Brace.GameLogic
         private Model model;
         private Texture2D texture;
         public PhysicsModel pObject;
+        public bool hasRotationSupport = false;
 
         public Unit(Vector3 position, Vector3 rotation, Model model, Texture2D text)
             : base(position, rotation)
@@ -68,7 +69,16 @@ namespace Brace.GameLogic
         public Vector3 ViewDirection()
         {
             // Might need to negate rot.X
-            return Vector3.TransformCoordinate(Vector3.UnitZ, Matrix.RotationAxis(Vector3.UnitY, rot.X));
+            if (hasRotationSupport && BraceGame.get().Camera.CurrentViewType == Camera.ViewType.FirstPerson)
+            {
+                //Get the orientation support
+                Vector3 deviceRotation = Vector3.TransformCoordinate(Vector3.UnitZ, BraceGame.get().input.deviceRotation);
+                return new Vector3(-deviceRotation.Y, -deviceRotation.Z, deviceRotation.X);
+            }
+            else
+            {
+                return Vector3.TransformCoordinate(Vector3.UnitZ, Matrix.RotationAxis(Vector3.UnitY, rot.X));
+            }
         }
 
         public Vector3 BodyLocation()

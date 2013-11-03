@@ -90,6 +90,7 @@ namespace Brace.GameLogic
             chargeTime += gameTime.ElapsedGameTime.Milliseconds;
         }
 
+
         public override void Move(Vector2 destination)
         {
             base.Move(destination);
