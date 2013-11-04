@@ -1,6 +1,6 @@
 ﻿<common:LayoutAwarePage
     x:Name="pageRoot"
-    x:Class="Brace.Options"
+    x:Class="Brace.Legal"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -11,6 +11,9 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">My Application</x:String>
     </Page.Resources>
 
     <!--
@@ -20,7 +23,7 @@
     -->
     <Grid Style="{StaticResource LayoutRootStyle}">
         <Grid.Background>
-            <ImageBrush ImageSource="Assets/OptionsBG.png"/>
+            <ImageBrush ImageSource="Assets/EndGameBG.png"/>
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
@@ -34,15 +37,15 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Options" Style="{StaticResource PageHeaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Text="Legal"/>
         </Grid>
-        <TextBox x:Name="playerNameTextBox" HorizontalAlignment="Left" Margin="140,111,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" FontSize="30" Height="53" Width="333" TextChanged="playerNameTextBox_TextChanged" Background="#FF544957" Foreground="White" InputScope="Default" Tapped="test"/>
-        <TextBlock HorizontalAlignment="Left" Margin="140,60,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Player Name:" VerticalAlignment="Top" FontSize="30"/>
-        <ToggleSwitch x:Name="challengeModeToggle" Header="Challenge Mode:" HorizontalAlignment="Left" Margin="134,213,0,0" Grid.Row="1" VerticalAlignment="Top" FontSize="30" Toggled="challengeModeToggle_Toggled"/>
-        <TextBlock HorizontalAlignment="Left" Margin="140,369,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Volume:" VerticalAlignment="Top" FontSize="30"/>
-        <Slider x:Name="volumeSlider" HorizontalAlignment="Left" Margin="140,419,0,0" Grid.Row="1" VerticalAlignment="Top" Width="252" ValueChanged="volumeSlider_ValueChanged"/>
-        <Button x:Name="legalButton" BorderBrush="Transparent" BorderThickness="0" Padding="20,0,20,5" Content="Legal" HorizontalAlignment="Right" Margin="0,0,40,40" VerticalAlignment="Bottom" Click="legalButton_Click" FontSize="24" Grid.Row="1"/>
-
+        <TextBlock x:Name="scoreList" Grid.Row="1" Margin="166,41,20,38" FontSize="30" >
+        	<Run Text="Sound code derived from code available at http://stevenpeirce.wordpress.com/"/>
+        	<LineBreak/>
+        	<Run/>
+        	<LineBreak/>
+        	<Run Text="Sound effects from SoundBible, licensed under CC Attribution License 3.0"/>
+        </TextBlock>
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -11,7 +9,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -22,15 +19,11 @@ namespace Brace
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class Options : Brace.Common.LayoutAwarePage
+    public sealed partial class Legal : Brace.Common.LayoutAwarePage
     {
-        public Options()
+        public Legal()
         {
             this.InitializeComponent();
-
-            playerNameTextBox.Text = Utils.OptionsManager.GetPlayerName();
-            challengeModeToggle.IsOn = Utils.OptionsManager.ChallengeModeEnabled();
-            volumeSlider.Value = Utils.OptionsManager.Volume();
         }
 
         /// <summary>
@@ -60,32 +53,6 @@ namespace Brace
         {
             MainPage parent = this.Parent as MainPage;
             parent.Children.Remove(this);
-        }
-
-        private void challengeModeToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-            Utils.OptionsManager.ChallengeModeEnabled(this.challengeModeToggle.IsOn);
-        }
-
-        private void playerNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Utils.OptionsManager.SetPlayerName(this.playerNameTextBox.Text);
-        }
-
-        private void volumeSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
-        {
-            Utils.OptionsManager.SetVolume((int)e.NewValue);
-        }
-
-        private void test(object sender, TappedRoutedEventArgs e)
-        {
-            Debug.WriteLine("this is a test");
-        }
-
-        private void legalButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainPage parent = this.Parent as MainPage;
-            parent.Children.Add(new Legal());
         }
     }
 }

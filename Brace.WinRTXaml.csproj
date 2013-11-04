@@ -52,6 +52,9 @@
     <Compile Include="HowTo.xaml.cs">
       <DependentUpon>HowTo.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Legal.xaml.cs">
+      <DependentUpon>Legal.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Options.xaml.cs">
       <DependentUpon>Options.xaml</DependentUpon>
     </Compile>
@@ -202,6 +205,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="HowTo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Legal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
