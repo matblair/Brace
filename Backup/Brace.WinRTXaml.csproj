@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5114D1A3-5423-4B73-8729-57CD90DC4BEC}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Brace</RootNamespace>
+    <AssemblyName>Brace.WinRTXaml</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PackageCertificateKeyFile>MiniCube.WinRTXaml_TemporaryKey.pfx</PackageCertificateKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\DebugWinRTXaml\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\ReleaseWinRTXaml\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\ReleaseWinRTXaml\Brace.WinRTXaml.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Common\BooleanNegationConverter.cs" />
+    <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Common\LayoutAwarePage.cs" />
+    <Compile Include="Common\RichTextColumns.cs" />
+    <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="EndGame.xaml.cs">
+      <DependentUpon>EndGame.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HowTo.xaml.cs">
+      <DependentUpon>HowTo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Legal.xaml.cs">
+      <DependentUpon>Legal.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Options.xaml.cs">
+      <DependentUpon>Options.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="src\Light.cs" />
+    <Compile Include="src\Utils\HighScoreManager.cs" />
+    <Compile Include="Highscores.xaml.cs">
+      <DependentUpon>Highscores.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="src\Camera.cs" />
+    <Compile Include="src\BraceGame.cs" />
+    <Compile Include="src\GameLogic\HealthOrb.cs" />
+    <Compile Include="src\GameLogic\Tree.cs" />
+    <Compile Include="src\GameLogic\Enemy.cs" />
+    <Compile Include="src\GameLogic\EnemyBehaviour.cs" />
+    <Compile Include="src\GameLogic\EnemyController.cs" />
+    <Compile Include="src\GameLogic\EnemySpawner.cs" />
+    <Compile Include="src\GameLogic\Player.cs" />
+    <Compile Include="src\GameLogic\PlayerController.cs" />
+    <Compile Include="src\GameLogic\Projectile.cs" />
+    <Compile Include="src\Physics\Quadtree.cs" />
+    <Compile Include="src\TrackingLight.cs" />
+    <Compile Include="src\FPSRenderer.cs" />
+    <Compile Include="src\Actor.cs" />
+    <Compile Include="src\GameLogic\Controller.cs" />
+    <Compile Include="src\GameLogic\Cube.cs" />
+    <Compile Include="src\GameLogic\Landscape.cs" />
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\GameLogic\Unit.cs" />
+    <Compile Include="src\ITrackable.cs" />
+    <Compile Include="src\OriginTrackable.cs" />
+    <Compile Include="src\Physics\Contact.cs" />
+    <Compile Include="src\Physics\PhysicsBody.cs" />
+    <Compile Include="src\Physics\PhysicsEngine.cs" />
+    <Compile Include="src\Physics\PhysicsModel.cs" />
+    <Compile Include="src\Physics\Sphere.cs" />
+    <Compile Include="src\Physics\SpheresBody.cs" />
+    <Compile Include="src\Physics\TerrainBody.cs" />
+    <Compile Include="src\InputManager.cs" />
+    <Compile Include="src\Utils\Assets.cs" />
+    <Compile Include="src\Utils\OptionsManager.cs" />
+    <Compile Include="src\Utils\PhysicsUtils.cs" />
+    <Compile Include="src\Utils\SerializableDictionary.cs" />
+    <Compile Include="src\Utils\SoundEffect.cs" />
+    <Compile Include="src\Utils\SoundManager.cs" />
+    <Compile Include="src\Utils\VectorUtils.cs" />
+    <Compile Include="src\VertexPositionNormalColor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="PackageXaml.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <ToolkitModel Include="Content\player.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitModel>
+    <ToolkitModel Include="Content\bullet.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitModel>
+    <ToolkitModel Include="Content\health.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitModel>
+    <ToolkitModel Include="Content\tree.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitModel>
+    <ToolkitModel Include="Content\smalltree.obj">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitModel>
+    <None Include="packages.config" />
+    <ToolkitModel Include="Content\cube.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitModel>
+    <None Include="MiniCube.WinRTXaml_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Audio\rain.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Audio\thunder1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Audio\thunder2.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Audio\thunder3.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\EndGameBG.png" />
+    <Content Include="Assets\Background.png" />
+    <Content Include="Assets\HighScoreBG.png" />
+    <Content Include="Assets\HowToBG.png" />
+    <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\OptionsBG.png" />
+    <Content Include="Assets\pauseButton.png" />
+    <Content Include="Assets\SmallLogo.png" />
+    <Content Include="Assets\SplashScreen.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\WideLogo.png" />
+    <Content Include="Common\ReadMe.txt" />
+    <ToolkitFxc Include="Content\MPUnitCelShader_9_1.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPLandscapeCelShader_9_1.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPLandscapeCelShader_9_3.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPUnitCelShader_9_3.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPLandscapeCelShader_11.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPUnitCelShader_11.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPUnitCelShader_10.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\MPLandscapeCelShader_10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFxc Include="Content\CelShader.fx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </ToolkitFxc>
+    <ToolkitFont Include="Content\Arial16.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="Common\StandardStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EndGame.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Highscores.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HowTo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Legal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Options.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Parse">
+      <HintPath>packages\parse.1.2.9\lib\netcore45\Parse.dll</HintPath>
+    </Reference>
+    <Reference Include="Parse.WinRT">
+      <HintPath>packages\parse.1.2.9\lib\netcore45\Parse.WinRT.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="SharpDX.XAudio2">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\SharpDX\Bin\DirectX11_1-winrt\SharpDX.XAudio2.dll</HintPath>
+    </Reference>
+    <Reference Include="TCD.Controls">
+      <HintPath>packages\TCD.Controls.2.1.0\lib\netcore45\TCD.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="TCD.Controls.Settings">
+      <HintPath>packages\TCD.Controls.2.1.0\lib\netcore45\TCD.Controls.Settings.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
+    <VisualStudioVersion>11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <Import Project="$(SharpDXSdkDir)\SharpDX.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

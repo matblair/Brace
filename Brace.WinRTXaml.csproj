@@ -12,7 +12,9 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>MiniCube.WinRTXaml_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Brace.WinRTXaml_StoreKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <PackageCertificateThumbprint>2E3B23E007665DAF0E9DAD1FFD96C06762B8EFB5</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,8 +51,10 @@
     <Compile Include="EndGame.xaml.cs">
       <DependentUpon>EndGame.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HowTo.xaml.cs">
-      <DependentUpon>HowTo.xaml</DependentUpon>
+    <Compile Include="FirstPerson.xaml.cs" />
+    <Compile Include="FirstPersonGyro.xaml.cs" />
+    <Compile Include="HowToIntro.xaml.cs">
+      <DependentUpon>HowToIntro.xaml</DependentUpon>
     </Compile>
     <Compile Include="Legal.xaml.cs">
       <DependentUpon>Legal.xaml</DependentUpon>
@@ -107,6 +111,12 @@
     <Compile Include="src\Utils\SoundManager.cs" />
     <Compile Include="src\Utils\VectorUtils.cs" />
     <Compile Include="src\VertexPositionNormalColor.cs" />
+    <Compile Include="TopDown.xaml.cs">
+      <DependentUpon>TopDown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TopDown2.xaml.cs">
+      <DependentUpon>TopDown2.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="PackageXaml.appxmanifest">
@@ -127,6 +137,7 @@
     <ToolkitModel Include="Content\smalltree.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitModel>
+    <None Include="Brace.WinRTXaml_StoreKey.pfx" />
     <None Include="packages.config" />
     <ToolkitModel Include="Content\cube.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -146,18 +157,26 @@
     <Content Include="Assets\Audio\thunder3.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\charge weapon.png" />
     <Content Include="Assets\EndGameBG.png" />
     <Content Include="Assets\Background.png" />
+    <Content Include="Assets\fps gyro controls.png" />
     <Content Include="Assets\HighScoreBG.png" />
     <Content Include="Assets\HowToBG.png" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\non gyro fps.png" />
     <Content Include="Assets\OptionsBG.png" />
     <Content Include="Assets\pauseButton.png" />
+    <Content Include="Assets\Pickup health screen.png" />
+    <Content Include="Assets\release to shoot.png" />
+    <Content Include="Assets\Screenshot %2823%29.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\tap to move.png" />
     <Content Include="Assets\WideLogo.png" />
     <Content Include="Common\ReadMe.txt" />
+    <None Include="Package.StoreAssociation.xml" />
     <ToolkitFxc Include="Content\MPUnitCelShader_9_1.fx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </ToolkitFxc>
@@ -200,13 +219,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="FirstPerson.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FirstPersonGyro.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Highscores.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HowTo.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="HowToIntro.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Legal.xaml">
       <SubType>Designer</SubType>
@@ -224,6 +251,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TopDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TopDown2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Parse">
@@ -231,10 +270,6 @@
     </Reference>
     <Reference Include="Parse.WinRT">
       <HintPath>packages\parse.1.2.9\lib\netcore45\Parse.WinRT.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>$(SharpDXSdkBinDir)\SharpDX.D3DCompiler.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="SharpDX.XAudio2">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\SharpDX\Bin\DirectX11_1-winrt\SharpDX.XAudio2.dll</HintPath>

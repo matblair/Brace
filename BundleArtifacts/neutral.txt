@@ -1,0 +1,2 @@
+MainPackage=C:\Users\Mathew\Documents\CellShadedAdventure\bin\ReleaseWinRTXaml\Brace.WinRTXaml_1.1.0.14_Bundle\Brace.WinRTXaml_1.1.0.14_AnyCPU.appx
+SymbolPackage=C:\Users\Mathew\Documents\CellShadedAdventure\AppPackages\Brace.WinRTXaml_1.1.0.14_Test\Brace.WinRTXaml_1.1.0.14_AnyCPU.appxsym

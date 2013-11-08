@@ -144,6 +144,11 @@ namespace Brace
             List<Actor> newActors = new List<Actor>();
             Random rand = new Random();
             player = new Player(Vector3.Zero, Vector3.Zero);
+            if (OptionsManager.ChallengeModeEnabled())
+            {
+                player.decreasePerMs = player.decreasePerMs *2;
+            }
+
             newActors.Add(player);
             newActors.Add(new EnemySpawner(player));
             landscape = new GameLogic.Landscape(this);
@@ -320,7 +325,7 @@ namespace Brace
             }
 
             // Show FPS
-            fpsRenderer.Draw();
+            //fpsRenderer.Draw();
 
             // Handle base.Draw
             base.Draw(gameTime);
@@ -525,7 +530,7 @@ namespace Brace
 
                 //Set up the sun information 
                 Assets.sunColour = new Vector4(0.55f, 0.1f, 0.9f, 1);
-                Assets.sunKa = 0.05f;
+                Assets.sunKa = 0.5f;
                 Assets.sunKd = 0.5f;
                 Assets.sunKs = 3.0f;
                 Assets.sunSpecN = 10.0f;

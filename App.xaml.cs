@@ -61,8 +61,8 @@ namespace Brace
 
             // Initialse other bits and pieces
             HighScoreManager.Init();
-            OptionsManager.Init();
-            SoundManager.Initialise();
+       
+           // SoundManager.Initialise();
             //Call our method to get main name
             InitialiseUserName();
         }

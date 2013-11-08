@@ -26,6 +26,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Popups;
+using Windows.UI.Core;
 using TCD.Controls;
 using System;
 
@@ -38,7 +39,8 @@ namespace Brace
     {
         private BraceGame game;
         private static MainPage mainPage;
-        private Flyout f;
+      
+        private TCD.Controls.Flyout f;
 
         public MainPage()
         {
@@ -46,9 +48,10 @@ namespace Brace
 
             InitializeComponent();
             game = BraceGame.get();
+            Utils.OptionsManager.Init();
             game.Run(this);
-
-            Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Rain);
+          
+            //Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Rain);
             this.Children.Add(new MainMenu());
         }
 
@@ -60,14 +63,15 @@ namespace Brace
         public void ResetGame()
         {
             game.paused = true;
-            this.rainAudio.Play();
+            //this.rainAudio.Play();
             this.Children.Add(new EndGame());
         }
 
         public void StartGame()
         {
+           
             game.Start();
-            Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Thunder2);
+            //Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Thunder2);
             this.gamePauseButton.Visibility = Utils.OptionsManager.ChallengeModeEnabled() ? Visibility.Collapsed : Visibility.Visible;
         }
 
@@ -90,7 +94,7 @@ namespace Brace
             s.Children.Add(bExit);
 
             //now create the flyout
-            f = new Flyout(
+            f = new TCD.Controls.Flyout(
                 new SolidColorBrush(Colors.White),//the foreground color of all flyouts
                 (Brush)App.Current.Resources["ApplicationPageBackgroundThemeBrush"],//the background color of all flyouts
                 new SolidColorBrush(Color.FromArgb(255, 150, 0, 0)),//the theme brush of the app
@@ -140,5 +144,7 @@ namespace Brace
         {
             this.ResumeGame();
         }
+
+       
     }
 }

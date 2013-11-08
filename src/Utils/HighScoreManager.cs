@@ -96,6 +96,10 @@ namespace Brace.Utils
 
         public static void AddScore(int score)
         {
+            if (OptionsManager.isFirstPlay())
+            {
+                OptionsManager.isFirstPlay(false);
+            }
             AddScore(score, DateTime.Now);
         }
 
@@ -103,6 +107,10 @@ namespace Brace.Utils
         {
             CheckInit();
 
+            if (OptionsManager.isFirstPlay())
+            {
+                OptionsManager.isFirstPlay(false);
+            }
             // There's no score list, so error
             if (Scores == null)
             {
@@ -127,7 +135,15 @@ namespace Brace.Utils
             try
             {
                 ParseObject newScore = new ParseObject("HighScore");
-                newScore["Name"] = OptionsManager.GetPlayerName();
+                if (OptionsManager.IsAnonymous())
+                {
+                    newScore["Name"] = "Anonymous";
+                }
+                else {
+                    newScore["Name"] =
+                   OptionsManager.GetPlayerName();
+                }
+               
                 newScore["Score"] = score;
                 await newScore.SaveAsync();
             }

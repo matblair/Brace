@@ -1,0 +1,82 @@
+﻿<common:LayoutAwarePage
+    x:Name="pageRoot"
+    x:Class="Brace.FirstPersonGyro"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Brace"
+    xmlns:common="using:Brace.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">My Application</x:String>
+    </Page.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid.Background>
+            <ImageBrush ImageSource="Assets/HowToBG.png"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Back button and page title -->
+        <Grid Margin="10,10,-10,618" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,0,18,40" FontFamily="Global User Interface">
+            	<Run Text="First Person "/>
+            	<Run Text="Controls"/>
+            </TextBlock>
+        </Grid>
+        <TextBlock Margin="66,52,493,491" Grid.Row="1" TextWrapping="Wrap" FontSize="30" Text="A new level of immersion!" FontFamily="Segoe UI, Tahoma, Arial, Arial Unicode MS, Microsoft Sans Serif, Lucida Sans Unicode"/>
+        <TextBlock Margin="66,116,752,89" Grid.Row="1" TextWrapping="Wrap" FontSize="25" SelectionChanged="TextBlock_SelectionChanged" Text="Looking around is easy in first person, simply move your tablet! We will show you what you point at."/>
+        <Button x:Name="endButton" Content="Next" HorizontalAlignment="Left" Margin="1263,556,0,0" Grid.Row="1" VerticalAlignment="Top" FontFamily="Global User Interface" Click="endButtonPressed"/>
+        <Image HorizontalAlignment="Left" Height="342" Margin="698,32,0,0" VerticalAlignment="Top" Width="592" Source="Assets/Screenshot (23).png" RenderTransformOrigin="0.5,0.5" Grid.Row="1" IsTapEnabled="False" IsRightTapEnabled="False" IsHoldingEnabled="False" IsDoubleTapEnabled="False"/>
+        <Image HorizontalAlignment="Left" Height="342" Margin="49,249,0,0" VerticalAlignment="Top" Width="592" Source="Assets/fps gyro controls.png" RenderTransformOrigin="0.5,0.5" Grid.Row="1" IsHoldingEnabled="False" IsRightTapEnabled="False" IsTapEnabled="False" IsDoubleTapEnabled="False"/>
+        <TextBlock Margin="698,427,69,126" Grid.Row="1" TextWrapping="Wrap" FontSize="25" SelectionChanged="TextBlock_SelectionChanged" Text="Moving forward and shooting are also easy! Take advantage of the view to scope out your enemies."/>
+
+        <VisualStateManager.VisualStateGroups>
+
+            <!-- Visual states reflect the application's view state -->
+            <VisualStateGroup x:Name="ApplicationViewStates">
+                <VisualState x:Name="FullScreenLandscape"/>
+                <VisualState x:Name="Filled"/>
+
+                <!-- The entire page respects the narrower 100-pixel margin convention for portrait -->
+                <VisualState x:Name="FullScreenPortrait">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+
+                <!-- The back button and title have different styles when snapped -->
+                <VisualState x:Name="Snapped">
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</common:LayoutAwarePage>

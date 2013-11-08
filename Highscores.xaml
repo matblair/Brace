@@ -30,6 +30,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+  
         <!-- Back button and page title -->
         <Grid>
             <Grid.ColumnDefinitions>

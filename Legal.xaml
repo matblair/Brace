@@ -39,12 +39,21 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Text="Legal"/>
         </Grid>
-        <TextBlock x:Name="scoreList" Grid.Row="1" Margin="166,41,20,38" FontSize="30" >
+
+        <TextBlock x:Name="scoreList" Grid.Row="1" Margin="56,44,35,35" FontSize="30" >
         	<Run Text="Sound code derived from code available at http://stevenpeirce.wordpress.com/"/>
         	<LineBreak/>
         	<Run/>
-        	<LineBreak/>
-        	<Run Text="Sound effects from SoundBible, licensed under CC Attribution License 3.0"/>
+        </TextBlock>
+        <TextBlock Margin="56,125,181,333" TextWrapping="Wrap" FontFamily="Global User Interface" Grid.Row="1" FontSize="15">
+            <TextBlock.Text>
+                In order to provide a competitive game environment, Brace will use your windows profile name
+                    when it uploads your highscore to our servers. No other information will be sent, other than your 
+                    profile name and the score achieved.
+                    
+                    The data does not include any location information or any other identifying features. If you do not wish
+                    your name to be transmitted, enably "Anonymous HighScores" in the option menu.
+            </TextBlock.Text>
         </TextBlock>
         <VisualStateManager.VisualStateGroups>
 

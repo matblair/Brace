@@ -17,5 +17,8 @@
         <Button x:Name="menuHowToButton" BorderBrush="Transparent" BorderThickness="0" Padding="20,0,20,5" Content="How To" HorizontalAlignment="Center" Margin="0,509,0,0" VerticalAlignment="Top" Click="menuHowToButton_Click" FontSize="24"/>
         <Button x:Name="menuOptionsButton" BorderBrush="Transparent" BorderThickness="0" Padding="20,0,20,5" Content="Options" HorizontalAlignment="Center" Margin="0,639,0,0" VerticalAlignment="Top" Click="menuOptionsButton_Click" FontSize="24"/>
 
+
     </Grid>
+
+
 </Page>

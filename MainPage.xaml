@@ -22,5 +22,5 @@
             <ImageBrush ImageSource="Assets/pauseButton.png"/>
         </Button.Background>
     </Button>
-    <MediaElement x:Name="rainAudio" AudioCategory="SoundEffects" Source="Assets/Audio/rain.wav" AutoPlay="False" Visibility="Collapsed"/>
+  
 </SwapChainBackgroundPanel>

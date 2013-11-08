@@ -18,7 +18,7 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid Style="{StaticResource LayoutRootStyle}">
+    <Grid Style="{StaticResource LayoutRootStyle}" Margin="0,5,0,-5">
         <Grid.Background>
             <ImageBrush ImageSource="Assets/OptionsBG.png"/>
         </Grid.Background>
@@ -26,7 +26,7 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
+            
         <!-- Back button and page title -->
         <Grid>
             <Grid.ColumnDefinitions>
@@ -38,10 +38,11 @@
         </Grid>
         <TextBox x:Name="playerNameTextBox" HorizontalAlignment="Left" Margin="140,111,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" FontSize="30" Height="53" Width="333" TextChanged="playerNameTextBox_TextChanged" Background="#FF544957" Foreground="White" InputScope="Default" Tapped="test"/>
         <TextBlock HorizontalAlignment="Left" Margin="140,60,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Player Name:" VerticalAlignment="Top" FontSize="30"/>
-        <ToggleSwitch x:Name="challengeModeToggle" Header="Challenge Mode:" HorizontalAlignment="Left" Margin="134,213,0,0" Grid.Row="1" VerticalAlignment="Top" FontSize="30" Toggled="challengeModeToggle_Toggled"/>
-        <TextBlock HorizontalAlignment="Left" Margin="140,369,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Volume:" VerticalAlignment="Top" FontSize="30"/>
-        <Slider x:Name="volumeSlider" HorizontalAlignment="Left" Margin="140,419,0,0" Grid.Row="1" VerticalAlignment="Top" Width="252" ValueChanged="volumeSlider_ValueChanged"/>
+        <ToggleSwitch x:Name="challengeModeToggle" Header="Challenge Mode:" HorizontalAlignment="Left" Margin="134,305,0,0" Grid.Row="1" VerticalAlignment="Top" FontSize="30" Toggled="challengeModeToggle_Toggled"/>
+        <TextBlock HorizontalAlignment="Left" Margin="140,439,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Volume:" VerticalAlignment="Top" FontSize="30"/>
+        <Slider x:Name="volumeSlider" HorizontalAlignment="Left" Margin="140,489,0,0" Grid.Row="1" VerticalAlignment="Top" Width="252" ValueChanged="volumeSlider_ValueChanged"/>
         <Button x:Name="legalButton" BorderBrush="Transparent" BorderThickness="0" Padding="20,0,20,5" Content="Legal" HorizontalAlignment="Right" Margin="0,0,40,40" VerticalAlignment="Bottom" Click="legalButton_Click" FontSize="24" Grid.Row="1"/>
+        <ToggleSwitch x:Name="anonymousHighScores" Header="Anonymous High Scores:" HorizontalAlignment="Left" Margin="134,183,0,0" Grid.Row="1" VerticalAlignment="Top" FontSize="30" Toggled="anonymousHighScoresToggled" IsOn="True"/>
 
         <VisualStateManager.VisualStateGroups>
 
@@ -72,5 +73,8 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+
+       
     </Grid>
+  
 </common:LayoutAwarePage>

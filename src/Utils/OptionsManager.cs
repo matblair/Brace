@@ -46,6 +46,17 @@ namespace Brace.Utils
                 localSettings.Containers["options"].Values["volume"] = 100;
             }
 
+            if (!localSettings.Containers["options"].Values.ContainsKey("anonymous"))
+            {
+                localSettings.Containers["options"].Values["anonymous"] = true;
+            }
+
+
+            if (!localSettings.Containers["options"].Values.ContainsKey("firstPlay"))
+            {
+                localSettings.Containers["options"].Values["firstPlay"] = true;
+            }
+
             SetVolume((int)localSettings.Containers["options"].Values["volume"]);
 
             initialised = true;
@@ -59,10 +70,34 @@ namespace Brace.Utils
             }
         }
 
+        public static bool isFirstPlay()
+        {
+            CheckInit();
+            return (bool)localSettings.Containers["options"].Values["firstPlay"];
+        }
+
+
+        public static void isFirstPlay(bool val)
+        {
+           localSettings.Containers["options"].Values["firstPlay"] = val;
+        }
+
         public static string GetPlayerName()
         {
             CheckInit();
             return (string)localSettings.Containers["options"].Values["name"];
+        }
+
+        public static bool IsAnonymous()
+        {
+            CheckInit();
+            return (bool)localSettings.Containers["options"].Values["anonymous"];
+        }
+
+        public static void SetAnonymous(bool value)
+        {
+            CheckInit();
+            localSettings.Containers["options"].Values["anonymous"] = value;
         }
 
         public static void SetPlayerName(string name)
@@ -97,17 +132,17 @@ namespace Brace.Utils
             uint vAll = v | (v << 16);
 
             // Set the volume
-            int retVal = NativeMethods.WaveOutSetVolume(IntPtr.Zero, vAll);
+            //int retVal = NativeMethods.WaveOutSetVolume(IntPtr.Zero, vAll);
         }
     }
 
     static class NativeMethods
     {
 
-        [DllImport("winmm.dll", EntryPoint = "waveOutSetVolume")]
-        public static extern int WaveOutSetVolume(IntPtr hwo, uint dwVolume);
+        //[DllImport("winmm.dll", EntryPoint = "waveOutSetVolume")]
+        //public static extern int WaveOutSetVolume(IntPtr hwo, uint dwVolume);
 
-        [DllImport("winmm.dll", SetLastError = true)]
-        public static extern bool PlaySound(string pszSound, IntPtr hmod, uint fdwSound);
+        //[DllImport("winmm.dll", SetLastError = true)]
+        //public static extern bool Play(string pszSound, IntPtr hmod, uint fdwSound);
     }
 }
