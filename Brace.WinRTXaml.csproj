@@ -48,6 +48,9 @@
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="FirstPersonDesktop.xaml.cs">
+      <DependentUpon>FirstPersonDesktop.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HowToIntroDesktop.xaml.cs">
       <DependentUpon>HowToIntroDesktop.xaml</DependentUpon>
     </Compile>
@@ -177,6 +180,7 @@
     <Content Include="Assets\EndGameBG.png" />
     <Content Include="Assets\Background.png" />
     <Content Include="Assets\fps gyro controls.png" />
+    <Content Include="Assets\fps_desktop_controls.png" />
     <Content Include="Assets\HighScoreBG.png" />
     <Content Include="Assets\HowToBG.png" />
     <Content Include="Assets\Logo.png" />
@@ -228,6 +232,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Common\StandardStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FirstPersonDesktop.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

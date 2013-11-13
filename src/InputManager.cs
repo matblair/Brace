@@ -82,24 +82,24 @@ namespace Brace
             // Set the accelerometer
             accelerometer = Accelerometer.GetDefault();
             if (accelerometer != null)
-            { 
-            //    accelerometer.ReadingChanged += AccelerometerReadingChanged;
-            //    ViewTypeSetTime = System.DateTimeOffset.Now;
-            //    uint currentValue = accelerometer.MinimumReportInterval;
-            //    uint reportTime = currentValue > 16 ? currentValue : 16;
-            //    accelerometer.ReportInterval = currentValue;
-            //    hasAcceleromterSupport = true;
+            {
+                accelerometer.ReadingChanged += AccelerometerReadingChanged;
+                ViewTypeSetTime = System.DateTimeOffset.Now;
+                uint currentValue = accelerometer.MinimumReportInterval;
+                uint reportTime = currentValue > 16 ? currentValue : 16;
+                accelerometer.ReportInterval = currentValue;
+                hasAcceleromterSupport = true;
             }
 
             //Set the orientation sensor
             orientationSensor = OrientationSensor.GetDefault();
             if (orientationSensor != null)
             {
-                //orientationSensor.ReadingChanged += OrientationChanged;
-                //uint currentValue = orientationSensor.MinimumReportInterval;
-                //uint reportTime = currentValue > 16 ? currentValue : 16;
-                //orientationSensor.ReportInterval = currentValue;
-                //hasOrientationSupport = true;
+                orientationSensor.ReadingChanged += OrientationChanged;
+                uint currentValue = orientationSensor.MinimumReportInterval;
+                uint reportTime = currentValue > 16 ? currentValue : 16;
+                orientationSensor.ReportInterval = currentValue;
+                hasOrientationSupport = false;
             }
 
 

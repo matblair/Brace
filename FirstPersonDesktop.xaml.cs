@@ -12,6 +12,9 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Popups;
 using Windows.UI.Core;
@@ -23,15 +26,22 @@ namespace Brace
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class TopDown4 : Brace.Common.LayoutAwarePage
+    public sealed partial class FirstPersonDesktop : Brace.Common.LayoutAwarePage
     {
         private CoreWindow window;
 
-        public TopDown4()
+        public FirstPersonDesktop()
         {
             this.InitializeComponent();
 
-
+            if (Utils.OptionsManager.isFirstPlay())
+            {
+                this.endButton.Content = "Play";
+            }
+            else
+            {
+                this.endButton.Content = "Return";
+            }
         }
 
         /// <summary>
@@ -68,21 +78,26 @@ namespace Brace
 
         }
 
-        private void nextPressed(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void nextButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (BraceGame.get().input.hasOrientationSupport)
+            if (Utils.OptionsManager.isFirstPlay())
             {
                 MainPage parent = this.Parent as MainPage;
-                parent.Children.Add(new FirstPersonGyro());
-            }
-            else if (BraceGame.get().input.hasAcceleromterSupport){
-                MainPage parent = this.Parent as MainPage;
-                parent.Children.Add(new FirstPerson());
+                int size = parent.Children.Count();
+                for (int i = (size - 1); i > 0; i--)
+                {
+                    parent.Children.RemoveAt(i);
+                }
+                parent.StartGame();
             }
             else
             {
                 MainPage parent = this.Parent as MainPage;
-                parent.Children.Add(new FirstPersonDesktop());
+                int size = parent.Children.Count();
+                for (int i = (size - 1); i > 1; i--)
+                {
+                    parent.Children.RemoveAt(i);
+                }
             }
         }
     }

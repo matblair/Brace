@@ -42,16 +42,11 @@
             </TextBlock>
         </Grid>
         <TextBlock Margin="66,54,493,489" Grid.Row="1" TextWrapping="Wrap" FontSize="30" Text="Welcome to Brace, an exciting new arcade game!"/>
-        <TextBlock Margin="66,139,701,66" Grid.Row="1" TextWrapping="Wrap" FontSize="25">
-        	<Run Text="First lets run you through  some basics of how Brace works, "/>
-        	<Run Text="there are two types of views you can use to help you stay alive, a top down, and first person view."/>
+        <TextBlock Margin="66,144,701,61" Grid.Row="1" TextWrapping="Wrap" FontSize="25">
+        	<Run Text="First lets run you through  some basics of how Brace works. There are two types of views you can use to help you stay alive, a top down, and first person view."/>
         	<LineBreak/>
-        	<Run/>
         	<LineBreak/>
-        	<Run Text="Changing between the two is easy"/>
-        	<Run Text=" just "/>
-        	<Run Text="press tab on your keyboard to toggle between the views."/>
-        	<LineBreak/>
+        	<Run Text="Changing between the two is easy just press tab on your keyboard to toggle between the views."/>
         </TextBlock>
         <Button Content="Next" HorizontalAlignment="Left" Margin="1263,556,0,0" Grid.Row="1" VerticalAlignment="Top" FontFamily="Global User Interface" Click="nextButtonClicked"/>
 
