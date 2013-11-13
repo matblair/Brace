@@ -11,6 +11,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Popups;
 
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
@@ -26,6 +27,23 @@ namespace Brace
             this.InitializeComponent();
 
             this.gameOverScore.Text = string.Format("Final Score: {0}", Utils.HighScoreManager.LastScore.Value);
+
+            if(!Utils.OptionsManager.hasAsked()){
+                var messageDialog = new MessageDialog("Do you want to submit your name with your highscore?");
+                messageDialog.Commands.Add(new UICommand(
+                    "Yes", (uiCommand) =>
+                {
+                    Utils.OptionsManager.SetAnonymous(false);
+                }));
+                messageDialog.Commands.Add(new UICommand(
+                   "No", (uiCommand) =>
+                   {
+                       Utils.OptionsManager.SetAnonymous(true);
+                   }));
+                messageDialog.ShowAsync();
+
+                Utils.OptionsManager.hasAsked(true);
+            }
         }
 
         /// <summary>

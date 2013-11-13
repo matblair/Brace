@@ -51,6 +51,11 @@ namespace Brace.Utils
                 localSettings.Containers["options"].Values["anonymous"] = true;
             }
 
+            if (!localSettings.Containers["options"].Values.ContainsKey("asked"))
+            {
+                localSettings.Containers["options"].Values["asked"] = false;
+            }
+
 
             if (!localSettings.Containers["options"].Values.ContainsKey("firstPlay"))
             {
@@ -76,6 +81,17 @@ namespace Brace.Utils
             return (bool)localSettings.Containers["options"].Values["firstPlay"];
         }
 
+        public static bool hasAsked()
+        {
+            //CheckInit();
+            return false;
+            //return (bool)localSettings.Containers["options"].Values["asked"];
+        }
+
+        public static void hasAsked(bool val)
+        {
+            localSettings.Containers["options"].Values["asked"] = val;
+        }
 
         public static void isFirstPlay(bool val)
         {
