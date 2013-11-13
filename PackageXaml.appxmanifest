@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="26217MathewBlair.Brace" Publisher="CN=BC26F05C-5008-435C-8F16-6A2B8CEC8294" Version="1.0.0.5" />
+  <Identity Name="26217MathewBlair.Brace" Publisher="CN=BC26F05C-5008-435C-8F16-6A2B8CEC8294" Version="1.0.0.6" />
   <Properties>
     <DisplayName>Brace</DisplayName>
     <PublisherDisplayName>Mathew Blair</PublisherDisplayName>
