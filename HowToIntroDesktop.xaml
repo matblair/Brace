@@ -29,15 +29,15 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-       
+
         <!-- Back button and page title -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,0,18,40">
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}" Height="Auto" Margin="36,56,0,36" VerticalAlignment="Stretch"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,60,0,40" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="1252">
             	<Run Text="How To Play"/>
             </TextBlock>
         </Grid>
@@ -48,7 +48,7 @@
         	<LineBreak/>
         	<Run Text="Changing between the two is easy just press tab on your keyboard to toggle between the views."/>
         </TextBlock>
-        <Button Content="Next" HorizontalAlignment="Left" Margin="1263,556,0,0" Grid.Row="1" VerticalAlignment="Top" FontFamily="Global User Interface" Click="nextButtonClicked"/>
+        <Button Content="Next" HorizontalAlignment="Right" Margin="0,0,37,34" Grid.Row="1" VerticalAlignment="Bottom" FontFamily="Global User Interface" Click="nextButtonClicked" Width="66" Height="38"/>
 
         <VisualStateManager.VisualStateGroups>
 

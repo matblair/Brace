@@ -27,11 +27,12 @@
         </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="573*"/>
+            <RowDefinition Height="55*"/>
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
-        <Grid Margin="10,10,-10,618" Grid.RowSpan="2">
+        <Grid Margin="10,10,-10,563" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
@@ -39,8 +40,8 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,0,18,44" Text="First Person Controls"/>
         </Grid>
-        <Button Content="Next" HorizontalAlignment="Left" Margin="1263,556,0,0" Grid.Row="1" VerticalAlignment="Top" FontFamily="Global User Interface" Click="nextButtonClicked"/>
-        <TextBlock Margin="65,46,0,497" Grid.Row="1" TextWrapping="Wrap" FontSize="30" Text="A new level of immersion!" FontFamily="Segoe UI, Tahoma, Arial, Arial Unicode MS, Microsoft Sans Serif, Lucida Sans Unicode" HorizontalAlignment="Left" Width="807"/>
+        <Button Content="Next" HorizontalAlignment="Right" Margin="0,0,37,34" Grid.Row="1" VerticalAlignment="Bottom" FontFamily="Global User Interface" Click="nextButtonClicked" Grid.RowSpan="2" Width="66" Height="38"/>
+        <TextBlock Margin="65,46,0,442" Grid.Row="1" TextWrapping="Wrap" FontSize="30" Text="A new level of immersion!" FontFamily="Segoe UI, Tahoma, Arial, Arial Unicode MS, Microsoft Sans Serif, Lucida Sans Unicode" HorizontalAlignment="Left" Width="807"/>
         <TextBlock Margin="65,110,0,0" Grid.Row="1" TextWrapping="Wrap" FontSize="25" SelectionChanged="TextBlock_SelectionChanged" Text="Looking around is easy in first person, simply move your tablet! We will show you what you point at." HorizontalAlignment="Left" Width="548" Height="117" VerticalAlignment="Top"/>
 
         <VisualStateManager.VisualStateGroups>

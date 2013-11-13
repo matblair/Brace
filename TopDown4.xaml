@@ -29,17 +29,17 @@
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-    
+
         <!-- Back button and page title -->
         <Grid Margin="10,10,-10,618" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,0,18,44" Text="Top Down Controls"/>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}" Height="48" Margin="36,0,0,36" VerticalAlignment="Bottom"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,56,18,44" Text="Top Down Controls" VerticalAlignment="Stretch"/>
         </Grid>
-        <Button Content="Next" HorizontalAlignment="Left" Margin="1263,556,0,0" Grid.Row="1" VerticalAlignment="Top" FontFamily="Global User Interface" Click="nextPressed"/>
+        <Button Content="Next" HorizontalAlignment="Right" Margin="0,0,37,34" Grid.Row="1" VerticalAlignment="Bottom" FontFamily="Global User Interface" Click="nextPressed" Width="66" Height="38"/>
 
         <VisualStateManager.VisualStateGroups>
 

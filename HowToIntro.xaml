@@ -37,7 +37,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,0,18,40">
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,60,18,40" VerticalAlignment="Stretch">
             	<Run Text="How To Play"/>
             </TextBlock>
         </Grid>
@@ -52,7 +52,7 @@
         	<Run Text="To get a top down view lay the device flat, to get a more immersive first person view bring the device up like a mirror."/>
 
         </TextBlock>
-        <Button Content="Next" HorizontalAlignment="Left" Margin="1263,556,0,0" Grid.Row="1" VerticalAlignment="Top" FontFamily="Global User Interface" Click="nextButtonClicked"/>
+        <Button Content="Next" HorizontalAlignment="Right" Margin="0,0,36,34" Grid.Row="1" VerticalAlignment="Bottom" FontFamily="Global User Interface" Click="nextButtonClicked"/>
 
         <VisualStateManager.VisualStateGroups>
 

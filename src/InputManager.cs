@@ -99,7 +99,7 @@ namespace Brace
                 uint currentValue = orientationSensor.MinimumReportInterval;
                 uint reportTime = currentValue > 16 ? currentValue : 16;
                 orientationSensor.ReportInterval = currentValue;
-                hasOrientationSupport = false;
+                hasOrientationSupport = true;
             }
 
 
