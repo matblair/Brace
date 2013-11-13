@@ -26,22 +26,14 @@ namespace Brace
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class FirstPerson : Brace.Common.LayoutAwarePage
+    public sealed partial class HowToIntroDesktop : Brace.Common.LayoutAwarePage
     {
         private CoreWindow window;
 
-        public FirstPerson()
+        public HowToIntroDesktop()
         {
             this.InitializeComponent();
 
-            if (Utils.OptionsManager.isFirstPlay())
-            {
-                this.endButton.Content = "Play";
-            }
-            else
-            {
-                this.endButton.Content = "Return";
-            }
         }
 
         /// <summary>
@@ -73,32 +65,11 @@ namespace Brace
             parent.Children.Remove(this);
         }
 
-        private void TextBlock_SelectionChanged(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-
-        }
-
+      
         private void nextButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (Utils.OptionsManager.isFirstPlay())
-            {
-                MainPage parent = this.Parent as MainPage;
-                int size = parent.Children.Count();
-                for (int i = (size - 1); i > 0; i--)
-                {
-                    parent.Children.RemoveAt(i);
-                }
-                parent.StartGame();
-            }
-            else
-            {
-                MainPage parent = this.Parent as MainPage;
-                int size = parent.Children.Count();
-                for (int i = (size - 1); i > 1; i--)
-                {
-                    parent.Children.RemoveAt(i);
-                }
-            }
+            MainPage parent = this.Parent as MainPage;
+            parent.Children.Add(new TopDown());
         }
     }
 }

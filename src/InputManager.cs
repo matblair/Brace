@@ -24,6 +24,7 @@ namespace Brace
         private Accelerometer accelerometer;
         private OrientationSensor orientationSensor;
         public bool hasOrientationSupport { get; private set; }
+        public bool hasAcceleromterSupport { get; private set; }
 
         //Our information about our view and camera
         private CoreWindow window;
@@ -33,13 +34,13 @@ namespace Brace
 
        
         //The input key bindings
-        private Keys lookLeftKey = Keys.Left;
+        private Keys lookLeftKey = Keys.A;
         private Keys lookDownKey = Keys.Down;
-        private Keys lookRightKey = Keys.Right;
+        private Keys lookRightKey = Keys.D;
         private Keys lookUpKey = Keys.Up;
-        private Keys walkLeftKey = Keys.A;
+        private Keys walkLeftKey = Keys.Left;
         private Keys walkBackKey = Keys.S;
-        private Keys walkRightKey = Keys.D;
+        private Keys walkRightKey = Keys.Right;
         private Keys walkForwardKey = Keys.W;
         private Keys toggleCameraKey = Keys.Tab;
         private Keys shiftKey = Keys.Shift;
@@ -81,21 +82,24 @@ namespace Brace
             // Set the accelerometer
             accelerometer = Accelerometer.GetDefault();
             if (accelerometer != null)
-            {
-       
-                accelerometer.ReadingChanged += AccelerometerReadingChanged;
-                ViewTypeSetTime = System.DateTimeOffset.Now;
+            { 
+            //    accelerometer.ReadingChanged += AccelerometerReadingChanged;
+            //    ViewTypeSetTime = System.DateTimeOffset.Now;
+            //    uint currentValue = accelerometer.MinimumReportInterval;
+            //    uint reportTime = currentValue > 16 ? currentValue : 16;
+            //    accelerometer.ReportInterval = currentValue;
+            //    hasAcceleromterSupport = true;
             }
 
             //Set the orientation sensor
             orientationSensor = OrientationSensor.GetDefault();
             if (orientationSensor != null)
             {
-                orientationSensor.ReadingChanged += OrientationChanged;
-                uint currentValue = orientationSensor.MinimumReportInterval;
-                uint reportTime = currentValue > 16 ? currentValue : 16;
-                orientationSensor.ReportInterval = currentValue;
-                hasOrientationSupport = true;
+                //orientationSensor.ReadingChanged += OrientationChanged;
+                //uint currentValue = orientationSensor.MinimumReportInterval;
+                //uint reportTime = currentValue > 16 ? currentValue : 16;
+                //orientationSensor.ReportInterval = currentValue;
+                //hasOrientationSupport = true;
             }
 
 
@@ -139,21 +143,19 @@ namespace Brace
             mouseState = mouse.GetState();
 
             didTapped = false;
-
-            if (keyboardState.IsKeyDown(toggleCameraKey))
+            if (!hasAcceleromterSupport)
             {
-                if (ViewType == Camera.ViewType.Follow)
+                if (keyboardState.GetPressedKeys().Contains(toggleCameraKey))
                 {
-                    ViewType = Camera.ViewType.FirstPerson;
+                    if (ViewType == Camera.ViewType.FirstPerson)
+                    {
+                        ViewType = Camera.ViewType.TopDown;
+                    }
+                    else if (ViewType == Camera.ViewType.TopDown)
+                    {
+                        ViewType = Camera.ViewType.FirstPerson;
+                    }
                 }
-                else if (ViewType == Camera.ViewType.FirstPerson)
-                {
-                    ViewType = Camera.ViewType.TopDown;
-                }
-                else if (ViewType == Camera.ViewType.TopDown)
-                {
-                    ViewType = Camera.ViewType.Follow;
-                } 
             }
         }
 
@@ -258,33 +260,60 @@ namespace Brace
             {
                 Windows.Foundation.Point p = args.CurrentPoint.Position;
 
-                //If we don't have orientation support, then we need to use the onscreen hotboxes.
-                if (!hasOrientationSupport)
+                if (!hasAcceleromterSupport)
                 {
-                    if (p.X < turnLeftScreenBoundary)
-                    {
-                        screenTurnLeftButtonDown = true;
-                    }
-                    else if (p.X >= turnRightScreenBoundary)
-                    {
-                        screenTurnRightButtonDown = true;
-                    }
-                }
-                //We are always able to walk forward or shoot regardless of control scheme left and right
-                else if (p.Y <= walkForwardScreenBoundary)
-                {
-                    screenWalkForwardButtonDown = true;
-                }
-                else if (p.Y > shootScreenBoundary)
-                {
+                    //If no accelerometer support then only shoot
                     screenShootButtonDown = true;
                     // Set aim depending on the camera target view direction
                     Vector3 player = Camera.GetCameraTarget().ViewDirection();
                     aimDirection = new Vector2(player.X, player.Z);
-                }
-            }
-            gestureRecogniser.ProcessDownEvent(args.CurrentPoint);
 
+                }
+                else
+                {
+                    if (!hasOrientationSupport)
+                    {
+                        //If we don't have orientation support, then we need to use the onscreen hotboxes
+                        if (p.X < turnLeftScreenBoundary)
+                        {
+                            screenTurnLeftButtonDown = true;
+                        }
+                        else if (p.X >= turnRightScreenBoundary)
+                        {
+                            screenTurnRightButtonDown = true;
+                        }
+                        //We are always able to walk forward or shoot regardless of control scheme left and right
+                        else if (p.Y <= walkForwardScreenBoundary)
+                        {
+                            screenWalkForwardButtonDown = true;
+                        }
+                        else if (p.Y > shootScreenBoundary)
+                        {
+                            screenShootButtonDown = true;
+                            // Set aim depending on the camera target view direction
+                            Vector3 player = Camera.GetCameraTarget().ViewDirection();
+                            aimDirection = new Vector2(player.X, player.Z);
+                        }
+                    }
+                    else
+                    {
+                        //We are always able to walk forward or shoot regardless of control scheme left and right
+                        if (p.X <= this.window.Bounds.Width / 2)
+                        {
+                            screenShootButtonDown = true;
+                            // Set aim depending on the camera target view direction
+                            Vector3 player = Camera.GetCameraTarget().ViewDirection();
+                            aimDirection = new Vector2(player.X, player.Z);
+                        }
+                        else
+                        {
+                            screenWalkForwardButtonDown = true;
+                        }
+                    }
+                }  
+            }
+
+            gestureRecogniser.ProcessDownEvent(args.CurrentPoint);
         }
 
         void OnPointerMoved(CoreWindow sender, PointerEventArgs args)

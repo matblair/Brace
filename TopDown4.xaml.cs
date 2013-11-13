@@ -26,22 +26,15 @@ namespace Brace
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class FirstPerson : Brace.Common.LayoutAwarePage
+    public sealed partial class TopDown4 : Brace.Common.LayoutAwarePage
     {
         private CoreWindow window;
 
-        public FirstPerson()
+        public TopDown4()
         {
             this.InitializeComponent();
 
-            if (Utils.OptionsManager.isFirstPlay())
-            {
-                this.endButton.Content = "Play";
-            }
-            else
-            {
-                this.endButton.Content = "Return";
-            }
+
         }
 
         /// <summary>
@@ -78,26 +71,17 @@ namespace Brace
 
         }
 
-        private void nextButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void nextPressed(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (Utils.OptionsManager.isFirstPlay())
+            if (BraceGame.get().input.hasOrientationSupport)
             {
                 MainPage parent = this.Parent as MainPage;
-                int size = parent.Children.Count();
-                for (int i = (size - 1); i > 0; i--)
-                {
-                    parent.Children.RemoveAt(i);
-                }
-                parent.StartGame();
+                parent.Children.Add(new FirstPersonGyro());
             }
             else
             {
                 MainPage parent = this.Parent as MainPage;
-                int size = parent.Children.Count();
-                for (int i = (size - 1); i > 1; i--)
-                {
-                    parent.Children.RemoveAt(i);
-                }
+                parent.Children.Add(new FirstPerson());
             }
         }
     }

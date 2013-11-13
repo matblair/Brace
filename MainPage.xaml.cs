@@ -41,6 +41,7 @@ namespace Brace
         private static MainPage mainPage;
       
         private TCD.Controls.Flyout f;
+        private TCD.Controls.Flyout p;
 
         public MainPage()
         {
@@ -51,8 +52,10 @@ namespace Brace
             Utils.OptionsManager.Init();
             game.Run(this);
           
-            //Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Rain);
+            Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Rain);
             this.Children.Add(new MainMenu());
+            
+            SettingsPane.GetForCurrentView().CommandsRequested += MainPage_CommandsRequested;
         }
 
         public static MainPage GetMainPage()
@@ -71,7 +74,7 @@ namespace Brace
         {
            
             game.Start();
-            //Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Thunder2);
+            Utils.SoundManager.GetCurrent().PlaySound(Utils.SoundManager.SoundsEnum.Thunder2);
             this.gamePauseButton.Visibility = Utils.OptionsManager.ChallengeModeEnabled() ? Visibility.Collapsed : Visibility.Visible;
         }
 
@@ -145,6 +148,44 @@ namespace Brace
             this.ResumeGame();
         }
 
-       
+        void MainPage_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+            args.Request.ApplicationCommands.Clear();
+            if(this.game.IsActive){
+                game.paused = true;
+            }
+            SettingsCommand privacyPolicy = new SettingsCommand(
+                "PrivacyPolicy",
+                "Privacy Policy", (uiCommand) =>
+                {
+                    ShowSettingsPanel();
+                });
+
+            args.Request.ApplicationCommands.Add(privacyPolicy);
+        }
+        
+           private void ShowSettingsPanel()
+        {
+            //make up some content (this can be a user control as well!)
+            StackPanel s = new StackPanel();
+
+            //  Game description
+            TextBlock t = new TextBlock() { TextWrapping = TextWrapping.Wrap };
+            t.Text = "In order to provide a competitive game environment, Brace will use your windows profile name when it uploads your highscore to our servers. No other information will be sent, other than your profile name and the score achieved. The data does not include any location information or any other identifying features. If you do not wish your name to be transmitted, enable Anonymous HighScores in the option menu. ";
+            t.Margin = new Thickness(4);
+            t.FontSize = 14;
+            s.Children.Add(t);
+
+            //now create the flyout
+            p = new TCD.Controls.Flyout(
+                new SolidColorBrush(Colors.White),//the foreground color of all flyouts
+                (Brush)App.Current.Resources["ApplicationPageBackgroundThemeBrush"],//the background color of all flyouts
+                new SolidColorBrush(Color.FromArgb(255, 150, 0, 0)),//the theme brush of the app
+                "Brace : Privacy Policy",
+                FlyoutDimension.Narrow,
+                s);
+            p.ShowAsync();
+        }
     }
+
 }

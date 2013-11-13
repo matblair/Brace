@@ -48,11 +48,27 @@
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="HowToIntroDesktop.xaml.cs">
+      <DependentUpon>HowToIntroDesktop.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FirstPersonGyro.xaml.cs">
+      <DependentUpon>FirstPersonGyro.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FirstPersonGyro1.xaml.cs">
+      <DependentUpon>FirstPersonGyro1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FirstPerson.xaml.cs">
+      <DependentUpon>FirstPerson.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TopDown2.xaml.cs">
+      <DependentUpon>TopDown2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TopDown4.xaml.cs">
+      <DependentUpon>TopDown4.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EndGame.xaml.cs">
       <DependentUpon>EndGame.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FirstPerson.xaml.cs" />
-    <Compile Include="FirstPersonGyro.xaml.cs" />
     <Compile Include="HowToIntro.xaml.cs">
       <DependentUpon>HowToIntro.xaml</DependentUpon>
     </Compile>
@@ -114,8 +130,8 @@
     <Compile Include="TopDown.xaml.cs">
       <DependentUpon>TopDown.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TopDown2.xaml.cs">
-      <DependentUpon>TopDown2.xaml</DependentUpon>
+    <Compile Include="TopDown3.xaml.cs">
+      <DependentUpon>TopDown3.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -215,7 +231,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="EndGame.xaml">
+    <Page Include="HowToIntroDesktop.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FirstPersonGyro.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FirstPersonGyro1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -223,7 +247,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="FirstPersonGyro.xaml">
+    <Page Include="TopDown2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TopDown4.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EndGame.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -259,7 +291,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TopDown2.xaml">
+    <Page Include="TopDown3.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

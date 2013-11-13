@@ -26,11 +26,11 @@ namespace Brace
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class FirstPerson : Brace.Common.LayoutAwarePage
+    public sealed partial class FirstPersonGyro1 : Brace.Common.LayoutAwarePage
     {
         private CoreWindow window;
 
-        public FirstPerson()
+        public FirstPersonGyro1()
         {
             this.InitializeComponent();
 

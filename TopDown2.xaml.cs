@@ -33,8 +33,6 @@ namespace Brace
         public TopDown2()
         {
             this.InitializeComponent();
-
-
         }
 
         /// <summary>
@@ -71,18 +69,10 @@ namespace Brace
 
         }
 
-        private void nextPressed(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void nextButtonClicked(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (BraceGame.get().input.hasOrientationSupport)
-            {
-                MainPage parent = this.Parent as MainPage;
-                parent.Children.Add(new FirstPersonGyro());
-            }
-            else
-            {
-                MainPage parent = this.Parent as MainPage;
-                parent.Children.Add(new FirstPerson());
-            }
+            MainPage parent = this.Parent as MainPage;
+            parent.Children.Add(new TopDown3());
         }
     }
 }
