@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.Popups;
 
 namespace Brace.Utils
 {
@@ -110,6 +111,7 @@ namespace Brace.Utils
             if (OptionsManager.isFirstPlay())
             {
                 OptionsManager.isFirstPlay(false);
+              
             }
             // There's no score list, so error
             if (Scores == null)

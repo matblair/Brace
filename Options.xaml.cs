@@ -34,7 +34,6 @@ namespace Brace
 
             playerNameTextBox.Text = Utils.OptionsManager.GetPlayerName();
             challengeModeToggle.IsOn = Utils.OptionsManager.ChallengeModeEnabled();
-            volumeSlider.Value = Utils.OptionsManager.Volume();
             anonymousHighScores.IsOn = Utils.OptionsManager.IsAnonymous();
         }
 

@@ -83,9 +83,8 @@ namespace Brace.Utils
 
         public static bool hasAsked()
         {
-            //CheckInit();
-            return false;
-            //return (bool)localSettings.Containers["options"].Values["asked"];
+            CheckInit();
+            return (bool)localSettings.Containers["options"].Values["asked"];
         }
 
         public static void hasAsked(bool val)

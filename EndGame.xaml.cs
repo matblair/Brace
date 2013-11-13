@@ -28,13 +28,16 @@ namespace Brace
 
             this.gameOverScore.Text = string.Format("Final Score: {0}", Utils.HighScoreManager.LastScore.Value);
 
-            if(!Utils.OptionsManager.hasAsked()){
-                var messageDialog = new MessageDialog("Do you want to submit your name with your highscore?");
+            if (!Utils.OptionsManager.hasAsked())
+            {
+                var messageDialog = new MessageDialog("");
+                messageDialog.Title = "Do you want to submit your name with your highscore?";
+                messageDialog.Content = "We will only ask this once, after this you can turn anonymous high scores on and off in the options menu.";
                 messageDialog.Commands.Add(new UICommand(
                     "Yes", (uiCommand) =>
-                {
-                    Utils.OptionsManager.SetAnonymous(false);
-                }));
+                    {
+                        Utils.OptionsManager.SetAnonymous(false);
+                    }));
                 messageDialog.Commands.Add(new UICommand(
                    "No", (uiCommand) =>
                    {

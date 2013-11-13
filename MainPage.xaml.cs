@@ -171,7 +171,7 @@ namespace Brace
 
             //  Game description
             TextBlock t = new TextBlock() { TextWrapping = TextWrapping.Wrap };
-            t.Text = "In order to provide a competitive game environment, Brace will use your windows profile name when it uploads your highscore to our servers. No other information will be sent, other than your profile name and the score achieved. The data does not include any location information or any other identifying features. If you do not wish your name to be transmitted, enable Anonymous HighScores in the option menu. ";
+            t.Text = "In order to provide a competitive game environment, Brace will use your windows profile name when it uploads your highscore to our servers.\n\nNo other information will be sent, other than your profile name and the score achieved. The data does not include any location information or any other identifying features.\n\nIf you do not wish your name to be transmitted, enable Anonymous HighScores in the option menu. ";
             t.Margin = new Thickness(4);
             t.FontSize = 14;
             s.Children.Add(t);
