@@ -26,24 +26,20 @@
             <ImageBrush ImageSource="Assets/fps_desktop_controls.png"/>
         </Grid.Background>
         <Grid.RowDefinitions>
-            <RowDefinition Height="81"/>
-            <RowDefinition Height="59"/>
+            <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
-        <Grid Margin="10,10,-10,618" Grid.RowSpan="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="69*"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}" Height="48" Margin="36,0,0,34" VerticalAlignment="Bottom"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="12,56,18,42" Text="First Person Controls" VerticalAlignment="Stretch"/>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="First Person Controls" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
+        
         <Button x:Name="endButton" Content="Next" HorizontalAlignment="Right" Margin="0,0,37,34" Grid.Row="2" VerticalAlignment="Bottom" FontFamily="Global User Interface" Click="nextButtonClicked" Width="66" Height="38"/>
 
         <VisualStateManager.VisualStateGroups>

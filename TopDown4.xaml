@@ -31,14 +31,15 @@
         </Grid.RowDefinitions>
 
         <!-- Back button and page title -->
-        <Grid Margin="10,10,-10,618" Grid.RowSpan="2">
+        <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="120"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}" Height="48" Margin="36,0,0,36" VerticalAlignment="Bottom"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Style="{StaticResource PageHeaderTextStyle}" Margin="11,53,19,47" Text="Top Down Controls" VerticalAlignment="Stretch"/>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Top Down Controls" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
+
         <Button Content="Next" HorizontalAlignment="Right" Margin="0,0,37,34" Grid.Row="1" VerticalAlignment="Bottom" FontFamily="Global User Interface" Click="nextPressed" Width="66" Height="38"/>
 
         <VisualStateManager.VisualStateGroups>
